@@ -1,23 +1,22 @@
 <template>
-	<section>
-		<el-col :span="24" class="welcome"></el-col>
-	</section>
+  <section>
+    <el-col :span="24" class="welcome">
+      <img src="../assets/welcome.png">
+    </el-col>
+  </section>
 </template>
-
 <script>
-	import NProgress from 'nprogress'
+export default {
+  data() {
+    return {
 
-	export default {
-    data() {
-      return {
-
-      }
     }
   }
+}
 </script>
-
 <style scoped>
-	.welcome {
-		background-image: url(../assets/welcome.png);
-	}
+.welcome img {
+  width: 100%;
+  height: 100%;
+}
 </style>
