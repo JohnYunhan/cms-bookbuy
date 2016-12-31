@@ -93,4 +93,4 @@ new Vue({
     components: { App }
 }).$mount('#app')
 
-router.replace('/login');
+router.replace('/member');

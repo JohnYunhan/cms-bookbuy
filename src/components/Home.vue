@@ -8,15 +8,15 @@
         </el-col>
         <el-col :span="11">
           <h5 class="admin">
-						<i class="fa fa-user" aria-hidden="true" style="margin-right:5px;"></i>欢迎您&nbsp;~&nbsp;
-						<el-dropdown @command="handleCommand">
-							<span class="el-dropdown-link">{{ adminName }}</span>
-							<el-dropdown-menu slot="dropdown">
-						    <el-dropdown-item command="updatePwd">修改密码</el-dropdown-item>
-						    <el-dropdown-item command="logout">注销登录</el-dropdown-item>
-					  	</el-dropdown-menu>
-						</el-dropdown>
-					</h5>
+            <i class="fa fa-user" aria-hidden="true" style="margin-right:5px;"></i>欢迎您&nbsp;~&nbsp;
+            <el-dropdown @command="handleCommand">
+              <span class="el-dropdown-link">{{ adminName }}</span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="updatePwd">修改密码</el-dropdown-item>
+                <el-dropdown-item command="logout">注销登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </h5>
         </el-col>
         <el-col :span="1">
           <el-tooltip class="item tip-logout" effect="dark" content="退出" placement="bottom" style="padding:0px;">
@@ -57,7 +57,7 @@
       </el-col>
     </el-row>
     <!-- 修改密码对话框 -->
-    <el-dialog title="修改密码" v-model="updatePwdFormVisible" :close-on-click-modal="false">
+    <el-dialog class="updatePwdForm" title="修改密码" v-model="updatePwdFormVisible" :close-on-click-modal="false">
       <el-form :model="updatePwdForm" :rules="rulePwdForm" ref="updatePwdForm">
         <el-form-item label="原密码" label-width="82px" prop="originalPwd">
           <el-input type="password" v-model="updatePwdForm.originalPwd"></el-input>
@@ -204,6 +204,7 @@ export default {
   top: 0px;
   bottom: 0px;
   width: 100%;
+  font-size: 16px;
 }
 
 .panel aside {
@@ -271,6 +272,10 @@ export default {
 .el-dropdown-link:hover {
   color: rgb(20, 120, 220);
   text-decoration: underline;
+}
+
+.updatePwdForm {
+  width: 900px;
 }
 
 .btnCenter {
