@@ -45,7 +45,7 @@
                 <el-breadcrumb-item v-if="currentPathNameParent!=''">{{currentPathNameParent}}</el-breadcrumb-item>
                 <el-breadcrumb-item v-show="currentPathName!=''">{{currentPathName}}</el-breadcrumb-item>
               </el-breadcrumb>
-              <strong style="width:64px;float:right;color: #475669;">{{currentPathName}}</strong>
+              <strong style="float:right;color: #475669;">{{currentPathName}}</strong>
             </el-col>
             <el-col :span="24" style="background-color:#fff;box-sizing: border-box;">
               <transition>

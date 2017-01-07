@@ -2,11 +2,11 @@
   <el-row type="flex" justify="space-between" class="toolbar">
     <!--工具条-->
     <el-col :span="1">
-      <el-button type="primary" icon="plus" @click="add">新增</el-button>
+      <el-button v-if="haveAdd" type="primary" icon="plus" @click="add">新增</el-button>
     </el-col>
     <el-col :span="9">
       <el-select class="searchtype" v-model="searchType" placeholder="请选择">
-        <el-option v-for="item in list" :label="item.label" :value="item.value">
+        <el-option v-for="item in searchList" :label="item.label" :value="item.value">
         </el-option>
       </el-select>
       <el-input class="searchkey" v-model="searchKey" @keyup.enter="search"></el-input>
@@ -19,21 +19,48 @@
 </template>
 <script>
 export default {
-  props: ["list", "addSource", "searchSource", "defaultValue"],
+  props: ["haveAdd", "searchList", "addSource", "searchSource", "defaultValue"],
   data() {
     return {
       searchType: this.defaultValue,
       searchKey: "",
+      addItem: "add",
+      searchItem: "search"
     }
   },
   methods: {
     add() {
-      console.log(this.addSource);
+      switch (this.addSource) {
+        case "member":
+          {
+            this.$emit("addmember", this.addItem);
+          }
+          break;
+        case "book":
+          {
+            this.$emit("addbook", this.addItem);
+          }
+          break;
+      }
     },
     search() {
-      console.log(this.searchSource);
-      console.log(this.searchType);
-      console.log(this.searchKey);
+      switch (this.searchSource) {
+        case "member":
+          {
+            this.$emit("searchmember", this.searchItem);
+          }
+          break;
+        case "book":
+          {
+            this.$emit("searchbook", this.searchItem);
+          }
+          break;
+        case "order":
+          {
+            this.$emit("searchorder", this.searchItem);
+          }
+          break;
+      }
     },
     refresh() {
       location.reload();
@@ -54,7 +81,7 @@ export default {
 }
 
 .searchtype {
-  width: 90px;
+  width: 88px;
 }
 
 .searchkey {

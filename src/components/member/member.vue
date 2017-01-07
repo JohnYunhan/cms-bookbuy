@@ -1,6 +1,6 @@
 <template>
   <section>
-    <search :list="list" :searchSource="source" :addSource="source" :defaultValue="searchType"></search>
+    <search :haveAdd="have" :searchList="list" :searchSource="source" :addSource="source" :defaultValue="searchType" v-on:addmember="addMember" v-on:searchmember="searchMember"></search>
   </section>
 </template>
 <script>
@@ -17,17 +17,18 @@ export default {
         }, {
           label: "手机号",
           value: "cellphone"
-        }],
-        source: "member",
-        searchType: "用户名",
+        }], //搜索类型
+        have: true,
+        source: "member", //搜索种类
+        searchType: "用户名", //默认的搜索类型
       }
     },
     methods: {
-      addMember() {
-
+      addMember(addItem) {
+        console.log(addItem);
       },
-      searchMember() {
-
+      searchMember(searchItem) {
+        console.log(searchItem);
       },
     },
     components: {

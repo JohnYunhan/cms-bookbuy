@@ -1,6 +1,6 @@
 <template>
   <section>
-    <search v-bind:list="list"></search>
+    <search :haveAdd="have" :searchList="list" :searchSource="source" :addSource="source" :defaultValue="searchType" v-on:addbook="addBook" v-on:searchbook="searchBook"></search>
   </section>
 </template>
 <script>
@@ -20,15 +20,19 @@ export default {
         }, {
           label: "出版社",
           value: "publish"
-        }]
+        }], //搜索类型
+        have: true,
+        source: "book", //搜索种类
+        searchType: "书名", //默认的搜索类型
       }
     },
     methods: {
-      add() {
-        console.log(123);
+      addBook(addItem) {
+        console.log(addItem);
       },
-      search() {
-
+      searchBook(searchItem
+) {
+        console.log(searchItem);
       },
     },
     components: {

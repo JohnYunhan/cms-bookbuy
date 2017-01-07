@@ -1,6 +1,6 @@
 <template>
   <section>
-    <search v-bind:list="list"></search>
+    <search :haveAdd="have" :searchList="list" :searchSource="source" :defaultValue="searchType" v-on:searchorder="searchOrder"></search>
   </section>
 </template>
 <script>
@@ -23,15 +23,15 @@ export default {
         }, {
           label: "手机号",
           value: "cellphone"
-        }]
+        }],
+        have: false,
+        source: "order",
+        searchType: "用户名",
       }
     },
     methods: {
-      add() {
-        console.log(123);
-      },
-      search() {
-
+      searchOrder(searchItem) {
+        console.log(searchItem);
       },
     },
     components: {
