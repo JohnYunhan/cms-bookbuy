@@ -40,15 +40,15 @@
         <section class="panel-c-c">
           <div class="grid-content bg-purple-light">
             <el-col :span="24" style="margin-bottom:15px;">
-              <strong style="width:200px;float:left;color: #475669;">{{currentPathName}}</strong>
-              <el-breadcrumb separator="/" style="float:right;">
+              <el-breadcrumb separator=">" style="float:left;">
                 <el-breadcrumb-item :to="{ path: '/member' }">首页</el-breadcrumb-item>
                 <el-breadcrumb-item v-if="currentPathNameParent!=''">{{currentPathNameParent}}</el-breadcrumb-item>
                 <el-breadcrumb-item v-show="currentPathName!=''">{{currentPathName}}</el-breadcrumb-item>
               </el-breadcrumb>
+              <strong style="width:64px;float:right;color: #475669;">{{currentPathName}}</strong>
             </el-col>
             <el-col :span="24" style="background-color:#fff;box-sizing: border-box;">
-              <transition name="fade">
+              <transition>
                 <router-view></router-view>
               </transition>
             </el-col>
@@ -189,7 +189,7 @@ export default {
 }
 </script>
 <style scoped>
-.fade-enter-active,
+/*.fade-enter-active,
 .fade-leave-active {
   transition: opacity .5s
 }
@@ -197,6 +197,19 @@ export default {
 .fade-enter,
 .fade-leave-active {
   opacity: 0
+}*/
+
+.fadeOut-enter-active {
+  animation: fadeOut 1.5s;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 .panel {

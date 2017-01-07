@@ -1,6 +1,6 @@
 <template>
   <section>
-    <search v-bind:list="list"></search>
+    <search :list="list" :searchSource="source" :addSource="source" :defaultValue="searchType"></search>
   </section>
 </template>
 <script>
@@ -17,14 +17,16 @@ export default {
         }, {
           label: "手机号",
           value: "cellphone"
-        }]
+        }],
+        source: "member",
+        searchType: "用户名",
       }
     },
     methods: {
-      add() {
-        console.log(123);
+      addMember() {
+
       },
-      search() {
+      searchMember() {
 
       },
     },

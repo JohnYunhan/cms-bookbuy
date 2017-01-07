@@ -5,7 +5,7 @@
       <el-button type="primary" icon="plus" @click="add">新增</el-button>
     </el-col>
     <el-col :span="9">
-      <el-select class="searchlist" v-model="searchList" placeholder="请选择">
+      <el-select class="searchtype" v-model="searchType" placeholder="请选择">
         <el-option v-for="item in list" :label="item.label" :value="item.value">
         </el-option>
       </el-select>
@@ -19,19 +19,21 @@
 </template>
 <script>
 export default {
-  props: ["list"],
+  props: ["list", "addSource", "searchSource", "defaultValue"],
   data() {
     return {
-      searchList: "",
+      searchType: this.defaultValue,
       searchKey: "",
     }
   },
   methods: {
     add() {
-      console.log(456);
+      console.log(this.addSource);
     },
     search() {
-
+      console.log(this.searchSource);
+      console.log(this.searchType);
+      console.log(this.searchKey);
     },
     refresh() {
       location.reload();
@@ -51,7 +53,7 @@ export default {
   background-color: #fff;
 }
 
-.searchlist {
+.searchtype {
   width: 90px;
 }
 
