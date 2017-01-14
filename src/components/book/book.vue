@@ -4,7 +4,7 @@
   </section>
 </template>
 <script>
-import search from "../../common/search.vue";
+import search from "../common/search.vue";
 export default {
   data() {
       return {
@@ -30,8 +30,7 @@ export default {
       addBook(addItem) {
         console.log(addItem);
       },
-      searchBook(searchItem
-) {
+      searchBook(searchItem) {
         console.log(searchItem);
       },
     },

@@ -4,7 +4,7 @@
   </section>
 </template>
 <script>
-import search from "../../common/search.vue";
+import search from "../common/search.vue";
 export default {
   data() {
       return {
