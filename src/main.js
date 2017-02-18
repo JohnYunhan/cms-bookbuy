@@ -9,7 +9,6 @@ import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 // import 'minireset.css/minireset.css'
 
-
 Vue.use(ElementUI)
 Vue.use(Vuex)
 
@@ -30,4 +29,4 @@ new Vue({
   components: { App }
 }).$mount('#app')
 
-router.replace('/member');
+// router.replace('/member');

@@ -9,10 +9,19 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.16.1",
+    "cookie-parser": "^1.4.3",
     "flex.css": "^1.1.6",
+    "iron": "^4.0.4",
+    "jsonwebtoken": "^7.3.0",
+    "mongoose": "^4.8.3",
     "nprogress": "^0.2.0",
+    "serve-favicon": "^2.3.2",
+    "uniqid": "^4.1.1",
     "vue": "^2.1.0",
-    "vuex": "2.1.1"
+    "vuex": "2.1.1",
+    "whatwg-fetch": "^2.0.2"
   },
   "devDependencies": {
     "autoprefixer": "^6.4.0",

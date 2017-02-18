@@ -46,20 +46,19 @@ let Admin = mongoose.Schema({
 });
 
 //管理员登录(可根据昵称或手机登录)
-Admin.statics.adminLogin = function(josn) {
+Admin.statics.adminLogin = function(json) {
   return new Promise((resolve, reject) => {
-    let data = { Nick: josn.Nick };
-    if (josn.Mobile !== "") {
-      data = { Mobile: josn.Mobile };
+    let data = { Nick: json.Nick };
+    if (json.Mobile !== "") {
+      data = { Mobile: json.Mobile };
     }
     let query = this.findOne(data);
-    query.select("Id RoleId Nick Mobile Valid");
     query.exec((error, result) => {
       if (!error) {
         //找到管理员
         if (result) {
           if (result.Valid) {
-            decryptJSON(josn.Password, result.Password).then(pass => {
+            decryptJSON(json.Password, result.Password).then(pass => {
               if (pass) {
                 //密码正确
                 resolve(result);
@@ -85,10 +84,10 @@ Admin.statics.adminLogin = function(josn) {
 Admin.statics.getAdminList = function(json) {
   return new Promise((resolve, reject) => {
     let query = "";
-    if (josn.Nick !== "") {
+    if (json.Nick !== "") {
       //根据昵称搜索
       query = this.findOne({ Nick: json.Nick })
-    } else if (josn.Mobile !== "") {
+    } else if (json.Mobile !== "") {
       //根据手机搜索
       query = this.findOne({ Mobile: json.Mobile })
     } else {
