@@ -7,27 +7,27 @@ import Vuex from 'vuex'
 import router from './router'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-import 'minireset.css/minireset.css'
+// import 'minireset.css/minireset.css'
 
 
 Vue.use(ElementUI)
 Vue.use(Vuex)
 
 router.beforeEach((to, from, next) => {
-    NProgress.start();
-    next()
+  NProgress.start();
+  next()
 });
 
 router.afterEach(transition => {
-    NProgress.done();
+  NProgress.done();
 });
 
 new Vue({
-    el: '#app',
-    template: '<App/>',
-    router,
-    store,
-    components: { App }
+  el: '#app',
+  template: '<App/>',
+  router,
+  store,
+  components: { App }
 }).$mount('#app')
 
 router.replace('/member');
