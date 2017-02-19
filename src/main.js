@@ -7,7 +7,7 @@ import Vuex from 'vuex'
 import router from './router'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-// import 'minireset.css/minireset.css'
+import 'minireset.css/minireset.css'
 
 Vue.use(ElementUI)
 Vue.use(Vuex)

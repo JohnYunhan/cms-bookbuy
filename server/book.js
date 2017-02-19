@@ -128,16 +128,16 @@ Book.statics.getHotBook = function(json) {
 Book.statics.getBookList = function(json) {
   return new Promise((resolve, reject) => {
     let query = "";
-    if (josn.Name !== "") {
+    if (json.Name !== "") {
       //根据图书名称搜索
       query = this.find({ Name: /json.Name/ })
-    } else if (josn.Author !== "") {
+    } else if (json.Author !== "") {
       //根据图书作者搜索
       query = this.find({ Author: /json.Author/ })
-    } else if (josn.Press !== "") {
+    } else if (json.Press !== "") {
       //根据出版社搜索
       query = this.find({ Press: /json.Press/ })
-    } else if (josn.Category !== "") {
+    } else if (json.Category !== "") {
       //根据分类搜索
       query = this.find({ Category: /json.Category/ })
     } else {

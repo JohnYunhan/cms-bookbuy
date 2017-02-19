@@ -35,12 +35,15 @@ router.post('/login', function(req, res, next) {
     Password: req.body.Password
   });
   Admins.adminLogin(json).then(result => {
-    res.cookie("token", setCookie({
-      Id: result.Id,
-      RoleId: result.RoleId,
-      Nick: result.Nick,
-      LoginDate: Date.now()
-    }));
+    //记住密码
+    if (req.body.Checked) {
+      res.cookie("token", setCookie({
+        Id: result.Id,
+        RoleId: result.RoleId,
+        Nick: result.Nick,
+        LoginDate: Date.now()
+      }));
+    }
     res.send({ Data: result, Message: "登录成功", Code: 200 });
   }).catch(error => {
     res.send({ Message: error.Message, Code: error.Code });
@@ -125,13 +128,13 @@ router.post('/setAdminValid', function(req, res, next) {
 //获取会员列表
 router.post('/getUserList', function(req, res, next) {
   let json = new Users({
-    Index: req.body.Index,
-    Size: req.body.Size,
     Nick: req.body.Nick,
     Mobile: req.body.Mobile
   });
-  Users.getUserList(json).then(result => {
-    res.send({ Data: result, Message: "执行成功", Code: 200 });
+  let index = req.body.Index;
+  let size = req.body.Size;
+  Users.getUserList(json, index, size).then(result => {
+    res.send({ Data: result.Data, TotalConut: result.TotalConut, Message: "执行成功", Code: 200 });
   }).catch(error => {
     res.send({ Message: error.Message, Code: error.Code });
   })

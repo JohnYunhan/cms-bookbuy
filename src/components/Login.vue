@@ -2,10 +2,10 @@
   <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-position="left" label-width="0px" class="demo-ruleForm card-box loginform">
     <h3 class="title">系统登录</h3>
     <el-form-item prop="account">
-      <el-input type="text" v-model="ruleForm.account" auto-complete="off" placeholder="账号"></el-input>
+      <el-input type="text" v-model="ruleForm.account" auto-complete="off" @keyup.enter.native.prevent="login" placeholder="账号"></el-input>
     </el-form-item>
     <el-form-item prop="password">
-      <el-input type="password" v-model="ruleForm.password" auto-complete="off" placeholder="密码"></el-input>
+      <el-input type="password" v-model="ruleForm.password" auto-complete="off" @keyup.enter.native.prevent="login" placeholder="密码"></el-input>
     </el-form-item>
     <el-checkbox v-model="checked" checked style="margin:0px 0px 35px 0px;">记住密码</el-checkbox>
     <el-form-item style="width:100%;">
@@ -49,7 +49,8 @@ export default {
       login() {
         var _this = this;
         var data = {
-          Password: this.ruleForm.password
+          Password: this.ruleForm.password,
+          Checked: this.checked
         };
         if (this.ruleForm.account.length === 11) {
           data.Nick = "";
@@ -71,7 +72,7 @@ export default {
               }).then(res => res.json()).then(result => {
                 if (result.Code === 200) {
                   this.UsrName = result.Nick;
-                  _this.$router.replace('/member');
+                  _this.$router.replace('/welcome');
                 } else {
                   console.log(result)
                 }

@@ -38,7 +38,7 @@ let Car = mongoose.Schema({
 Car.statics.getCarList = function(json) {
   return new Promise((resolve, reject) => {
     let query = "";
-    if (josn.UserId !== "") {
+    if (json.UserId !== "") {
       //根据会员Id搜索
       query = this.find({ UserId: json.UserId })
     } else {

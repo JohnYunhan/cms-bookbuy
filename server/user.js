@@ -94,24 +94,31 @@ User.statics.userLogin = function(json) {
 }
 
 //获取会员列表
-User.statics.getUserList = function(json) {
+User.statics.getUserList = function(json, index, size) {
   return new Promise((resolve, reject) => {
     let query = "";
-    if (josn.Nick !== "") {
+    let total = 0;
+    if (json.Nick !== "") {
       //根据昵称搜索
-      query = this.findOne({ Nick: json.Nick })
-    } else if (josn.Mobile !== "") {
+      let nick = new RegExp(json.Nick); //创建正则表达式
+      query = this.find({ Nick: { $regex: nick } })
+    } else if (json.Mobile !== "") {
       //根据手机搜索
-      query = this.findOne({ Mobile: json.Mobile })
+      let mobile = new RegExp(json.Mobile);
+      query = this.find({ Mobile: { $regex: mobile } })
     } else {
       query = this.find();
+      total = this.count();
       query.sort({ UpdateDate: -1 }); //根据添加日期倒序
-      query.skip(json.Index * json.Size); //跳过多少个数据
-      query.limit(json.Size); //限制Size条数据
+      query.skip(index * size); //跳过多少条数据
+      query.limit(size); //获取多少条数据
     }
     query.exec((error, result) => {
       if (!error) {
-        resolve(result);
+        resolve({
+          Data: result,
+          TotalConut: total
+        });
       } else {
         reject(error);
         // reject({ Message: "服务器错误，请稍后再试", Code: 400 });

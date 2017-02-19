@@ -4,7 +4,7 @@
       <!-- 页面顶部 -->
       <el-col :span="24" class="panel-top">
         <el-col :span="12" style="font-size:24px;">
-          <img src="../assets/book.png" class="logo" alt="logo"> <span><i style="color:#20a0ff">BookBuy</i>&nbsp;图书商城管理系统</span>
+          <img src="../assets/book.png" class="logo" alt="logo"> <span><i style="color:#20a0ff">BookBuy</i>&nbsp;图书网后台管理系统</span>
         </el-col>
         <el-col :span="11">
           <h5 class="admin">
@@ -27,7 +27,7 @@
       <el-col :span="24" class="panel-center">
         <!-- 菜单 -->
         <aside>
-          <el-menu default-active="/member" class="el-menu-vertical-demo" @open="handleopen" @close="handleclose" @select="handleselect" theme="dark" unique-opened router>
+          <el-menu default-active="/welcome" class="el-menu-vertical-demo" @open="handleopen" @close="handleclose" @select="handleselect" theme="dark" unique-opened router>
             <template v-for="(item,index) in $router.options.routes" v-if="!item.hidden">
               <el-submenu :index="index+''">
                 <template slot="title"><i :class="item.iconCls"></i>{{item.name}}</template>
@@ -39,10 +39,10 @@
         <!-- 内容 -->
         <section class="panel-c-c">
           <div class="grid-content bg-purple-light">
-            <el-col :span="24" style="margin-bottom:15px;">
+            <el-col :span="24" style="margin-bottom:5px;">
               <el-breadcrumb separator=">" style="float:left;">
-                <el-breadcrumb-item :to="{ path: '/member' }">首页</el-breadcrumb-item>
-                <el-breadcrumb-item v-if="currentPathNameParent!=''">{{currentPathNameParent}}</el-breadcrumb-item>
+                <el-breadcrumb-item :to="{ path: '/welcome' }">首页</el-breadcrumb-item>
+                <el-breadcrumb-item v-if="currentPathNameParent!='首页'">{{currentPathNameParent}}</el-breadcrumb-item>
                 <el-breadcrumb-item v-show="currentPathName!=''">{{currentPathName}}</el-breadcrumb-item>
               </el-breadcrumb>
               <strong style="float:right;color: #475669;">{{currentPathName}}</strong>
@@ -109,8 +109,8 @@ export default {
       }
       return {
         adminName: "admin", //管理员名称
-        currentPathName: "会员管理",
-        currentPathNameParent: "会员",
+        currentPathName: "欢迎页",
+        currentPathNameParent: "首页",
         updatePwdFormVisible: false, //修改密码界面是否显示
         updatePwdForm: {
           originalPwd: "", //原密码
@@ -130,20 +130,74 @@ export default {
             validator: validateCheckPwd,
             trigger: 'blur'
           }]
-        }
+        },
+        tableData: [],
       };
+    },
+    created() {
+
     },
     methods: {
       onSubmit() {
         console.log('submit!');
       },
-      handleopen() {
-        //console.log('handleopen');
+      handleopen(key, keyPath) {
+        // console.log(key, keyPath);
       },
       handleclose() {
-        //console.log('handleclose');
+        // console.log('handleclose');
       },
-      handleselect: (a, b) => {},
+      handleselect(path) {
+        // var route = "";
+        // var data = {
+        //   Index: 0,
+        //   Size: 10
+        // };
+        // switch (path) {
+        //   case "/member":
+        //     {
+        //       data.Nick = "";
+        //       data.Mobile = "";
+        //       route = "/api/getUserList";
+        //       this.getList(data, route);
+        //     }
+        //     break;
+        // }
+      },
+      getList(data, route) {
+        var _this = this;
+        fetch(route, {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            'Content-Type': "application/json"
+          },
+          body: JSON.stringify(data)
+        }).then(res => res.json()).then(result => {
+          if (result.Code === 200) {
+            var item = result.Data;
+            console.log(item)
+              //判断是否为null
+            if (!item) {
+              _this.tableData = [];
+            } else {
+              //清空原来的数据，避免叠加
+              _this.tableData = [];
+              if (item instanceof Array) {
+                //返回的结果是数组
+                _this.tableData = item;
+              } else {
+                //返回的结果是对象
+                _this.tableData.push(item);
+              }
+            }
+          } else {
+            console.log(result)
+          }
+        }).catch(error => {
+          console.log(error)
+        })
+      },
       handleCommand(command) {
         if (command === "updatePwd") {
           this.updatePwd();
