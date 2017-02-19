@@ -101,11 +101,13 @@ User.statics.getUserList = function(json, index, size) {
     if (json.Nick !== "") {
       //根据昵称搜索
       let nick = new RegExp(json.Nick); //创建正则表达式
-      query = this.find({ Nick: { $regex: nick } })
+      query = this.find({ Nick: { $regex: nick } });
+      total = this.find({ Nick: { $regex: nick } }).count();
     } else if (json.Mobile !== "") {
       //根据手机搜索
       let mobile = new RegExp(json.Mobile);
-      query = this.find({ Mobile: { $regex: mobile } })
+      query = this.find({ Mobile: { $regex: mobile } });
+      total = this.find({ Mobile: { $regex: mobile } }).count();
     } else {
       query = this.find();
       total = this.count();
@@ -114,15 +116,18 @@ User.statics.getUserList = function(json, index, size) {
       query.limit(size); //获取多少条数据
     }
     query.exec((error, result) => {
-      if (!error) {
-        resolve({
-          Data: result,
-          TotalConut: total
-        });
-      } else {
-        reject(error);
-        // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
-      }
+      total.exec((error, res) => {
+        console.log(res)
+        if (!error) {
+          resolve({
+            Data: result,
+            TotalCount: res
+          });
+        } else {
+          reject(error);
+          // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
+        }
+      });
     })
   })
 }

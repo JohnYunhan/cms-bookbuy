@@ -134,7 +134,7 @@ router.post('/getUserList', function(req, res, next) {
   let index = req.body.Index;
   let size = req.body.Size;
   Users.getUserList(json, index, size).then(result => {
-    res.send({ Data: result.Data, TotalConut: result.TotalConut, Message: "执行成功", Code: 200 });
+    res.send({ Data: result.Data, TotalCount: result.TotalCount, Message: "执行成功", Code: 200 });
   }).catch(error => {
     res.send({ Message: error.Message, Code: error.Code });
   })

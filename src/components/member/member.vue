@@ -31,7 +31,7 @@
       </el-table>
     </section>
     <footer>
-      <el-pagination @size-change="sizeChange" @current-change="currentChange" :current-page="currentPage" :page-sizes="[1, 2, 3, 4]" :page-size="1" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
+      <el-pagination @size-change="sizeChange" @current-change="currentChange" :current-page="currentPage" :page-sizes="[1, 2, 3, 4]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
       </el-pagination>
     </footer>
   </section>
@@ -54,8 +54,9 @@ export default {
       searchType: "Nick", //默认的搜索类型
       tableData: [],
       loading: true,
-      totalCount: 4,
-      currentPage: 1,
+      totalCount: 0, //数据总量
+      currentPage: 1, //当前页码
+      pageSize: 1, //每页的数据量
     }
   },
   created() {
@@ -81,7 +82,7 @@ export default {
       }).then(res => res.json()).then(result => {
         if (result.Code === 200) {
           var item = result.Data;
-          // _this.totalCount = result.TotalCount;
+          _this.totalCount = result.TotalCount;
           //判断是否为null
           if (!item) {
             _this.tableData = [];
@@ -121,14 +122,20 @@ export default {
       console.log(index, row)
     },
     sizeChange(val) {
-
+      this.pageSize = val;
+      console.log(val)
+      this.getMember(this.currentPage - 1, val, "", "");
     },
     currentChange(val) {
       this.currentPage = val;
-      // console.log(`当前页: ${val}`);
+      this.getMember(val - 1, this.pageSize, "", "");
     }
   },
-
+  watch: {
+    totalCount: function(val) {
+      this.totalCount = val;
+    },
+  },
   components: {
     search,
   }
