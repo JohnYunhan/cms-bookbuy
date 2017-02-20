@@ -99,13 +99,13 @@ router.post('/setAdmin', function(req, res, next) {
 //修改管理员密码
 router.post('/setAdminPassword', function(req, res, next) {
   let json = new Admins({
-    Id: req.body.Id,
-    OldPassword: req.body.OldPassword,
-    NewPassword: req.body.NewPassword,
+    Id: req.AdminInfo.Id,
+    Password: req.body.NewPassword,
     UpdateDate: Date.now()
   });
-  Admins.setAdminPassword(json).then(result => {
-    res.send({ Data: result, Message: "执行成功", Code: 200 });
+  let oldpwd = req.body.OldPassword;
+  Admins.setAdminPassword(json, oldpwd).then(result => {
+    res.send({ Data: result, Message: "修改成功", Code: 200 });
   }).catch(error => {
     res.send({ Message: error.Message, Code: error.Code });
   })
@@ -114,7 +114,7 @@ router.post('/setAdminPassword', function(req, res, next) {
 //加入或解除黑名单(管理员)
 router.post('/setAdminValid', function(req, res, next) {
   let json = new Admins({
-    Id: req.body.Id,
+    Id: req.AdminInfo.Id,
     Valid: req.body.Valid,
     UpdateDate: Date.now()
   });

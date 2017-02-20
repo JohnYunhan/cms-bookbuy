@@ -69,8 +69,8 @@
           <el-input type="password" v-model="updatePwdForm.checkPwd"></el-input>
         </el-form-item>
         <el-form-item class="btnCenter">
-          <el-button type="primary" v-on:click="updatePwdSubmit('updatePwdForm')">提交</el-button>
-          <el-button v-on:click="updatePwdReset('updatePwdForm')">重置</el-button>
+          <el-button type="primary" @click="updatePwdSubmit('updatePwdForm')">提交</el-button>
+          <el-button @click="updatePwdClose">取消</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -148,55 +148,7 @@ export default {
         // console.log('handleclose');
       },
       handleselect(path) {
-        // var route = "";
-        // var data = {
-        //   Index: 0,
-        //   Size: 10
-        // };
-        // switch (path) {
-        //   case "/member":
-        //     {
-        //       data.Nick = "";
-        //       data.Mobile = "";
-        //       route = "/api/getUserList";
-        //       this.getList(data, route);
-        //     }
-        //     break;
-        // }
-      },
-      getList(data, route) {
-        var _this = this;
-        fetch(route, {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            'Content-Type': "application/json"
-          },
-          body: JSON.stringify(data)
-        }).then(res => res.json()).then(result => {
-          if (result.Code === 200) {
-            var item = result.Data;
-            console.log(item)
-              //判断是否为null
-            if (!item) {
-              _this.tableData = [];
-            } else {
-              //清空原来的数据，避免叠加
-              _this.tableData = [];
-              if (item instanceof Array) {
-                //返回的结果是数组
-                _this.tableData = item;
-              } else {
-                //返回的结果是对象
-                _this.tableData.push(item);
-              }
-            }
-          } else {
-            console.log(result)
-          }
-        }).catch(error => {
-          console.log(error)
-        })
+
       },
       handleCommand(command) {
         if (command === "updatePwd") {
@@ -207,20 +159,43 @@ export default {
       },
       updatePwd() {
         this.updatePwdFormVisible = true;
-        this.updatePwdReset('updatePwdForm');
       },
       updatePwdSubmit(formName) {
+        var _this = this;
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('submit!')
+            var data = {
+              OldPassword: _this.updatePwdForm.originalPwd,
+              NewPassword: _this.updatePwdForm.newPwd,
+            };
+            data = JSON.stringify(data);
+            fetch("/api/setAdminPassword", {
+              method: "POST",
+              credentials: "include",
+              headers: {
+                'Content-Type': "application/json"
+              },
+              body: data
+            }).then(res => res.json()).then(result => {
+              if (result.Code === 200) {
+                _this.updatePwdClose();
+              } else {
+                console.log(result)
+              }
+            }).catch(error => {
+              console.log(error)
+            })
           } else {
             console.log('error submit!!')
             return false
           }
         })
       },
-      updatePwdReset(formName) {
-        this.$refs[formName].resetFields();
+      updatePwdClose() {
+        this.updatePwdForm.originalPwd = "";
+        this.updatePwdForm.newPwd = "";
+        this.updatePwdForm.checkPwd = "";
+        this.updatePwdFormVisible = false;
       },
       //退出登录
       logout() {
@@ -243,16 +218,6 @@ export default {
 }
 </script>
 <style scoped>
-/*.fade-enter-active,
-.fade-leave-active {
-  transition: opacity .5s
-}
-
-.fade-enter,
-.fade-leave-active {
-  opacity: 0
-}*/
-
 .fadeOut-enter-active {
   animation: fadeOut 1.5s;
 }
@@ -302,14 +267,6 @@ export default {
   left: 160px;
   overflow-y: scroll;
   padding: 20px;
-}
-
-.logout {
-  background: url(../assets/logo.png);
-  background-size: contain;
-  width: 20px;
-  height: 20px;
-  float: left;
 }
 
 .logo {

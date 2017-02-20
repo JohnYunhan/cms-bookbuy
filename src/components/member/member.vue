@@ -7,9 +7,9 @@
       <el-table :data="tableData" v-loading.table="loading" border align="center" style="width:100%">
         <el-table-column prop="Nick" label="昵称">
         </el-table-column>
-        <el-table-column prop="Mobile" label="手机">
-        </el-table-column>
         <el-table-column prop="Name" label="姓名">
+        </el-table-column>
+        <el-table-column prop="Mobile" label="手机">
         </el-table-column>
         <el-table-column prop="Email" label="邮箱">
         </el-table-column>
@@ -123,7 +123,6 @@ export default {
     },
     sizeChange(val) {
       this.pageSize = val;
-      console.log(val)
       this.getMember(this.currentPage - 1, val, "", "");
     },
     currentChange(val) {
@@ -142,4 +141,8 @@ export default {
 }
 </script>
 <style scoped>
+footer {
+  margin-left: 5px;
+  margin-bottom: 10px;
+}
 </style>
