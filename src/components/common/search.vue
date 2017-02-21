@@ -44,7 +44,7 @@ export default {
           break;
         case "book":
           {
-            this.$emit("addbook", this.addItem);
+            this.$emit("addBook", true);
           }
           break;
       }
@@ -56,11 +56,11 @@ export default {
             this.$emit("searchMember", this.searchType, this.searchKey);
           }
           break;
-          // case "book":
-          //   {
-          //     this.$emit("getBook", this.searchItem);
-          //   }
-          //   break;
+        case "book":
+          {
+            this.$emit("searchBook", this.searchType, this.searchKey);
+          }
+          break;
           // case "order":
           //   {
           //     this.$emit("getOrder", this.searchItem);
@@ -75,11 +75,11 @@ export default {
             this.$emit("getMember", 0, 10, "", "");
           }
           break;
-          // case "book":
-          //   {
-          //     this.$emit("getBook", 0, 10, "", "");
-          //   }
-          //   break;
+        case "book":
+          {
+            this.$emit("getBook", 0, 10, "", "", "", "");
+          }
+          break;
           // case "order":
           //   {
           //     this.$emit("getOrder", 0, 10, "", "");

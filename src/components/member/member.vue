@@ -4,7 +4,7 @@
       <search :haveAdd="have" :searchList="list" :source="source" :defaultValue="searchType" @addMember="addMember" @searchMember="searchMember" @getMember="getMember"></search>
     </header>
     <section style="padding:0 20px 20px">
-      <el-table :data="tableData" v-loading.table="loading" border align="center" style="width:100%">
+      <el-table :data="tableData" border align="center" style="width:100%">
         <el-table-column prop="Nick" label="昵称">
         </el-table-column>
         <el-table-column prop="Name" label="姓名">
@@ -53,7 +53,7 @@ export default {
       source: "member", //搜索种类
       searchType: "Nick", //默认的搜索类型
       tableData: [],
-      loading: true,
+      // loading: true,
       totalCount: 0, //数据总量
       currentPage: 1, //当前页码
       pageSize: 1, //每页的数据量
@@ -97,7 +97,7 @@ export default {
               _this.tableData.push(item);
             }
           }
-          _this.loading = false;
+          // _this.loading = false;
         } else {
           console.log(result)
         }

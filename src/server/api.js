@@ -187,9 +187,7 @@ router.post('/addBook', function(req, res, next) {
     ListPrice: parseFloat(req.body.ListPrice),
     SellPrice: parseFloat(req.body.SellPrice),
     Count: parseInt(req.body.Count),
-    ClickCount: parseInt(req.body.ClickCount),
-    IsRecommend: parseInt(req.body.IsRecommend),
-    IsSoldOut: parseInt(req.body.IsSoldOut)
+    IsRecommend: parseInt(req.body.IsRecommend)
   });
   Books.addBook(json).then(result => {
     res.send({ Data: result, Message: "执行成功", Code: 200 });
@@ -285,6 +283,7 @@ router.post('/addPress', function(req, res, next) {
   let json = new Presses({
     Name: req.body.Name
   });
+  console.log(json)
   Presses.addPress(json).then(result => {
     res.send({ Data: result, Message: "执行成功", Code: 200 });
   }).catch(error => {

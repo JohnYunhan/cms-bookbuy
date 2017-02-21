@@ -11,7 +11,7 @@ let Book = mongoose.Schema({
     unique: true,
     index: true,
     default: uniqid("book")
-  }, //读者id
+  },
   Name: {
     type: String,
     required: true,
