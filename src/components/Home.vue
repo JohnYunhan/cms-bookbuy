@@ -179,6 +179,10 @@ export default {
             }).then(res => res.json()).then(result => {
               if (result.Code === 200) {
                 _this.updatePwdClose();
+                _this.$message({
+                  message: '修改成功',
+                  type: 'success'
+                });
               } else {
                 console.log(result)
               }

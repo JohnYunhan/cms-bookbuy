@@ -171,28 +171,29 @@ Admin.statics.setAdminPassword = function(json, oldpwd) {
   return new Promise((resolve, reject) => {
     console.log(oldpwd)
     console.log(json)
-    encryptJSON(oldpwd).then(opwd => {
-      console.log(opwd)
-      let query = this.findOne({ Id: json.Id });
-      query.exec((error, result) => {
-        if (!error) {
-          console.log(result)
-          console.log(opwd)
-          if (result.Password === opwd) {
-            encryptJSON(json.Password).then(newpwd => {
-              result.Password = newpwd;
-              result.UpdateDate = json.UpdateDate;
-              result.save((error, res) => {
-                resolve(res);
+    let query = this.findOne({ Id: json.Id });
+    query.exec((error, result) => {
+      if (!error) {
+        if (result) {
+          decryptJSON(oldpwd, result.Password).then(pass => {
+            if (pass) {
+              encryptJSON(json.Password).then(newpwd => {
+                result.Password = newpwd;
+                result.UpdateDate = json.UpdateDate;
+                result.save((error, res) => {
+                  resolve(res);
+                })
               })
-            })
-          } else {
-            reject({ Message: "旧密码不正确", Code: 401 });
-          }
+            } else {
+              reject({ Message: "旧密码不正确", Code: 401 });
+            }
+          })
         } else {
           reject({ Message: "服务器错误，请稍后再试", Code: 400 });
         }
-      })
+      } else {
+        reject({ Message: "服务器错误，请稍后再试", Code: 400 });
+      }
     })
   })
 }
