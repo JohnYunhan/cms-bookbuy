@@ -175,13 +175,14 @@ Book.statics.getBookList = function(json) {
 //根据Id获取图书
 Book.statics.getBookById = function(Id) {
   return new Promise((resolve, reject) => {
+    console.log(Id)
     let query = this.findOne({ Id: Id });
     query.exec((error, result) => {
       if (result) {
         resolve(result);
       } else {
-        // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
-        reject(error);
+        reject({ Message: "服务器错误，请稍后再试", Code: 400 });
+        // reject(error);
       }
     })
   })

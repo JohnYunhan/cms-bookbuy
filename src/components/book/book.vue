@@ -3,7 +3,7 @@
     <header v-show="!openForm">
       <search :haveAdd="have" :searchList="list" :source="source" :defaultValue="searchType" @addBook="addBook" @searchBook="searchBook" @getBook="getBook"></search>
     </header>
-    <section v-if="!openForm" style="padding:0 20px 20px">
+    <section v-if="!openForm" style="padding:0 20px 10px">
       <el-table :data="tableData" border align="center" style="width:100%">
         <!-- <el-table-column prop="Id" label="ID">
         </el-table-column> -->
@@ -53,12 +53,12 @@
         </el-table-column> -->
         <el-table-column prop="" label="操作">
           <template scope="scope">
-            <el-button type="text" @click="editBook(scope.$index, scope.row)" size="small">编辑</el-button>
+            <el-button type="text" @click="editBook(scope.row)" size="small">编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
       <section>
-        <el-pagination @size-change="sizeChange" @current-change="currentChange" :current-page="currentPage" :page-sizes="[1, 2, 3, 4]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
+        <el-pagination style="padding:0;margin-top:10px;margin-left:-10px" @size-change="sizeChange" @current-change="currentChange" :current-page="currentPage" :page-sizes="[1, 2, 3, 4]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
         </el-pagination>
       </section>
     </section>
@@ -292,17 +292,20 @@ export default {
       },
       sizeChange(val) {
         this.pageSize = val;
-        this.getBook(this.currentPage - 1, val, "", "");
+        this.getBook(this.currentPage - 1, val, "", "", "", "");
       },
       currentChange(val) {
         this.currentPage = val;
         this.getBook(val - 1, this.pageSize, "", "", "", "");
       },
-      editBook() {},
+      editBook(row) {
+        // this.openForm = true;
+        row = JSON.parse(JSON.stringify(row));
+
+      },
       addBook(isOpen) {
         if (isOpen) {
           this.openForm = true;
-
         }
       },
       //保存添加的图书

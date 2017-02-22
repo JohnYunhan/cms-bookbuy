@@ -140,6 +140,17 @@ router.post('/getUserList', function(req, res, next) {
   })
 });
 
+//根据Id获取会员
+router.get('/getUserById', function(req, res, next) {
+  let Id = req.query.Id;
+  console.log(Id)
+  Users.getUserById(Id).then(result => {
+    res.send({ Data: result, Message: "执行成功", Code: 200 });
+  }).catch(error => {
+    res.send({ Message: error.Message, Code: error.Code });
+  })
+});
+
 //加入或解除黑名单(会员)
 router.post('/setUserValid', function(req, res, next) {
   let json = new Users({
@@ -166,6 +177,17 @@ router.post('/getBookList', function(req, res, next) {
   });
   Books.getBookList(json).then(result => {
     res.send({ Data: result.Data, TotalCount: result.TotalCount, Message: "执行成功", Code: 200 });
+  }).catch(error => {
+    res.send({ Message: error.Message, Code: error.Code });
+  })
+});
+
+//根据Id获取图书
+router.get('/getBookById', function(req, res, next) {
+  let Id = req.query.Id;
+  console.log(Id)
+  Books.getBookById(Id).then(result => {
+    res.send({ Data: result, Message: "执行成功", Code: 200 });
   }).catch(error => {
     res.send({ Message: error.Message, Code: error.Code });
   })
@@ -238,13 +260,12 @@ router.post('/delBook', function(req, res, next) {
 //获取订单列表
 router.post('/getOrderList', function(req, res, next) {
   let json = new Orders({
-    Index: req.body.Index,
-    Size: req.body.Size,
+    Id: req.body.OrderId,
     UserId: req.body.UserId,
     Status: req.body.Status
   });
-  Orders.getOrderList(json).then(result => {
-    res.send({ Data: result, Message: "执行成功", Code: 200 });
+  Orders.getOrderList(req.body.Index, req.body.Size, json).then(result => {
+    res.send({ Data: result.Data, TotalCount: result.TotalCount, Message: "执行成功", Code: 200 });
   }).catch(error => {
     res.send({ Message: error.Message, Code: error.Code });
   })
@@ -263,7 +284,24 @@ router.post('/setOrderStatus', function(req, res, next) {
     res.send({ Message: error.Message, Code: error.Code });
   })
 });
-
+//新增订单（下单）
+router.post('/addOrder', function(req, res, next) {
+  let json = new Orders({
+    Id: req.body.OrderId,
+    BookId: req.body.BookId,
+    UserId: req.body.UserId,
+    Count: req.body.Count,
+    Total: req.body.Total,
+    Name: req.body.Name,
+    Mobile: req.body.Mobile,
+    Address: req.body.Address
+  });
+  Orders.addOrder(json).then(result => {
+    res.send({ Data: result, Message: "执行成功", Code: 200 });
+  }).catch(error => {
+    res.send({ Message: error.Message, Code: error.Code });
+  })
+});
 //获取出版社列表
 router.post('/getPressList', function(req, res, next) {
   let json = new Presses({

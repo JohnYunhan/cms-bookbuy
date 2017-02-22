@@ -61,11 +61,11 @@ export default {
             this.$emit("searchBook", this.searchType, this.searchKey);
           }
           break;
-          // case "order":
-          //   {
-          //     this.$emit("getOrder", this.searchItem);
-          //   }
-          //   break;
+        case "order":
+          {
+            this.$emit("searchOrder", this.searchType, this.searchKey);
+          }
+          break;
       }
     },
     refresh() {
@@ -80,11 +80,11 @@ export default {
             this.$emit("getBook", 0, 10, "", "", "", "");
           }
           break;
-          // case "order":
-          //   {
-          //     this.$emit("getOrder", 0, 10, "", "");
-          //   }
-          //   break;
+        case "order":
+          {
+            this.$emit("getOrder", 0, 10, "", "", "");
+          }
+          break;
       }
     },
   }
