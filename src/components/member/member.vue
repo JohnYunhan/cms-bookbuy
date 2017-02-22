@@ -109,7 +109,7 @@ export default {
       console.log(addItem);
     },
     searchMember(type, key) {
-      this.loading = true;
+      // this.loading = true;
       if (type === "Nick") {
         this.getMember(0, 10, key, "");
       } else if (type === "Mobile") {

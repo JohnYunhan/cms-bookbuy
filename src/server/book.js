@@ -128,31 +128,46 @@ Book.statics.getHotBook = function(json) {
 Book.statics.getBookList = function(json) {
   return new Promise((resolve, reject) => {
     let query = "";
+    let total = 0;
     if (json.Name !== "") {
       //根据图书名称搜索
-      query = this.find({ Name: /json.Name/ })
+      let name = new RegExp(json.Name); //创建正则表达式
+      query = this.find({ Name: { $regex: name } });
+      total = this.find({ Name: { $regex: name } }).count();
     } else if (json.Author !== "") {
       //根据图书作者搜索
-      query = this.find({ Author: /json.Author/ })
+      let author = new RegExp(json.Author);
+      query = this.find({ Author: { $regex: author } });
+      total = this.find({ Author: { $regex: author } }).count();
     } else if (json.Press !== "") {
       //根据出版社搜索
-      query = this.find({ Press: /json.Press/ })
+      let press = new RegExp(json.Press);
+      query = this.find({ Press: { $regex: press } });
+      total = this.find({ Press: { $regex: press } }).count();
     } else if (json.Category !== "") {
       //根据分类搜索
-      query = this.find({ Category: /json.Category/ })
+      let category = new RegExp(json.Category);
+      query = this.find({ Category: { $regex: category } });
+      total = this.find({ Category: { $regex: category } }).count();
     } else {
       query = this.find();
+      total = this.count();
       query.sort({ UpdateDate: -1 }); //根据添加日期倒序
       query.skip(json.Index * json.Size); //跳过多少个数据
       query.limit(json.Size); //限制Size条数据
     }
     query.exec((error, result) => {
-      if (!error) {
-        resolve(result);
-      } else {
-        reject(error);
-        // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
-      }
+      total.exec((error, res) => {
+        if (!error) {
+          resolve({
+            Data: result,
+            TotalCount: res
+          });
+        } else {
+          // reject(error);
+          reject({ Message: "服务器错误，请稍后再试", Code: 400 });
+        }
+      })
     })
   })
 }

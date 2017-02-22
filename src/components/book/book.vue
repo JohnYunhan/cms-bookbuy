@@ -5,8 +5,8 @@
     </header>
     <section v-if="!openForm" style="padding:0 20px 20px">
       <el-table :data="tableData" border align="center" style="width:100%">
-        <el-table-column prop="Id" label="ID">
-        </el-table-column>
+        <!-- <el-table-column prop="Id" label="ID">
+        </el-table-column> -->
         <el-table-column prop="Name" label="书名">
         </el-table-column>
         <el-table-column prop="Author" label="作者">
@@ -53,7 +53,7 @@
         </el-table-column> -->
         <el-table-column prop="" label="操作">
           <template scope="scope">
-            <el-button type="text" @click="editMember(scope.$index, scope.row)" size="small">编辑</el-button>
+            <el-button type="text" @click="editBook(scope.$index, scope.row)" size="small">编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -75,14 +75,14 @@
             </el-form-item>
             <el-form-item label="类别" prop="Category">
               <el-select v-model="ruleForm.Category" placeholder="请选择类别">
-                <el-option label="计算机" value="category2ds5a29oizforoc6"></el-option>
-                <el-option label="教材" value=""></el-option>
+                <el-option label="计算机" value="计算机"></el-option>
+                <el-option label="教材" value="教材"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="出版社" prop="Press">
               <el-select v-model="ruleForm.Press" placeholder="请选择出版社">
-                <el-option label="机械工业出版社" value="press2ds5a6foizfo47eu"></el-option>
-                <el-option label="清华大学出版社" value=""></el-option>
+                <el-option label="机械工业出版社" value="机械工业出版社"></el-option>
+                <el-option label="人民邮电出版社" value="人民邮电出版社"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="出版日期" prop="PublishDate">
@@ -142,7 +142,7 @@ export default {
         }], //搜索类型
         have: true, //是否有添加功能
         source: "book", //搜索种类
-        searchType: "书名", //默认的搜索类型
+        searchType: "Name", //默认的搜索类型
         tableData: [],
         // loading: true,
         totalCount: 0, //数据总量
@@ -277,8 +277,18 @@ export default {
           console.log(error)
         })
       },
-      searchBook(searchItem) {
-        console.log(searchItem);
+      searchBook(type, key) {
+        if (type === "Name") {
+          this.getBook(0, 10, key, "", "", "");
+        } else if (type === "Author") {
+          this.getBook(0, 10, "", key, "", "");
+        } else if (type === "Category") {
+          this.getBook(0, 10, "", "", key, "");
+        } else if (type === "Press") {
+          this.getBook(0, 10, "", "", "", key);
+        } else {
+          this.getBook(0, 10, "", "", "", "");
+        }
       },
       sizeChange(val) {
         this.pageSize = val;
@@ -288,6 +298,7 @@ export default {
         this.currentPage = val;
         this.getBook(val - 1, this.pageSize, "", "", "", "");
       },
+      editBook() {},
       addBook(isOpen) {
         if (isOpen) {
           this.openForm = true;
@@ -325,32 +336,32 @@ export default {
         })
       },
       Close() {
-        // this.openForm = false;
-        // this.$refs[ruleForm].resetFields();
-        var _this = this;
-        var data = {
-          Name: "教材"
-        }
-        data = JSON.stringify(data);
-        fetch("/api/addCategory", {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            'Content-Type': "application/json"
-          },
-          body: data
-        }).then(res => res.json()).then(result => {
-          if (result.Code === 200) {
-            _this.$message({
-              message: '新增成功',
-              type: 'success'
-            });
-          } else {
-            console.log(result)
-          }
-        }).catch(error => {
-          console.log(error)
-        })
+        this.openForm = false;
+        this.$refs["ruleForm"].resetFields();
+        // var _this = this;
+        // var data = {
+        //   Name: "教材"
+        // }
+        // data = JSON.stringify(data);
+        // fetch("/api/addCategory", {
+        //   method: "POST",
+        //   credentials: "include",
+        //   headers: {
+        //     'Content-Type': "application/json"
+        //   },
+        //   body: data
+        // }).then(res => res.json()).then(result => {
+        //   if (result.Code === 200) {
+        //     _this.$message({
+        //       message: '新增成功',
+        //       type: 'success'
+        //     });
+        //   } else {
+        //     console.log(result)
+        //   }
+        // }).catch(error => {
+        //   console.log(error)
+        // })
       },
     },
     components: {

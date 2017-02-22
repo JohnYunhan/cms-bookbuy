@@ -165,7 +165,7 @@ router.post('/getBookList', function(req, res, next) {
     Category: req.body.Category
   });
   Books.getBookList(json).then(result => {
-    res.send({ Data: result, Message: "执行成功", Code: 200 });
+    res.send({ Data: result.Data, TotalCount: result.TotalCount, Message: "执行成功", Code: 200 });
   }).catch(error => {
     res.send({ Message: error.Message, Code: error.Code });
   })

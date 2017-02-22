@@ -123,8 +123,8 @@ User.statics.getUserList = function(json, index, size) {
             TotalCount: res
           });
         } else {
-          reject(error);
-          // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
+          // reject(error);
+          reject({ Message: "服务器错误，请稍后再试", Code: 400 });
         }
       });
     })
