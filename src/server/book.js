@@ -10,7 +10,7 @@ let Book = mongoose.Schema({
     type: String,
     unique: true,
     index: true,
-    default: uniqid("book")
+    // default: uniqid("book")
   },
   Name: {
     type: String,
@@ -190,6 +190,7 @@ Book.statics.getBookById = function(Id) {
 //增加图书
 Book.statics.addBook = function(json) {
   return new Promise((resolve, reject) => {
+    json.Id = uniqid("book");
     json.save((error, res) => {
       if (!error) {
         resolve(res);

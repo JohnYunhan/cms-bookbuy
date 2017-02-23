@@ -8,6 +8,7 @@ let Modules = require("./module");
 let Orders = require("./order");
 let Presses = require("./press");
 let Categorys = require("./category");
+let Pictures = require("./picture");
 let jwt = require('jsonwebtoken');
 const jwtSecret = "zcvaetmbnhgpwegdfvcmghsdpdj"; //jwt密钥
 
@@ -168,14 +169,12 @@ router.post('/setUserValid', function(req, res, next) {
 //获取图书列表
 router.post('/getBookList', function(req, res, next) {
   let json = new Books({
-    Index: req.body.Index,
-    Size: req.body.Size,
     Name: req.body.Name,
     Author: req.body.Author,
     Press: req.body.Press,
     Category: req.body.Category
   });
-  Books.getBookList(json).then(result => {
+  Books.getBookList(req.body.Index, req.body.Size, json).then(result => {
     res.send({ Data: result.Data, TotalCount: result.TotalCount, Message: "执行成功", Code: 200 });
   }).catch(error => {
     res.send({ Message: error.Message, Code: error.Code });
@@ -305,11 +304,11 @@ router.post('/addOrder', function(req, res, next) {
 //获取出版社列表
 router.post('/getPressList', function(req, res, next) {
   let json = new Presses({
-    Index: req.body.Index,
-    Size: req.body.Size,
     Name: req.body.Name
   });
-  Presses.getPressList(json).then(result => {
+  let size = req.body.Size;
+  let index = req.body.Index;
+  Presses.getPressList(index, size, json).then(result => {
     res.send({ Data: result, Message: "执行成功", Code: 200 });
   }).catch(error => {
     res.send({ Message: error.Message, Code: error.Code });
@@ -356,11 +355,11 @@ router.post('/setPress', function(req, res, next) {
 //获取轮播图列表
 router.post('/getPictureList', function(req, res, next) {
   let json = new Pictures({
-    Index: req.body.Index,
-    Size: req.body.Size,
     Name: req.body.Name
   });
-  Pictures.getPictureList(json).then(result => {
+  let size = req.body.Size;
+  let index = req.body.Index;
+  Pictures.getPictureList(index, size, json).then(result => {
     res.send({ Data: result.Data, TotalCount: result.TotalCount, Message: "执行成功", Code: 200 });
   }).catch(error => {
     res.send({ Message: error.Message, Code: error.Code });
@@ -370,7 +369,9 @@ router.post('/getPictureList', function(req, res, next) {
 //新增轮播图
 router.post('/addPicture', function(req, res, next) {
   let json = new Pictures({
-    Name: req.body.Name
+    Name: req.body.Name,
+    Url: req.body.Url,
+    Status: parseInt(req.body.Status)
   });
   Pictures.addPicture(json).then(result => {
     res.send({ Data: result, Message: "执行成功", Code: 200 });
@@ -394,6 +395,8 @@ router.post('/setPicture', function(req, res, next) {
   let json = new Pictures({
     Id: req.body.Id,
     Name: req.body.Name,
+    Url: req.body.Url,
+    Status: parseInt(req.body.Status),
     UpdateDate: Date.now()
   });
   Pictures.setPicture(json).then(result => {

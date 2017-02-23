@@ -11,7 +11,7 @@ let User = mongoose.Schema({
     type: String,
     unique: true,
     index: true,
-    default: uniqid("user")
+    // default: uniqid("user")
   }, //会员id
   Nick: {
     type: String,
@@ -149,6 +149,7 @@ User.statics.getUserById = function(Id) {
 // 新增会员
 User.statics.addUser = function(json) {
   return new Promise((resolve, reject) => {
+    json.Id = uniqid("user");
     encryptJSON(json.Password).then(result => {
       json.Password = result;
       json.save((error, res) => {

@@ -47,6 +47,11 @@ export default {
             this.$emit("addBook", true);
           }
           break;
+        case "picture":
+          {
+            this.$emit("addPicture", );
+          }
+          break;
       }
     },
     search() {
@@ -66,6 +71,11 @@ export default {
             this.$emit("searchOrder", this.searchType, this.searchKey);
           }
           break;
+        case "picture":
+          {
+            this.$emit("searchPicture", this.searchType, this.searchKey);
+          }
+          break;
       }
     },
     refresh() {
@@ -83,6 +93,11 @@ export default {
         case "order":
           {
             this.$emit("getOrder", 0, 10, "", "", "");
+          }
+          break;
+        case "picture":
+          {
+            this.$emit("getPicture", 0, 10, "");
           }
           break;
       }

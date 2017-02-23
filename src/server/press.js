@@ -10,7 +10,7 @@ let Press = mongoose.Schema({
     type: String,
     unique: true,
     index: true,
-    default: uniqid("press")
+    // default: uniqid("press")
   }, //出版社id
   Name: {
     type: String,
@@ -69,6 +69,7 @@ Press.statics.getPressById = function(pressId) {
 //新增出版社
 Press.statics.addPress = function(json) {
   return new Promise((resolve, reject) => {
+    json.Id = uniqid("press");
     json.save((error, res) => {
       if (!error) {
         resolve(res); //新增的数据

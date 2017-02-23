@@ -200,38 +200,38 @@ export default {
       sizeChange(val) {
         this.pageSize = val;
         this.getOrder(this.currentPage - 1, val, "", "");
-        var _this = this;
-        var data = {
-          OrderId: "20170220213216",
-          BookId: ["book2ds5a29oizforobk", "book2ds5a53sizg6jaux"],
-          BookName: ["Node.js权威指南", "JavaScript DOM编程艺术"]
-          UserId: "user2ds5a7fciz9rryos",
-          Count: [2, 1],
-          Total: "179.3",
-          Name: "刘云汉",
-          Mobile: "13361642438",
-          Address: "紫阳大道99号"
-        }
-        data = JSON.stringify(data);
-        fetch("/api/addOrder", {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            'Content-Type': "application/json"
-          },
-          body: data
-        }).then(res => res.json()).then(result => {
-          if (result.Code === 200) {
-            _this.$message({
-              message: '新增成功',
-              type: 'success'
-            });
-          } else {
-            console.log(result)
-          }
-        }).catch(error => {
-          console.log(error)
-        })
+        // var _this = this;
+        // var data = {
+        //   OrderId: "20170220213216",
+        //   BookId: ["book2ds5a29oizforobk", "book2ds5a53sizg6jaux"],
+        //   BookName: ["Node.js权威指南", "JavaScript DOM编程艺术"]
+        //   UserId: "user2ds5a7fciz9rryos",
+        //   Count: [2, 1],
+        //   Total: "179.3",
+        //   Name: "刘云汉",
+        //   Mobile: "13361642438",
+        //   Address: "紫阳大道99号"
+        // }
+        // data = JSON.stringify(data);
+        // fetch("/api/addOrder", {
+        //   method: "POST",
+        //   credentials: "include",
+        //   headers: {
+        //     'Content-Type': "application/json"
+        //   },
+        //   body: data
+        // }).then(res => res.json()).then(result => {
+        //   if (result.Code === 200) {
+        //     _this.$message({
+        //       message: '新增成功',
+        //       type: 'success'
+        //     });
+        //   } else {
+        //     console.log(result)
+        //   }
+        // }).catch(error => {
+        //   console.log(error)
+        // })
       },
       currentChange(val) {
         this.currentPage = val;

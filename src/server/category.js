@@ -10,7 +10,7 @@ let Category = mongoose.Schema({
     type: String,
     unique: true,
     index: true,
-    default: uniqid("category")
+    // default: uniqid("category")
   }, //类别id
   Name: {
     type: String,
@@ -69,6 +69,7 @@ Category.statics.getCategoryById = function(categoryId) {
 //新增类别
 Category.statics.addCategory = function(json) {
   return new Promise((resolve, reject) => {
+    json.Id = uniqid("category");
     json.save((error, res) => {
       if (!error) {
         resolve(res); //新增的数据

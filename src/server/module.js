@@ -10,7 +10,7 @@ let Module = mongoose.Schema({
     type: String,
     unique: true,
     index: true,
-    default: uniqid("module")
+    // default: uniqid("module")
   }, //模块id
   Name: {
     type: String,
@@ -69,6 +69,7 @@ Module.statics.getModuleById = function(ModuleId) {
 //新增管理模块
 Module.statics.addModule = function(json) {
   return new Promise((resolve, reject) => {
+    json.Id = uniqid("module");
     json.save((error, res) => {
       if (!error) {
         resolve(res); //新增的数据

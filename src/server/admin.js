@@ -12,7 +12,7 @@ let Admin = mongoose.Schema({
     type: String,
     unique: true,
     index: true,
-    default: uniqid("admin")
+    // default: uniqid("admin")
   }, //管理员id
   RoleId: {
     type: String,
@@ -111,6 +111,7 @@ Admin.statics.getAdminList = function(json) {
 //新增管理员
 Admin.statics.addAdmin = function(json) {
   return new Promise((resolve, reject) => {
+    json.Id = uniqid("admin");
     encryptJSON(json.Password).then(result => {
       json.Password = result;
       json.save((error, res) => {

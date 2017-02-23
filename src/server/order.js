@@ -120,6 +120,7 @@ Order.statics.getOrderById = function(Id) {
 // 新增订单(确认下单)
 Order.statics.addOrder = function(json) {
   return new Promise((resolve, reject) => {
+    json.Id = uniqid("order");
     json.save((error, res) => {
       if (!error) {
         resolve(res);

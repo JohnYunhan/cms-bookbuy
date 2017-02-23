@@ -10,7 +10,7 @@ let Role = mongoose.Schema({
     type: String,
     unique: true,
     index: true,
-    default: uniqid("role")
+    // default: uniqid("role")
   }, //角色id
   Name: {
     type: String,
@@ -81,6 +81,7 @@ Role.statics.getModulesById = function(RoleId) {
 //新增管理角色
 Role.statics.addRole = function(json) {
   return new Promise((resolve, reject) => {
+    json.Id = uniqid("role");
     json.save((error, res) => {
       if (!error) {
         resolve(res); //新增的数据
