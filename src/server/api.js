@@ -353,6 +353,56 @@ router.post('/setPress', function(req, res, next) {
   })
 });
 
+//获取轮播图列表
+router.post('/getPictureList', function(req, res, next) {
+  let json = new Pictures({
+    Index: req.body.Index,
+    Size: req.body.Size,
+    Name: req.body.Name
+  });
+  Pictures.getPictureList(json).then(result => {
+    res.send({ Data: result.Data, TotalCount: result.TotalCount, Message: "执行成功", Code: 200 });
+  }).catch(error => {
+    res.send({ Message: error.Message, Code: error.Code });
+  })
+});
+
+//新增轮播图
+router.post('/addPicture', function(req, res, next) {
+  let json = new Pictures({
+    Name: req.body.Name
+  });
+  Pictures.addPicture(json).then(result => {
+    res.send({ Data: result, Message: "执行成功", Code: 200 });
+  }).catch(error => {
+    res.send({ Message: error.Message, Code: error.Code });
+  })
+});
+
+//删除轮播图
+router.post('/delPicture', function(req, res, next) {
+  let Id = req.body.Id;
+  Pictures.delPicture(Id).then(result => {
+    res.send({ Data: result, Message: "执行成功", Code: 200 });
+  }).catch(error => {
+    res.send({ Message: error.Message, Code: error.Code });
+  })
+});
+
+//修改轮播图
+router.post('/setPicture', function(req, res, next) {
+  let json = new Pictures({
+    Id: req.body.Id,
+    Name: req.body.Name,
+    UpdateDate: Date.now()
+  });
+  Pictures.setPicture(json).then(result => {
+    res.send({ Data: result, Message: "执行成功", Code: 200 });
+  }).catch(error => {
+    res.send({ Message: error.Message, Code: error.Code });
+  })
+});
+
 //获取类别列表
 router.post('/getCategoryList', function(req, res, next) {
   let json = new Categorys({
