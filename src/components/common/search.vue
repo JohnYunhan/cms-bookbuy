@@ -44,12 +44,12 @@ export default {
           break;
         case "book":
           {
-            this.$emit("addBook", true);
+            this.$emit("addBook");
           }
           break;
         case "picture":
           {
-            this.$emit("addPicture", );
+            this.$emit("addPicture");
           }
           break;
       }

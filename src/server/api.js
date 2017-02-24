@@ -234,7 +234,6 @@ router.post('/setBook', function(req, res, next) {
     ListPrice: parseFloat(req.body.ListPrice),
     SellPrice: parseFloat(req.body.SellPrice),
     Count: parseInt(req.body.Count),
-    ClickCount: parseInt(req.body.ClickCount),
     IsRecommend: parseInt(req.body.IsRecommend),
     IsSoldOut: parseInt(req.body.IsSoldOut),
     UpdateDate: Date.now()

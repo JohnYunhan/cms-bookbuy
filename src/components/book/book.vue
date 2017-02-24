@@ -4,58 +4,100 @@
       <search :haveAdd="have" :searchList="list" :source="source" :defaultValue="searchType" @addBook="addBook" @searchBook="searchBook" @getBook="getBook"></search>
     </header>
     <section v-if="!openForm" style="padding:0 20px 10px">
-      <el-table :data="tableData" border align="center" style="width:100%">
-        <!-- <el-table-column prop="Id" label="ID">
-        </el-table-column> -->
-        <el-table-column prop="Name" label="书名">
+      <el-table :data="tableData" style="width: 100%">
+        <el-table-column type="expand">
+          <template scope="props">
+            <el-form label-position="left" inline class="table-expand">
+              <el-form-item label="ID">
+                <span>{{ props.row.Id }}</span>
+              </el-form-item>
+              <el-form-item label="名称">
+                <span>{{ props.row.Name }}</span>
+              </el-form-item>
+              <el-form-item label="作者">
+                <span>{{ props.row.Author }}</span>
+              </el-form-item>
+              <el-form-item label="类别">
+                <span>{{ props.row.Category }}</span>
+              </el-form-item>
+              <el-form-item label="出版社">
+                <span>{{ props.row.Press }}</span>
+              </el-form-item>
+              <el-form-item label="出版日期">
+                <span>{{ props.row.PublishDate | subDate }}</span>
+              </el-form-item>
+              <el-form-item label="版次">
+                <span>{{ props.row.Edition }}</span>
+              </el-form-item>
+              <el-form-item label="ISBN">
+                <span>{{ props.row.ISBN }}</span>
+              </el-form-item>
+              <el-form-item label="字数">
+                <span>{{ props.row.WordsCount }}</span>
+              </el-form-item>
+              <el-form-item label="简介">
+                <span>{{ props.row.Abstract }}</span>
+              </el-form-item>
+              <el-form-item label="定价">
+                <span>{{ props.row.ListPrice }}</span>
+              </el-form-item>
+              <el-form-item label="售价">
+                <span>{{ props.row.SellPrice }}</span>
+              </el-form-item>
+              <el-form-item label="库存数量">
+                <span>{{ props.row.Count }}</span>
+              </el-form-item>
+              <el-form-item label="点击次数">
+                <span>{{ props.row.ClickCount }}</span>
+              </el-form-item>
+              <el-form-item label="推荐">
+                <template scope="scope">
+                  <span v-if="props.row.IsRecommend===1">是</span>
+                  <span v-else>否</span>
+                </template>
+              </el-form-item>
+              <el-form-item label="下架">
+                <template scope="scope">
+                  <span v-if="props.row.IsSoldOut===1">是</span>
+                  <span v-else>否</span>
+                </template>
+              </el-form-item>
+              <el-form-item label="上架日期">
+                <span>{{ props.row.CreateDate | shiftDate }}</span>
+              </el-form-item>
+              <el-form-item label="更新日期">
+                <span>{{ props.row.UpdateDate | shiftDate }}</span>
+              </el-form-item>
+            </el-form>
+          </template>
         </el-table-column>
-        <el-table-column prop="Author" label="作者">
+        <el-table-column align="center" label="名称" prop="Name">
         </el-table-column>
-        <el-table-column prop="Category" label="类别">
+        <el-table-column align="center" label="作者" prop="Author">
         </el-table-column>
-        <el-table-column prop="Press" label="出版社">
+        <el-table-column align="center" label="类别" prop="Category">
         </el-table-column>
-        <!--  <el-table-column prop="PublishDate" label="出版日期">
+        <el-table-column align="center" label="出版社" prop="Press">
         </el-table-column>
-        <el-table-column prop="Edition" label="版次">
+        <el-table-column align="center" label="库存数量" prop="Count">
         </el-table-column>
-        <el-table-column prop="ISBN" label="ISBN">
+        <el-table-column align="center" label="点击次数" prop="ClickCount">
         </el-table-column>
-        <el-table-column prop="WordsCount" label="字数">
-        </el-table-column>
-        <el-table-column prop="Abstract" label="简介">
-        </el-table-column> -->
-        <!-- <el-table-column prop="Image" label="图片">
-        </el-table-column>
-        <el-table-column prop="ListPrice" label="定价">
-        </el-table-column>
-        <el-table-column prop="SellPrice" label="售价">
-        </el-table-column> -->
-        <el-table-column prop="Count" label="库存数量">
-        </el-table-column>
-        <el-table-column prop="ClickCount" label="点击次数">
-        </el-table-column>
-        <el-table-column label="推荐">
+        <el-table-column align="center" label="推荐">
           <template scope="scope">
             <span v-if="scope.row.IsRecommend===1">是</span>
             <span v-else>否</span>
           </template>
         </el-table-column>
-        <el-table-column label="下架">
+        <el-table-column align="center" label="下架">
           <template scope="scope">
             <span v-if="scope.row.IsSoldOut===1">是</span>
             <span v-else>否</span>
           </template>
         </el-table-column>
-        <!-- <el-table-column prop="CreateDate" label="上架日期">
-        </el-table-column>
-        <el-table-column prop="UpdateDate" label="更新日期">
-        </el-table-column> -->
-        <el-table-column prop="" label="操作">
+        <el-table-column label="操作">
           <template scope="scope">
-            <!-- <el-button type="text" @click="editBook(scope.row)" size="small">编辑</el-button> -->
             <i class="fa fa-edit fa-lg" @click="editBook(scope.row)"></i>
-            <i class="fa fa-search fa-lg" @click="lookBookDetail(scope.row)"></i>
           </template>
         </el-table-column>
       </el-table>
@@ -67,9 +109,9 @@
     <section v-else>
       <el-row type="flex" justify="center">
         <el-col :span="9">
-          <h5 style="text-align: center;margin: 10px 0"><b>新增图书</b></h5>
+          <h5 style="text-align: center;margin: 10px 0"><b>{{title}}</b></h5>
           <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" style="">
-            <el-form-item label="图书名称" prop="Name" style="width: 318px;">
+            <el-form-item label="名称" prop="Name" style="width: 318px;">
               <el-input v-model="ruleForm.Name"></el-input>
             </el-form-item>
             <el-form-item label="作者" prop="Author" style="width: 318px;">
@@ -111,11 +153,14 @@
             <el-form-item label="数量" prop="Count">
               <el-input-number v-model="ruleForm.Count" :min="1" :max="999"></el-input-number>
             </el-form-item>
-            <el-form-item label="是否推荐" prop="IsRecommend">
-              <el-switch on-text="" off-text="" v-model="ruleForm.IsRecommend"></el-switch>
+            <el-form-item label="推荐">
+              <el-switch on-text="是" off-text="否" v-model="ruleForm.IsRecommend"></el-switch>
+            </el-form-item>
+            <el-form-item v-if="isEdit" label="下架">
+              <el-switch v-model="ruleForm.IsSoldOut"></el-switch>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="Save">保存</el-button>
+              <el-button type="primary" @click="Submit">保存</el-button>
               <el-button @click="Close">取消</el-button>
             </el-form-item>
           </el-form>
@@ -151,6 +196,7 @@ export default {
         currentPage: 1, //当前页码
         pageSize: 1, //每页的数据量
         openForm: false, //打开添加或编辑图书的表单
+        addItem: {},
         ruleForm: {
           Name: "",
           Author: "",
@@ -165,7 +211,8 @@ export default {
           SellPrice: "",
           Count: 1,
           IsRecommend: false,
-          Image: ["http://img3x6.ddimg.cn/82/5/23460706-1_w_1.jpg", "http://img3x6.ddimg.cn/82/5/23460706-1_x_1.jpg", "http://img3x6.ddimg.cn/82/5/23460706-1_u_1.jpg"]
+          Image: [],
+          IsSoldOut: 1,
         },
         rules: {
           Name: [{
@@ -229,11 +276,14 @@ export default {
             message: '请输入数量',
             trigger: 'blur'
           }]
-        }
+        },
+        title: "新增图书",
+        isEdit: true, //判断是否为编辑
       }
     },
     created() {
       this.getBook(0, 10, "", "", "", "");
+      this.addItem = this.ruleForm; //保存ruleForm的初始值
     },
     methods: {
       getBook(index, size, name, author, category, press) {
@@ -302,18 +352,32 @@ export default {
         this.getBook(val - 1, this.pageSize, "", "", "", "");
       },
       editBook(row) {
-        // this.openForm = true;
+        this.openForm = true;
+        this.title = "编辑图书";
+        this.isEdit = true;
         row = JSON.parse(JSON.stringify(row));
-
+        this.ruleForm = row;
+        // if (this.ruleForm.IsSoldOut == 0) {
+        //   this.ruleForm.IsSoldOut = false;
+        // } else {
+        //   this.ruleForm.IsSoldOut = true;
+        // }
       },
-      lookBookDetail(row) {},
-      addBook(isOpen) {
-        if (isOpen) {
-          this.openForm = true;
-        }
+      addBook() {
+        this.openForm = true;
+        this.isEdit = false;
+        this.title = "新增图书";
       },
       //保存添加的图书
-      Save() {
+      Submit() {
+        if (this.isEdit) {
+          this.submitEdit();
+        } else {
+          this.submitAdd();
+        }
+      },
+      //提交新增的图书
+      submitAdd() {
         var _this = this;
         if (this.ruleForm.IsRecommend) {
           this.ruleForm.IsRecommend = 1;
@@ -342,9 +406,45 @@ export default {
           console.log(error)
         })
       },
+      //提交编辑的图书
+      submitEdit() {
+        var _this = this;
+        if (this.ruleForm.IsRecommend) {
+          this.ruleForm.IsRecommend = 1;
+        } else {
+          this.ruleForm.IsRecommend = 0;
+        }
+        if (this.ruleForm.IsSoldOut) {
+          this.ruleForm.IsSoldOut = 1;
+        } else {
+          this.ruleForm.IsSoldOut = 0;
+        }
+        var data = JSON.stringify(this.ruleForm);
+        fetch("/api/setBook", {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            'Content-Type': "application/json"
+          },
+          body: data
+        }).then(res => res.json()).then(result => {
+          if (result.Code === 200) {
+            _this.Close();
+            _this.$message({
+              message: '编辑成功',
+              type: 'success'
+            });
+          } else {
+            console.log(result)
+          }
+        }).catch(error => {
+          console.log(error)
+        })
+      },
       Close() {
         this.openForm = false;
         this.$refs["ruleForm"].resetFields();
+        this.ruleForm = this.addItem; //将ruleForm初始化
         // var _this = this;
         // var data = {
         //   Name: "教材"
@@ -371,10 +471,35 @@ export default {
         // })
       },
     },
+    filters: {
+      //截取日期
+      subDate: function(date) {
+        return date.substring(0, 10);
+      },
+      //日期转换
+      shiftDate: function(date) {
+        date = new Date(date);
+        return date.toLocaleDateString();
+      },
+    },
     components: {
       search,
     }
 }
 </script>
 <style scoped>
+.table-expand {
+  font-size: 0;
+}
+
+.table-expand label {
+  width: 90px;
+  color: #99a9bf;
+}
+
+.table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 50%;
+}
 </style>
