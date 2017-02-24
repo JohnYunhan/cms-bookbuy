@@ -292,6 +292,7 @@ router.post('/addOrder', function(req, res, next) {
     BookName: req.body.BookName,
     UserId: req.body.UserId,
     Count: parseInt(req.body.Count),
+    Freight: parseFloat(req.body.Freight),
     Total: parseFloat(req.body.Total),
     Name: req.body.Name,
     Mobile: req.body.Mobile,

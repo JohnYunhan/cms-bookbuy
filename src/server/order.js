@@ -31,10 +31,10 @@ let Order = mongoose.Schema({
     type: Number,
     required: true,
   }, //订单数量
-  freight: {
+  Freight: {
     type: Number,
     required: true,
-  },
+  }, //运费
   Total: {
     type: Number,
     required: true,

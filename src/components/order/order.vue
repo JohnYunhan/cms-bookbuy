@@ -4,7 +4,7 @@
       <search :haveAdd="have" :searchList="list" :source="source" :defaultValue="searchType" @searchOrder="searchOrder" @getOrder="getOrder"></search>
     </header>
     <section style="padding:0 20px 20px">
-      <el-table :data="tableData" border style="width:100%">
+      <!-- <el-table :data="tableData" border style="width:100%">
         <el-table-column align="center" prop="Id" label="订单号">
         </el-table-column>
         <el-table-column align="center" prop="Nick" label="昵称">
@@ -34,11 +34,11 @@
             <i class="fa fa-search fa-lg" @click="lookOrderDetail(scope.row)"></i>
           </template>
         </el-table-column>
-      </el-table>
+      </el-table> -->
       <el-table :data="tableData" style="width: 100%">
         <el-table-column type="expand">
           <template scope="props">
-            <el-form label-position="left" inline class="demo-table-expand">
+            <el-form label-position="right" inline class="table-expand">
               <el-form-item label="订单号">
                 <span>{{ props.row.Id }}</span>
               </el-form-item>
@@ -50,6 +50,9 @@
               </el-form-item>
               <el-form-item label="数量">
                 <span>{{ props.row.Count }}</span>
+              </el-form-item>
+              <el-form-item label="运费">
+                <span>{{ props.row.Freight }}</span>
               </el-form-item>
               <el-form-item label="总额">
                 <span>{{ props.row.Total }}</span>
@@ -81,6 +84,19 @@
         <el-table-column label="数量" prop="Count">
         </el-table-column>
         <el-table-column label="总额" prop="Total">
+        </el-table-column>
+        <el-table-column label="下单日期" prop="CreateDate">
+        </el-table-column>
+        <el-table-column label="订单状态">
+          <template scope="scope">
+            <span v-if="scope.row.Status==0">已失效</span>
+            <span v-else-if="scope.row.Status==1">待确认</span>
+            <span v-else-if="scope.row.Status==2">未发货</span>
+            <span v-else-if="scope.row.Status==3">配送中</span>
+            <span v-else-if="scope.row.Status==4">已签收</span>
+            <span v-else-if="scope.row.Status==5">审核中</span>
+            <span v-else>已退款</span>
+          </template>
         </el-table-column>
       </el-table>
     </section>
@@ -264,6 +280,7 @@ export default {
           BookName: "Node.js开发指南",
           UserId: "user1sh5kqf3o7iz9o71p9",
           Count: 2,
+          Freight: 0.5,
           Total: "75.4",
           Name: "刘云汉",
           Mobile: "13361642438",
@@ -310,4 +327,18 @@ export default {
 }
 </script>
 <style type="text/css">
+.table-expand {
+  font-size: 0;
+}
+
+.table-expand label {
+  width: 90px;
+  color: #99a9bf;
+}
+
+.table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 50%;
+}
 </style>
