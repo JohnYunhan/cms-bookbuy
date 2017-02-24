@@ -9,15 +9,14 @@ let Order = mongoose.Schema({
   Id: {
     type: String,
     required: true,
-    index: true,
-    // default: uniqid("order")
+    index: true
   }, //订单id
   BookId: {
-    type: Array,
+    type: String,
     required: true,
   }, //图书Id
   BookName: {
-    type: Array,
+    type: String,
     required: true,
   },
   UserId: {
@@ -29,9 +28,13 @@ let Order = mongoose.Schema({
     required: true,
   }, //昵称
   Count: {
-    type: Array,
+    type: Number,
     required: true,
   }, //订单数量
+  freight: {
+    type: Number,
+    required: true,
+  },
   Total: {
     type: Number,
     required: true,
@@ -94,8 +97,7 @@ Order.statics.getOrderList = function(index, size, json) {
             TotalCount: res
           });
         } else {
-          // reject(error);
-          reject({ Message: "服务器错误，请稍后再试", Code: 400 });
+          reject(error);
         }
       })
     })
@@ -120,7 +122,6 @@ Order.statics.getOrderById = function(Id) {
 // 新增订单(确认下单)
 Order.statics.addOrder = function(json) {
   return new Promise((resolve, reject) => {
-    json.Id = uniqid("order");
     json.save((error, res) => {
       if (!error) {
         resolve(res);

@@ -69,7 +69,7 @@ router.post('/getAdminById', function(req, res, next) {
 //新增管理员
 router.post('/addAdmin', function(req, res, next) {
   let json = new Admins({
-    RoleId: req.body.RoleId,
+    RoleId: parseInt(req.body.RoleId),
     Nick: req.body.Nick,
     Password: req.body.Password,
     Mobile: req.body.Mobile
@@ -242,7 +242,7 @@ router.post('/setBook', function(req, res, next) {
   Books.setBook(json).then(result => {
     res.send({ Data: result, Message: "执行成功", Code: 200 });
   }).catch(error => {
-    res.send({ Message: error.Message, Code: error.Code });
+    res.send({ Message: error, Code: 400 });
   })
 });
 
@@ -252,7 +252,7 @@ router.post('/delBook', function(req, res, next) {
   Books.delBook(Id).then(result => {
     res.send({ Data: result, Message: "执行成功", Code: 200 });
   }).catch(error => {
-    res.send({ Message: error.Message, Code: error.Code });
+    res.send({ Message: error, Code: 400 });
   })
 });
 
@@ -266,7 +266,7 @@ router.post('/getOrderList', function(req, res, next) {
   Orders.getOrderList(req.body.Index, req.body.Size, json).then(result => {
     res.send({ Data: result.Data, TotalCount: result.TotalCount, Message: "执行成功", Code: 200 });
   }).catch(error => {
-    res.send({ Message: error.Message, Code: error.Code });
+    res.send({ Message: error, Code: 400 });
   })
 });
 
@@ -280,17 +280,19 @@ router.post('/setOrderStatus', function(req, res, next) {
   Orders.setOrderStatus(json).then(result => {
     res.send({ Data: result, Message: "执行成功", Code: 200 });
   }).catch(error => {
-    res.send({ Message: error.Message, Code: error.Code });
+    res.send({ Message: error, Code: 400 });
   })
 });
 //新增订单（下单）
 router.post('/addOrder', function(req, res, next) {
   let json = new Orders({
-    Id: req.body.OrderId,
+    Id: req.body.Id,
+    Nick: req.body.Nick,
     BookId: req.body.BookId,
+    BookName: req.body.BookName,
     UserId: req.body.UserId,
-    Count: req.body.Count,
-    Total: req.body.Total,
+    Count: parseInt(req.body.Count),
+    Total: parseFloat(req.body.Total),
     Name: req.body.Name,
     Mobile: req.body.Mobile,
     Address: req.body.Address
@@ -298,7 +300,7 @@ router.post('/addOrder', function(req, res, next) {
   Orders.addOrder(json).then(result => {
     res.send({ Data: result, Message: "执行成功", Code: 200 });
   }).catch(error => {
-    res.send({ Message: error.Message, Code: error.Code });
+    res.send({ Message: error, Code: 400 });
   })
 });
 //获取出版社列表
