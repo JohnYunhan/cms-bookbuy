@@ -31,7 +31,8 @@
         <el-table-column prop="" label="操作">
           <template scope="scope">
             <!-- <el-button type="text" size="small">编辑</el-button> -->
-            <i class="el-icon-edit" Medium @click="editOrder(scope.row)"></i> <i Medium class="el-icon-search" @click="lookOrderDetail(scope.row)"></i>
+            <i class="fa fa-edit fa-lg" @click="editOrder(scope.row)"></i>
+            <i class="fa fa-search fa-lg" @click="lookOrderDetail(scope.row)"></i>
           </template>
         </el-table-column>
       </el-table>
@@ -91,6 +92,7 @@ export default {
         }).then(res => res.json()).then(result => {
           if (result.Code === 200) {
             var item = result.Data;
+            _this.pageSize = item.length;
             _this.totalCount = result.TotalCount;
             //判断是否为null
             if (!item) {
@@ -196,6 +198,9 @@ export default {
         } else {
           this.getOrder(0, 10, key, "", this.Status);
         }
+      },
+      editOrder(row) {
+        console.log(row)
       },
       sizeChange(val) {
         this.pageSize = val;

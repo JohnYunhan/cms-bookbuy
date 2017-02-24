@@ -4,28 +4,29 @@
       <search :haveAdd="have" :searchList="list" :source="source" :defaultValue="searchType" @addMember="addMember" @searchMember="searchMember" @getMember="getMember"></search>
     </header>
     <section style="padding:0 20px 20px">
-      <el-table :data="tableData" border align="center" style="width:100%">
-        <el-table-column prop="Nick" label="昵称">
+      <el-table :data="tableData" border style="width:100%">
+        <el-table-column align="center" prop="Nick" label="昵称">
         </el-table-column>
-        <el-table-column prop="Name" label="姓名">
+        <el-table-column align="center" prop="Name" label="姓名">
         </el-table-column>
-        <el-table-column prop="Mobile" label="手机">
+        <el-table-column align="center" prop="Mobile" label="手机">
         </el-table-column>
-        <el-table-column prop="Email" label="邮箱">
+        <el-table-column align="center" prop="Email" label="邮箱">
         </el-table-column>
-        <el-table-column prop="Level" label="等级">
+        <el-table-column align="center" prop="Level" label="等级">
         </el-table-column>
-        <el-table-column prop="CreateDate" label="注册日期">
+        <el-table-column align="center" prop="CreateDate" label="注册日期">
         </el-table-column>
-        <el-table-column label="状态">
+        <el-table-column align="center" label="状态">
           <template scope="scope">
             <span v-if="scope.row.Valid">已启用</span>
             <span v-else>已禁用</span>
           </template>
         </el-table-column>
-        <el-table-column prop="" label="操作">
+        <el-table-column align="center" label="操作">
           <template scope="scope">
-            <el-button type="text" @click="editMember(scope.$index, scope.row)" size="small">编辑</el-button>
+            <!-- <el-button type="text" @click="editMember(scope.row)" size="small">编辑</el-button> -->
+            <i class="fa fa-edit fa-lg" @click="editMember(scope.row)"></i>
           </template>
         </el-table-column>
       </el-table>
@@ -82,6 +83,7 @@ export default {
       }).then(res => res.json()).then(result => {
         if (result.Code === 200) {
           var item = result.Data;
+          _this.pageSize = item.length;
           _this.totalCount = result.TotalCount;
           //判断是否为null
           if (!item) {

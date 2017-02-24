@@ -19,7 +19,8 @@
         </el-table-column>
         <el-table-column prop="" label="操作">
           <template scope="scope">
-            <el-button type="text" @click="editMember(scope.row)" size="small">编辑</el-button>
+            <!-- <el-button type="text" @click="editMember(scope.row)" size="small">编辑</el-button> -->
+            <i class="fa fa-edit fa-lg" @click="editPicture(scope.row)"></i>
           </template>
         </el-table-column>
       </el-table>
@@ -72,6 +73,7 @@ export default {
       }).then(res => res.json()).then(result => {
         if (result.Code === 200) {
           var item = result.Data;
+          _this.pageSize = item.length;
           _this.totalCount = result.TotalCount;
           //判断是否为null
           if (!item) {
@@ -142,9 +144,12 @@ export default {
     }
   },
   watch: {
-    totalCount: function(val) {
-      this.totalCount = val;
-    },
+    // totalCount: function(val) {
+    //   this.totalCount = val;
+    // },
+    // pageSize: function(val) {
+    //   this.pageSize = val;
+    // },
   },
   components: {
     search,
