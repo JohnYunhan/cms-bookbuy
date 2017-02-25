@@ -74,13 +74,13 @@ let Book = mongoose.Schema({
     default: 0
   }, //点击次数
   IsRecommend: {
-    type: Number,
-    default: 0
-  }, //是否推荐,1:是,0:否 
+    type: Boolean,
+    default: false
+  }, //是否推荐
   IsSoldOut: {
-    type: Number,
-    default: 0
-  }, //是否下架,1:是,0:否 
+    type: Boolean,
+    default: false
+  }, //是否下架
   CreateDate: {
     type: Number,
     default: Date.now()
@@ -92,14 +92,14 @@ let Book = mongoose.Schema({
 });
 
 //获取最新图书(新到图书)
-Book.statics.getNewBook = function(json) {
+Book.statics.getNewBook = function(index, size, json) {
   return new Promise((resolve, reject) => {
-    let query = this.find({ IsSoldOut: 0 });
+    let query = this.find({ IsSoldOut: false });
     query.sort({ UpdateDate: -1 }); //根据添加时间倒叙
-    query.skip(json.Index * json.Size); //跳过多少个数据
+    query.skip(index * size); //跳过多少个数据
     query.limit(json.Size); //限制Size条数据
     query.exec((error, result) => {
-      if (!error) {
+      if (result) {
         resolve(result);
       } else {
         reject(error);
@@ -109,13 +109,13 @@ Book.statics.getNewBook = function(json) {
 }
 
 //获取最热图书(畅销榜)
-Book.statics.getHotBook = function(json) {
+Book.statics.getHotBook = function(index, size, json) {
   return new Promise((resolve, reject) => {
     let query = this.find({ ClickCount: { $gt: 0 } });
-    query.skip(json.Index * json.Size); //跳过多少个数据
-    query.limit(json.Size); //限制Size条数据
+    query.skip(index * size); //跳过多少个数据
+    query.limit(size); //限制Size条数据
     query.exec((error, result) => {
-      if (!error) {
+      if (result) {
         resolve(result);
       } else {
         reject(error);
@@ -125,7 +125,7 @@ Book.statics.getHotBook = function(json) {
 }
 
 //获取图书列表
-Book.statics.getBookList = function(json) {
+Book.statics.getBookList = function(index, size, json) {
   return new Promise((resolve, reject) => {
     let query = "";
     let total = 0;
@@ -153,21 +153,24 @@ Book.statics.getBookList = function(json) {
       query = this.find();
       total = this.count();
       query.sort({ UpdateDate: -1 }); //根据添加日期倒序
-      query.skip(json.Index * json.Size); //跳过多少个数据
-      query.limit(json.Size); //限制Size条数据
+      query.skip(index * size); //跳过多少个数据
+      query.limit(size); //限制Size条数据
     }
     query.exec((error, result) => {
-      total.exec((error, res) => {
-        if (!error) {
-          resolve({
-            Data: result,
-            TotalCount: res
-          });
-        } else {
-          // reject(error);
-          reject({ Message: "服务器错误，请稍后再试", Code: 400 });
-        }
-      })
+      if (result) {
+        total.exec((err, res) => {
+          if (res) {
+            resolve({
+              Data: result,
+              TotalCount: res
+            });
+          } else {
+            reject(err);
+          }
+        })
+      } else {
+        reject(error);
+      }
     })
   })
 }
@@ -180,8 +183,7 @@ Book.statics.getBookById = function(Id) {
       if (result) {
         resolve(result);
       } else {
-        reject({ Message: "服务器错误，请稍后再试", Code: 400 });
-        // reject(error);
+        reject(error);
       }
     })
   })
@@ -191,11 +193,11 @@ Book.statics.getBookById = function(Id) {
 Book.statics.addBook = function(json) {
   return new Promise((resolve, reject) => {
     json.Id = uniqid("book");
-    json.save((error, res) => {
-      if (!error) {
-        resolve(res);
+    json.save((error, result) => {
+      if (result) {
+        resolve(result);
       } else {
-        reject({ Message: error.message, Code: 500 });
+        reject(error);
       }
     })
   })
@@ -206,9 +208,9 @@ Book.statics.delBook = function(Id) {
   return new Promise((resolve, reject) => {
     let query = this.findOne({ Id: Id });
     query.exec((error, result) => {
-      if (!error) {
+      if (result) {
         result.remove((err, res) => {
-          if (!err) {
+          if (res) {
             resolve(res);
           } else {
             reject(err)
@@ -226,31 +228,31 @@ Book.statics.setBook = function(json) {
   return new Promise((resolve, reject) => {
     let query = this.findOne({ Id: json.Id });
     query.exec((error, result) => {
-      if (!error) {
-        if (result) {
-          result.Name = json.Name;
-          result.Author = json.Author;
-          result.Press = json.Press;
-          result.Category = json.Category;
-          result.PublishDate = json.PublishDate;
-          result.Edition = json.Edition;
-          result.ISBN = json.ISBN;
-          result.WordsCount = json.WordsCount;
-          result.Abstract = json.Abstract;
-          // result.Directory = json.Directory;
-          result.Image = json.Image;
-          result.ListPrice = json.ListPrice;
-          result.SellPrice = json.SellPrice;
-          result.Count = json.Count;
-          result.IsRecommend = json.IsRecommend;
-          result.IsSoldOut = json.IsSoldOut;
-          result.UpdateDate = json.UpdateDate;
-          result.save((error, res) => {
+      if (result) {
+        result.Name = json.Name;
+        result.Author = json.Author;
+        result.Press = json.Press;
+        result.Category = json.Category;
+        result.PublishDate = json.PublishDate;
+        result.Edition = json.Edition;
+        result.ISBN = json.ISBN;
+        result.WordsCount = json.WordsCount;
+        result.Abstract = json.Abstract;
+        // result.Directory = json.Directory;
+        result.Image = json.Image;
+        result.ListPrice = json.ListPrice;
+        result.SellPrice = json.SellPrice;
+        result.Count = json.Count;
+        result.IsRecommend = json.IsRecommend;
+        result.IsSoldOut = json.IsSoldOut;
+        result.UpdateDate = json.UpdateDate;
+        result.save((err, res) => {
+          if (res) {
             resolve(res);
-          })
-        } else {
-          reject(error);
-        }
+          } else {
+            reject(err);
+          }
+        })
       } else {
         reject(error);
       }
@@ -263,15 +265,15 @@ Book.statics.addClickCount = function(Id) {
   return new Promise((resolve, reject) => {
     let query = this.findOne({ Id: Id });
     query.exec((error, result) => {
-      if (!error) {
-        if (result) {
-          result.ClickCount++;
-          result.save((error, res) => {
+      if (result) {
+        result.ClickCount++;
+        result.save((err, res) => {
+          if (res) {
             resolve(res);
-          })
-        } else {
-          reject(error);
-        }
+          } else {
+            reject(err);
+          }
+        })
       } else {
         reject(error);
       }

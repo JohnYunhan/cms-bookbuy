@@ -10,7 +10,6 @@ let Picture = mongoose.Schema({
     type: String,
     unique: true,
     index: true,
-    // default: uniqid("picture")
   }, //轮播图id
   Name: {
     type: String,
@@ -29,9 +28,9 @@ let Picture = mongoose.Schema({
     default: Date.now()
   },
   Status: {
-    type: Number,
-    default: 1
-  } //是否启用,1为启用，0为禁用
+    type: Boolean,
+    default: true
+  } //是否启用
 })
 
 //获取轮播图列表
@@ -52,17 +51,20 @@ Picture.statics.getPictureList = function(index, size, json) {
       query.sort({ UpdateDate: -1 }); //根据添加日期倒序      
     }
     query.exec((error, result) => {
-      total.exec((error, res) => {
-        if (!error) {
-          resolve({
-            Data: result,
-            TotalCount: res
-          });
-        } else {
-          // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
-          reject(error);
-        }
-      })
+      if (result) {
+        total.exec((err, res) => {
+          if (res) {
+            resolve({
+              Data: result,
+              TotalCount: res
+            });
+          } else {
+            reject(err);
+          }
+        })
+      } else {
+        reject(error);
+      }
     })
   })
 }
@@ -72,10 +74,9 @@ Picture.statics.getPictureById = function(Id) {
   return new Promise((resolve, reject) => {
     let query = this.findOne({ Id: Id });
     query.exec((error, result) => {
-      if (!error) {
+      if (result) {
         resolve(result);
       } else {
-        // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
         reject(error);
       }
     })
@@ -86,12 +87,11 @@ Picture.statics.getPictureById = function(Id) {
 Picture.statics.addPicture = function(json) {
   return new Promise((resolve, reject) => {
     json.Id = uniqid("picture");
-    json.save((error, res) => {
-      if (!error) {
-        resolve(res); //新增的数据
+    json.save((error, result) => {
+      if (result) {
+        resolve(result);
       } else {
-        // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
-        reject({ Message: error.message, Code: 500 });
+        reject(error);
       }
     })
   })
@@ -102,21 +102,19 @@ Picture.statics.setPicture = function(json) {
   return new Promise((resolve, reject) => {
     let query = this.findOne({ Id: json.Id });
     query.exec((error, result) => {
-      if (!error) {
-        if (result) {
-          result.Name = json.Name;
-          result.Url = json.Url;
-          result.Status = json.Status;
-          result.UpdateDate = json.UpdateDate;
-          result.save((error, res) => {
-            resolve(res); //更新后的数据
-          })
-        } else {
-          // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
-          reject(error);
-        }
+      if (result) {
+        result.Name = json.Name;
+        result.Url = json.Url;
+        result.Status = json.Status;
+        result.UpdateDate = json.UpdateDate;
+        result.save((err, res) => {
+          if (!err) {
+            resolve(res);
+          } else {
+            reject(err);
+          }
+        })
       } else {
-        // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
         reject(error);
       }
     })
@@ -128,17 +126,15 @@ Picture.statics.delPicture = function(Id) {
   return new Promise((resolve, reject) => {
     let query = this.findOne({ Id: Id });
     query.exec((error, result) => {
-      if (!error) {
+      if (result) {
         result.remove((err, res) => {
           if (!err) {
-            resolve(res); //删除后的数据
+            resolve(res);
           } else {
-            // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
-            reject(error);
+            reject(err);
           }
         })
       } else {
-        // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
         reject(error);
       }
     })

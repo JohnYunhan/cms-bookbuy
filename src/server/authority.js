@@ -12,7 +12,10 @@ function AuthCookie(req, res, next) {
         // 解密成功
         let Id = decoded.Id;
         let Nick = decoded.Nick;
-        let LoginDate = decoded.LoginDate;
+        // let loginDate = decoded.LoginDate;
+        // let nowDate = Date.now();
+        // let days = nowDate - loginDate;
+        // days = Math.floor(days / (24 * 3600 * 1000));
         if (Id.indexOf("admin") > -1) {
           //管理员
           req.AdminInfo = {
@@ -46,18 +49,7 @@ function Page(req, res, next) {
   next();
 }
 
-// 检查账号是否过期
-function CheckLogin(req, res, next) {
-  let adminId = req.AdminInfo.Id;
-  if (adminId === "") {
-    res.redirect('/login');
-  } else {
-    next();
-  }
-}
-
 module.exports = {
   AuthCookie,
-  Page,
-  CheckLogin
+  Page
 };

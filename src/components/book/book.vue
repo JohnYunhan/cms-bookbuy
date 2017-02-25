@@ -7,7 +7,7 @@
       <el-table :data="tableData" style="width: 100%">
         <el-table-column type="expand">
           <template scope="props">
-            <el-form label-position="left" inline class="table-expand">
+            <el-form inline class="table-expand">
               <el-form-item label="ID">
                 <span>{{ props.row.Id }}</span>
               </el-form-item>
@@ -52,13 +52,13 @@
               </el-form-item>
               <el-form-item label="推荐">
                 <template scope="scope">
-                  <span v-if="props.row.IsRecommend===1">是</span>
+                  <span v-if="props.row.IsRecommend">是</span>
                   <span v-else>否</span>
                 </template>
               </el-form-item>
               <el-form-item label="下架">
                 <template scope="scope">
-                  <span v-if="props.row.IsSoldOut===1">是</span>
+                  <span v-if="props.row.IsSoldOut">是</span>
                   <span v-else>否</span>
                 </template>
               </el-form-item>
@@ -85,13 +85,13 @@
         </el-table-column>
         <el-table-column align="center" label="推荐">
           <template scope="scope">
-            <span v-if="scope.row.IsRecommend===1">是</span>
+            <span v-if="scope.row.IsRecommend">是</span>
             <span v-else>否</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="下架">
           <template scope="scope">
-            <span v-if="scope.row.IsSoldOut===1">是</span>
+            <span v-if="scope.row.IsSoldOut">是</span>
             <span v-else>否</span>
           </template>
         </el-table-column>
@@ -142,7 +142,7 @@
               <el-input-number v-model="ruleForm.WordsCount" :min="1" :max="9999999999"></el-input-number>
             </el-form-item>
             <el-form-item label="简介" prop="Abstract" style="width: 318px;">
-              <el-input type="textarea" v-model="ruleForm.Abstract"></el-input>
+              <el-input type="textarea" autosize v-model="ruleForm.Abstract"></el-input>
             </el-form-item>
             <el-form-item label="定价" prop="ListPrice" style="width: 280px;">
               <el-input v-model="ruleForm.ListPrice"></el-input>
@@ -153,11 +153,11 @@
             <el-form-item label="数量" prop="Count">
               <el-input-number v-model="ruleForm.Count" :min="1" :max="999"></el-input-number>
             </el-form-item>
-            <el-form-item label="推荐">
-              <el-switch on-text="是" off-text="否" v-model="ruleForm.IsRecommend"></el-switch>
+            <el-form-item label="推荐" prop="IsRecommend">
+              <el-switch on-text="是" v-bind:true-value="true" v-bind:false-value="false" off-text="否" v-model="ruleForm.IsRecommend"></el-switch>
             </el-form-item>
-            <el-form-item v-if="isEdit" label="下架">
-              <el-switch v-model="ruleForm.IsSoldOut"></el-switch>
+            <el-form-item v-if="isEdit" label="下架" prop="IsSoldOut">
+              <el-switch on-text="是" off-text="否" v-model="ruleForm.IsSoldOut"></el-switch>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="Submit">保存</el-button>
@@ -203,7 +203,7 @@ export default {
           Category: "",
           Press: "",
           PublishDate: "",
-          Edition: "",
+          Edition: 1,
           ISBN: "",
           WordsCount: 1,
           Abstract: "",
@@ -211,8 +211,8 @@ export default {
           SellPrice: "",
           Count: 1,
           IsRecommend: false,
-          Image: [],
-          IsSoldOut: 1,
+          Image: ["http://img3x0.ddimg.cn/86/1/23648810-1_w_1.jpg", "http://img3x0.ddimg.cn/86/1/23648810-1_x_1.jpg", "http://img3x0.ddimg.cn/86/1/23648810-1_u_1.jpg"],
+          IsSoldOut: false,
         },
         rules: {
           Name: [{
@@ -241,19 +241,9 @@ export default {
             message: '请选择出版日期',
             trigger: 'change'
           }],
-          Edition: [{
-            required: true,
-            message: '请输入版次',
-            trigger: 'blur'
-          }],
           ISBN: [{
             required: true,
             message: '请输入ISBN',
-            trigger: 'blur'
-          }],
-          WordsCount: [{
-            required: true,
-            message: '请输入字数',
             trigger: 'blur'
           }],
           Abstract: [{
@@ -271,11 +261,6 @@ export default {
             message: '请输入售价',
             trigger: 'blur'
           }],
-          Count: [{
-            required: true,
-            message: '请输入数量',
-            trigger: 'blur'
-          }]
         },
         title: "新增图书",
         isEdit: true, //判断是否为编辑
@@ -357,18 +342,12 @@ export default {
         this.isEdit = true;
         row = JSON.parse(JSON.stringify(row));
         this.ruleForm = row;
-        // if (this.ruleForm.IsSoldOut == 0) {
-        //   this.ruleForm.IsSoldOut = false;
-        // } else {
-        //   this.ruleForm.IsSoldOut = true;
-        // }
       },
       addBook() {
         this.openForm = true;
         this.isEdit = false;
         this.title = "新增图书";
       },
-      //保存添加的图书
       Submit() {
         if (this.isEdit) {
           this.submitEdit();
@@ -379,11 +358,6 @@ export default {
       //提交新增的图书
       submitAdd() {
         var _this = this;
-        if (this.ruleForm.IsRecommend) {
-          this.ruleForm.IsRecommend = 1;
-        } else {
-          this.ruleForm.IsRecommend = 0;
-        }
         var data = JSON.stringify(this.ruleForm);
         fetch("/api/addBook", {
           method: "POST",
@@ -409,16 +383,6 @@ export default {
       //提交编辑的图书
       submitEdit() {
         var _this = this;
-        if (this.ruleForm.IsRecommend) {
-          this.ruleForm.IsRecommend = 1;
-        } else {
-          this.ruleForm.IsRecommend = 0;
-        }
-        if (this.ruleForm.IsSoldOut) {
-          this.ruleForm.IsSoldOut = 1;
-        } else {
-          this.ruleForm.IsSoldOut = 0;
-        }
         var data = JSON.stringify(this.ruleForm);
         fetch("/api/setBook", {
           method: "POST",
@@ -445,6 +409,7 @@ export default {
         this.openForm = false;
         this.$refs["ruleForm"].resetFields();
         this.ruleForm = this.addItem; //将ruleForm初始化
+        this.getBook(0, 10, "", "", "", "");
         // var _this = this;
         // var data = {
         //   Name: "教材"

@@ -13,13 +13,12 @@
         </el-table-column>
         <el-table-column label="状态">
           <template scope="scope">
-            <span v-if="scope.row.Status==1">已启用</span>
+            <span v-if="scope.row.Status">已启用</span>
             <span v-else>已禁用</span>
           </template>
         </el-table-column>
         <el-table-column prop="" label="操作">
           <template scope="scope">
-            <!-- <el-button type="text" @click="editMember(scope.row)" size="small">编辑</el-button> -->
             <i class="fa fa-edit fa-lg" @click="editPicture(scope.row)"></i>
           </template>
         </el-table-column>
@@ -101,8 +100,7 @@ export default {
       var _this = this;
       var data = {
         Name: "开学促销",
-        Url: "http://image31.bookschina.com/pro-images/170222school/1000300.jpg?id=2",
-        Status: 1
+        Url: "http://image31.bookschina.com/pro-images/170222school/1000300.jpg?id=2"
       }
       data = JSON.stringify(data);
       fetch("/api/addPicture", {

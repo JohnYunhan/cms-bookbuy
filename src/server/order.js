@@ -31,7 +31,7 @@ let Order = mongoose.Schema({
     type: Number,
     required: true,
   }, //订单数量
-  freight: {
+  Freight: {
     type: Number,
     required: true,
   },
@@ -62,19 +62,20 @@ let Order = mongoose.Schema({
   Status: {
     type: Number,
     default: 1
-  }, //订单状态,0:已失效、1:待确认、2:未发货、3:配送中、4:已签收、5:申请退款、6:退款中、7:已退款
+  }, //订单状态,0:已失效、1:待确认、2:配送中、3:已签收、4:审核退款、5:已退款
 });
 
 //获取订单列表
 Order.statics.getOrderList = function(index, size, json) {
+  // console.log(json)
   return new Promise((resolve, reject) => {
     let query = "";
     let total = 0;
-    if (json.UserId !== "") {
+    if (json.Nick !== "") {
       //根据会员Id搜索
-      query = this.find({ UserId: json.UserId });
-      total = this.find({ UserId: json.UserId }).count();
-    } else if (json.Status !== null) {
+      query = this.find({ Nick: json.Nick });
+      total = this.find({ Nick: json.Nick }).count();
+    } else if (json.Status !== null && json.Status !== "") {
       //根据订单状态搜索
       query = this.find({ Status: json.Status })
       total = this.find({ Status: json.Status }).count();
@@ -90,16 +91,20 @@ Order.statics.getOrderList = function(index, size, json) {
       query.limit(size); //限制Size条数据
     }
     query.exec((error, result) => {
-      total.exec((error, res) => {
-        if (!error) {
-          resolve({
-            Data: result,
-            TotalCount: res
-          });
-        } else {
-          reject(error);
-        }
-      })
+      if (result) {
+        total.exec((err, res) => {
+          if (res) {
+            resolve({
+              Data: result,
+              TotalCount: res
+            });
+          } else {
+            reject(err);
+          }
+        })
+      } else {
+        reject(error);
+      }
     })
   })
 }
@@ -112,7 +117,6 @@ Order.statics.getOrderById = function(Id) {
       if (result) {
         resolve(result);
       } else {
-        // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
         reject(error);
       }
     })
@@ -122,42 +126,41 @@ Order.statics.getOrderById = function(Id) {
 // 新增订单(确认下单)
 Order.statics.addOrder = function(json) {
   return new Promise((resolve, reject) => {
-    json.save((error, res) => {
-      if (!error) {
-        resolve(res);
+    json.save((error, result) => {
+      if (result) {
+        resolve(result);
       } else {
         reject(error);
-        // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
       }
     })
   })
 }
 
-//修改订单(未确认下单之前)
+//修改订单
 Order.statics.setOrder = function(json) {
   return new Promise((resolve, reject) => {
     let query = this.findOne({ Id: json.Id });
     query.exec((error, result) => {
-      if (!error) {
-        if (result) {
-          result.BookId = json.BookId;
-          result.Count = json.Count;
-          result.Total = json.Total;
-          result.Name = json.Name;
-          result.Mobile = json.Mobile;
-          result.Address = json.Address;
-          result.Status = json.Status;
-          result.UpdateDate = json.UpdateDate;
-          result.save((error, res) => {
+      if (result) {
+        result.BookId = json.BookId;
+        result.BookName = json.BookName;
+        result.Count = json.Count;
+        result.Freight = json.Freight;
+        result.Total = json.Total;
+        result.Name = json.Name;
+        result.Mobile = json.Mobile;
+        result.Address = json.Address;
+        result.Status = json.Status;
+        result.UpdateDate = json.UpdateDate;
+        result.save((err, res) => {
+          if (res) {
             resolve(res);
-          })
-        } else {
-          reject(error);
-          // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
-        }
+          } else {
+            reject(err);
+          }
+        })
       } else {
         reject(error);
-        // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
       }
     })
   })
@@ -175,13 +178,9 @@ Order.statics.setOrderStatus = function(json) {
           result.save((error, res) => {
             resolve(res); //更新后的数据
           })
-        } else {
-          reject(error);
-          // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
         }
       } else {
         reject(error);
-        // reject({ Message: "旧密码不正确", Code: 400 });
       }
     })
   })

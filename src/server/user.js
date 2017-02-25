@@ -11,7 +11,6 @@ let User = mongoose.Schema({
     type: String,
     unique: true,
     index: true,
-    // default: uniqid("user")
   }, //会员id
   Nick: {
     type: String,
@@ -57,37 +56,29 @@ let User = mongoose.Schema({
 });
 
 //会员登录(可根据昵称或手机登录)
-User.statics.userLogin = function(json) {
+User.statics.uesrLogin = function(json) {
   return new Promise((resolve, reject) => {
-    let data = {};
-    if (json.Mobile != "") {
+    let data = { Nick: json.Nick };
+    if (json.Mobile !== "") {
       data = { Mobile: json.Mobile };
-    } else {
-      data = { Nick: json.Nick }
     }
     let query = this.findOne(data);
     query.exec((error, result) => {
-      if (!error) {
-        //找到会员
-        if (result) {
-          if (result.Valid) {
-            decryptJSON(json.Password, result.Password).then(pass => {
-              if (pass) {
-                //密码正确
-                resolve(result);
-              } else {
-                reject({ Code: 400, Message: "密码错误" });
-              }
-            })
-          } else {
-            reject({ Code: 401, Message: "抱歉，由于您近期违规操作较多，账号已被拉黑" });
-          }
+      if (result) {
+        if (result.Valid) {
+          decryptJSON(json.Password, result.Password).then(pass => {
+            if (pass) {
+              //密码正确
+              resolve(result);
+            } else {
+              reject({ Code: 400, Message: "密码错误" });
+            }
+          })
         } else {
-          reject({ Code: 400, Message: "账号不存在" });
+          reject({ Code: 400, Message: "账号已被拉黑" });
         }
       } else {
-        reject(error)
-          // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
+        reject({ Code: 400, Message: "账号不存在" });
       }
     })
   })
@@ -116,17 +107,20 @@ User.statics.getUserList = function(json, index, size) {
       query.limit(size); //获取多少条数据
     }
     query.exec((error, result) => {
-      total.exec((error, res) => {
-        if (!error) {
-          resolve({
-            Data: result,
-            TotalCount: res
-          });
-        } else {
-          // reject(error);
-          reject({ Message: "服务器错误，请稍后再试", Code: 400 });
-        }
-      });
+      if (result) {
+        total.exec((err, res) => {
+          if (res) {
+            resolve({
+              Data: result,
+              TotalCount: res
+            });
+          } else {
+            reject(err);
+          }
+        })
+      } else {
+        reject(error);
+      }
     })
   })
 }
@@ -139,8 +133,7 @@ User.statics.getUserById = function(Id) {
       if (result) {
         resolve(result);
       } else {
-        reject({ Message: "服务器错误，请稍后再试", Code: 400 });
-        // reject(error);
+        reject(error);
       }
     })
   })
@@ -152,12 +145,11 @@ User.statics.addUser = function(json) {
     json.Id = uniqid("user");
     encryptJSON(json.Password).then(result => {
       json.Password = result;
-      json.save((error, res) => {
-        if (!error) {
+      json.save((err, res) => {
+        if (res) {
           resolve(res); //新增的数据
         } else {
-          // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
-          reject(error);
+          reject(err);
         }
       })
     })
@@ -169,23 +161,22 @@ User.statics.setUser = function(json) {
   return new Promise((resolve, reject) => {
     let query = this.findOne({ Id: json.Id });
     query.exec((error, result) => {
-      if (!error) {
-        if (result) {
-          result.Nick = json.Nick;
-          result.Name = json.Name;
-          result.Mobile = json.Mobile;
-          result.Email = json.Email;
-          result.Address = json.Address;
-          result.UpdateDate = json.UpdateDate;
-          result.save((error, res) => {
-            resolve(res); //更新后的数据
-          })
-        } else {
-          // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
-          reject(error);
-        }
+      if (result) {
+        result.Nick = json.Nick;
+        result.Name = json.Name;
+        result.Mobile = json.Mobile;
+        result.Email = json.Email;
+        result.Address = json.Address;
+        result.Valid = json.Valid;
+        result.UpdateDate = json.UpdateDate;
+        result.save((err, res) => {
+          if (!err) {
+            resolve(res);
+          } else {
+            reject(err);
+          }
+        })
       } else {
-        // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
         reject(error);
       }
     })
@@ -193,48 +184,30 @@ User.statics.setUser = function(json) {
 }
 
 //修改会员密码
-User.statics.setUserPassword = function(json) {
-  return new Promise((resolve, reject) => {
-    let query = this.findOne({ Id: json.Id, Password: json.OldPassword });
-    query.exec((error, result) => {
-      if (!error) {
-        if (result) {
-          result.Password = json.NewPassword;
-          result.UpdateDate = json.UpdateDate;
-          result.save((error, res) => {
-            resolve(res); //更新后的数据
-          })
-        } else {
-          // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
-          reject(error);
-        }
-      } else {
-        // reject({ Message: "旧密码不正确", Code: 400 });
-        reject(error);
-      }
-    })
-  })
-}
-
-//加入或解除黑名单
-User.statics.setUserValid = function(json) {
+User.statics.setUserPassword = function(json, oldpwd) {
   return new Promise((resolve, reject) => {
     let query = this.findOne({ Id: json.Id });
     query.exec((error, result) => {
-      if (!error) {
-        if (result) {
-          result.Valid = json.Valid;
-          result.UpdateDate = json.UpdateDate;
-          result.save((error, res) => {
-            resolve(res); //更新后的数据
-          })
-        } else {
-          // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
-          reject(error);
-        }
+      if (result) {
+        decryptJSON(oldpwd, result.Password).then(pass => {
+          if (pass) {
+            encryptJSON(json.Password).then(newpwd => {
+              result.Password = newpwd;
+              result.UpdateDate = json.UpdateDate;
+              result.save((err, res) => {
+                if (!err) {
+                  resolve(res);
+                } else {
+                  reject({ Message: err });
+                }
+              })
+            })
+          } else {
+            reject({ Message: "旧密码不正确", Code: 401 });
+          }
+        })
       } else {
-        // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
-        reject(error);
+        reject({ Message: error });
       }
     })
   })
@@ -245,19 +218,13 @@ User.statics.userUpgrade = function(json) {
   return new Promise((resolve, reject) => {
     let query = this.findOne({ Id: json.Id });
     query.exec((error, result) => {
-      if (!error) {
-        if (result) {
-          result.Level = json.Level;
-          result.UpdateDate = json.UpdateDate;
-          result.save((error, res) => {
-            resolve(res); //更新后的数据
-          })
-        } else {
-          // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
-          reject(error);
-        }
+      if (result) {
+        result.Level = json.Level;
+        result.UpdateDate = json.UpdateDate;
+        result.save((error, res) => {
+          resolve(res); //更新后的数据
+        })
       } else {
-        // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
         reject(error);
       }
     })

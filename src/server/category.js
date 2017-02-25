@@ -10,7 +10,6 @@ let Category = mongoose.Schema({
     type: String,
     unique: true,
     index: true,
-    // default: uniqid("category")
   }, //类别id
   Name: {
     type: String,
@@ -23,28 +22,44 @@ let Category = mongoose.Schema({
   UpdateDate: {
     type: Number,
     default: Date.now()
-  }
+  },
+  Status: {
+    type: Boolean,
+    default: true
+  } //是否启用
 })
 
 //获取类别列表
-Category.statics.getCategoryList = function() {
+Category.statics.getCategoryList = function(index, size, json) {
   return new Promise((resolve, reject) => {
     let query = "";
+    let total = 0;
     if (json.Name !== "") {
       //根据名称搜索
-      query = this.find({ Name: json.Name });
+      let name = new RegExp(json.Name); //创建正则表达式
+      query = this.find({ Name: { $regex: name } });
+      total = this.find({ Name: { $regex: name } }).count();
     } else {
       query = this.find();
-      query.skip(json.Index * json.Size); //跳过多少个数据
-      query.limit(json.Size); //限制Size条数据
+      total = this.count();
+      query.skip(index * size); //跳过多少个数据
+      query.limit(size); //限制Size条数据
       query.sort({ UpdateDate: -1 }); //根据添加日期倒序      
     }
     query.exec((error, result) => {
-      if (!error) {
-        resolve(result);
+      if (result) {
+        total.exec((err, res) => {
+          if (res) {
+            resolve({
+              Data: result,
+              TotalCount: res
+            });
+          } else {
+            reject(err);
+          }
+        })
       } else {
         reject(error);
-        // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
       }
     })
   })
@@ -54,13 +69,11 @@ Category.statics.getCategoryList = function() {
 Category.statics.getCategoryById = function(categoryId) {
   return new Promise((resolve, reject) => {
     let query = this.findOne({ Id: categoryId });
-    query.select("Name");
     query.exec((error, result) => {
-      if (!error) {
+      if (result) {
         resolve(result);
       } else {
         reject(error);
-        // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
       }
     })
   })
@@ -70,12 +83,11 @@ Category.statics.getCategoryById = function(categoryId) {
 Category.statics.addCategory = function(json) {
   return new Promise((resolve, reject) => {
     json.Id = uniqid("category");
-    json.save((error, res) => {
-      if (!error) {
-        resolve(res); //新增的数据
+    json.save((error, result) => {
+      if (result) {
+        resolve(result);
       } else {
         reject(error);
-        // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
       }
     })
   })
@@ -86,20 +98,19 @@ Category.statics.setCategory = function(json) {
   return new Promise((resolve, reject) => {
     let query = this.findOne({ Id: json.Id });
     query.exec((error, result) => {
-      if (!error) {
-        if (result) {
-          result.Name = json.Name;
-          result.UpdateDate = json.UpdateDate;
-          result.save((error, res) => {
-            resolve(res); //更新后的数据
-          })
-        } else {
-          reject(error);
-          // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
-        }
+      if (result) {
+        result.Name = json.Name;
+        result.Status = json.Status;
+        result.UpdateDate = json.UpdateDate;
+        result.save((err, res) => {
+          if (res) {
+            resolve(res);
+          } else {
+            reject(err);
+          }
+        })
       } else {
         reject(error);
-        // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
       }
     })
   })
@@ -110,18 +121,16 @@ Category.statics.delCategory = function(Id) {
   return new Promise((resolve, reject) => {
     let query = this.findOne({ Id: Id });
     query.exec((error, result) => {
-      if (!error) {
+      if (result) {
         result.remove((err, res) => {
-          if (!err) {
-            resolve(res); //删除后的数据
+          if (res) {
+            resolve(res);
           } else {
-            reject(error);
-            // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
+            reject(err);
           }
         })
       } else {
         reject(error);
-        // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
       }
     })
   })

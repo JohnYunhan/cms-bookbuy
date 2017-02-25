@@ -1,44 +1,13 @@
 <template>
   <section>
-    <header>
+    <header v-show="!openForm">
       <search :haveAdd="have" :searchList="list" :source="source" :defaultValue="searchType" @searchOrder="searchOrder" @getOrder="getOrder"></search>
     </header>
-    <section style="padding:0 20px 20px">
-      <el-table :data="tableData" border style="width:100%">
-        <el-table-column align="center" prop="Id" label="订单号">
-        </el-table-column>
-        <el-table-column align="center" prop="Nick" label="昵称">
-        </el-table-column>
-        <el-table-column align="center" prop="BookName" label="图书">
-        </el-table-column>
-        <el-table-column align="center" prop="Count" label="数量">
-        </el-table-column>
-        <el-table-column align="center" prop="Total" label="总额">
-        </el-table-column>
-        <el-table-column align="center" prop="CreateDate" label="下单日期">
-        </el-table-column>
-        <el-table-column align="center" label="状态">
-          <template scope="scope">
-            <span v-if="scope.row.Status==0">已失效</span>
-            <span v-else-if="scope.row.Status==1">待确认</span>
-            <span v-else-if="scope.row.Status==2">未发货</span>
-            <span v-else-if="scope.row.Status==3">配送中</span>
-            <span v-else-if="scope.row.Status==4">已签收</span>
-            <span v-else-if="scope.row.Status==5">审核中</span>
-            <span v-else>已退款</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="操作">
-          <template scope="scope">
-            <i class="fa fa-edit fa-lg" @click="editOrder(scope.row)"></i>
-            <i class="fa fa-search fa-lg" @click="lookOrderDetail(scope.row)"></i>
-          </template>
-        </el-table-column>
-      </el-table>
+    <section v-if="!openForm" style="padding:0 20px 20px">
       <el-table :data="tableData" style="width: 100%">
         <el-table-column type="expand">
           <template scope="props">
-            <el-form label-position="left" inline class="demo-table-expand">
+            <el-form inline class="table-expand">
               <el-form-item label="订单号">
                 <span>{{ props.row.Id }}</span>
               </el-form-item>
@@ -50,6 +19,9 @@
               </el-form-item>
               <el-form-item label="数量">
                 <span>{{ props.row.Count }}</span>
+              </el-form-item>
+              <el-form-item label="运费">
+                <span>{{ props.row.Freight }}</span>
               </el-form-item>
               <el-form-item label="总额">
                 <span>{{ props.row.Total }}</span>
@@ -64,43 +36,89 @@
                 <span>{{ props.row.Address }}</span>
               </el-form-item>
               <el-form-item label="下单日期">
-                <span>{{ props.row.CreateDate }}</span>
+                <span>{{ props.row.CreateDate | shiftDate }}</span>
+              </el-form-item>
+              <el-form-item label="修改日期">
+                <span>{{ props.row.UpdateDate | shiftDate }}</span>
               </el-form-item>
               <el-form-item label="订单状态">
-                <span>{{ props.row.Status }}</span>
+                <template scope="scope">
+                  <span v-if="props.row.Status==0">已失效</span>
+                  <span v-else-if="props.row.Status==1">待确认</span>
+                  <span v-else-if="props.row.Status==2">配送中</span>
+                  <span v-else-if="props.row.Status==3">已签收</span>
+                  <span v-else-if="props.row.Status==4">审核退款</span>
+                  <span v-else>已退款</span>
+                </template>
               </el-form-item>
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column label="订单号" prop="Id">
+        <el-table-column align="center" label="订单号" prop="Id">
         </el-table-column>
-        <el-table-column label="图书名称" prop="BookName">
+        <el-table-column align="center" label="图书名称" prop="BookName">
         </el-table-column>
-        <el-table-column label="昵称" prop="Nick">
+        <el-table-column align="center" label="昵称" prop="Nick">
         </el-table-column>
-        <el-table-column label="数量" prop="Count">
+        <el-table-column align="center" label="数量" prop="Count">
         </el-table-column>
-        <el-table-column label="总额" prop="Total">
+        <el-table-column align="center" label="总额" prop="Total">
+        </el-table-column>
+        <el-table-column align="center" label="下单日期" prop="CreateDate">
+        </el-table-column>
+        <el-table-column align="center" label="修改日期" prop="UpdateDate">
+        </el-table-column>
+        <el-table-column align="center" label="订单状态" prop="Status">
+        </el-table-column>
+        <el-table-column align="center" label="操作">
+          <template scope="scope">
+            <i class="fa fa-edit fa-lg" @click="editOrder(scope.row)"></i>
+          </template>
         </el-table-column>
       </el-table>
-    </section>
-    <footer>
       <el-pagination @size-change="sizeChange" @current-change="currentChange" :current-page="currentPage" :page-sizes="[1, 2, 3, 4]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
       </el-pagination>
-    </footer>
-    <el-dialog title="订单详情" size="large" v-model="openOrderDetail">
-      <el-table :data="orderDetail">
-        <el-table-column property="Id" label="订单号"></el-table-column>
-        <el-table-column property="Nick" label="昵称"></el-table-column>
-        <el-table-column property="BookName" label="图书"></el-table-column>
-        <el-table-column property="Count" label="数量"></el-table-column>
-        <el-table-column property="Total" label="总额"></el-table-column>
-        <el-table-column property="Name" label="收货人"></el-table-column>
-        <el-table-column property="Mobile" label="收货人手机"></el-table-column>
-        <el-table-column property="Address" label="收货地址"></el-table-column>
-        <el-table-column property="Status" label="订单状态"></el-table-column>
-      </el-table>
-    </el-dialog>
+    </section>
+    <section v-else>
+      <el-row type="flex" justify="center">
+        <el-col :span="9">
+          <h5 style="text-align: center;margin: 10px 0"><b>修改订单</b></h5>
+          <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" style="">
+            <el-form-item label="图书" prop="BookName">
+              <el-input v-model="ruleForm.BookName"></el-input>
+            </el-form-item>
+            <el-form-item label="数量" prop="Count">
+              <el-input-number v-model="ruleForm.Count" :min="1" :max="999"></el-input-number>
+            </el-form-item>
+            <el-form-item label="运费" prop="Freight">
+              <el-input type="number" v-model="ruleForm.Freight"></el-input>
+            </el-form-item>
+            <el-form-item label="总额" prop="Total">
+              <el-input type="number" v-model="ruleForm.Total"></el-input>
+            </el-form-item>
+            <el-form-item label="收货人" prop="Name">
+              <el-input v-model="ruleForm.Name"></el-input>
+            </el-form-item>
+            <el-form-item label="手机" prop="Mobile">
+              <el-input v-model="ruleForm.Mobile"></el-input>
+            </el-form-item>
+            <el-form-item label="地址" prop="Address">
+              <el-input type="textarea" autosize v-model="ruleForm.Address"></el-input>
+            </el-form-item>
+            <el-form-item label="状态" prop="Status">
+              <el-select v-model="ruleForm.Status">
+                <el-option v-for="item in options" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="Submit">保存</el-button>
+              <el-button @click="Close">取消</el-button>
+            </el-form-item>
+          </el-form>
+        </el-col>
+      </el-row>
+    </section>
   </section>
 </template>
 <script>
@@ -123,23 +141,80 @@ export default {
         pageSize: 1, //每页的数据量
         Status: "", //订单状态
         tableData: [],
-        orderDetail: [], //订单详情
-        openOrderDetail: false, //查看订单详情窗口
         usrInfor: {}, //会员信息
         bookInfor: {}, //图书信息
+        openForm: false, //打开编辑订单的表单
+        ruleForm: {
+          Id: "",
+          BookId: "",
+          BookName: "",
+          Count: 1,
+          Freight: 0,
+          Total: 0,
+          Name: "",
+          Mobile: "",
+          Address: "",
+          Status: 1,
+        },
+        rules: {
+          BookName: [{
+            required: true,
+            message: '请输入图书名称',
+            trigger: 'blur'
+          }],
+          Name: [{
+            required: true,
+            message: '请输入收货人姓名',
+            trigger: 'blur'
+          }],
+          // Total: [{
+          //   required: true,
+          //   message: '请输入订单总额',
+          //   trigger: 'blur'
+          // }],
+          Mobile: [{
+            required: true,
+            message: '请输入收货人电话',
+            trigger: 'blur'
+          }],
+          Address: [{
+            required: true,
+            message: '请输入收货人地址',
+            trigger: 'blur'
+          }],
+        },
+        options: [{
+          label: "待确认",
+          value: 1,
+        }, {
+          label: "配送中",
+          value: 2,
+        }, {
+          label: "已签收",
+          value: 3,
+        }, {
+          label: "审核退款",
+          value: 4,
+        }, {
+          label: "已退款",
+          value: 5,
+        }, {
+          label: "已失效",
+          value: 0,
+        }],
       }
     },
     created() {
       this.getOrder(0, 10, "", "", "");
     },
     methods: {
-      getOrder(index, size, orderid, usrid, status) {
+      getOrder(index, size, orderid, nick, status) {
         var _this = this;
         var data = {
           Index: index,
           Size: size,
-          OrderId: orderid,
-          UserId: usrid,
+          Id: orderid,
+          Nick: nick,
           Status: status
         };
         data = JSON.stringify(data);
@@ -250,7 +325,34 @@ export default {
         }
       },
       editOrder(row) {
-        console.log(row)
+        this.openForm = true;
+        row = JSON.parse(JSON.stringify(row));
+        this.ruleForm = row;
+      },
+      Submit() {
+        var _this = this;
+        var data = JSON.stringify(this.ruleForm);
+        fetch("/api/setOrder", {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            'Content-Type': "application/json"
+          },
+          body: data
+        }).then(res => res.json()).then(result => {
+          if (result.Code === 200) {
+            _this.getOrder(0, 10, "", "", data.Status);
+            _this.Close();
+            _this.$message({
+              message: '修改成功',
+              type: 'success'
+            });
+          } else {
+            console.log(result)
+          }
+        }).catch(error => {
+          console.log(error)
+        })
       },
       sizeChange(val) {
         this.pageSize = val;
@@ -264,7 +366,8 @@ export default {
           BookName: "Node.js开发指南",
           UserId: "user1sh5kqf3o7iz9o71p9",
           Count: 2,
-          Total: "75.4",
+          Freight: 0.5,
+          Total: 75.9,
           Name: "刘云汉",
           Mobile: "13361642438",
           Address: "紫阳大道99号",
@@ -291,9 +394,20 @@ export default {
           console.log(error)
         })
       },
+      Close() {
+        this.openForm = false;
+        this.$refs["ruleForm"].resetFields();
+      },
       currentChange(val) {
         this.currentPage = val;
         this.getOrder(val - 1, this.pageSize, "", "", "");
+      },
+    },
+    filters: {
+      //日期转换
+      shiftDate: function(date) {
+        date = new Date(date);
+        return date.toLocaleDateString();
       },
     },
     watch: {
@@ -309,5 +423,23 @@ export default {
     }
 }
 </script>
-<style type="text/css">
+<style scoped>
+.table-expand {
+  font-size: 0;
+}
+
+.table-expand label {
+  width: 90px;
+  color: #99a9bf;
+}
+
+.table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 50%;
+}
+
+.el-pagination {
+  margin-top: 10px;
+}
 </style>

@@ -55,53 +55,61 @@ Admin.statics.adminLogin = function(json) {
     }
     let query = this.findOne(data);
     query.exec((error, result) => {
-      if (!error) {
-        //找到管理员
-        if (result) {
-          if (result.Valid) {
-            decryptJSON(json.Password, result.Password).then(pass => {
-              if (pass) {
-                //密码正确
-                resolve(result);
-              } else {
-                reject({ Code: 400, Message: "密码错误" });
-              }
-            })
-          } else {
-            reject({ Code: 400, Message: "账号已被拉黑" });
-          }
+      if (result) {
+        if (result.Valid) {
+          decryptJSON(json.Password, result.Password).then(pass => {
+            if (pass) {
+              //密码正确
+              resolve(result);
+            } else {
+              reject({ Code: 400, Message: "密码错误" });
+            }
+          })
         } else {
-          reject({ Code: 400, Message: "账号不存在" });
+          reject({ Code: 400, Message: "账号已被拉黑" });
         }
       } else {
-        reject(error);
-        // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
+        reject({ Code: 400, Message: "账号不存在" });
       }
     })
   })
 }
 
 //获取管理员列表
-Admin.statics.getAdminList = function(json) {
+Admin.statics.getAdminList = function(json, index, size) {
   return new Promise((resolve, reject) => {
     let query = "";
+    let total = 0;
     if (json.Nick !== "") {
       //根据昵称搜索
-      query = this.findOne({ Nick: json.Nick })
+      let nick = new RegExp(json.Nick); //创建正则表达式
+      query = this.find({ Nick: { $regex: nick } });
+      total = this.find({ Nick: { $regex: nick } }).count();
     } else if (json.Mobile !== "") {
       //根据手机搜索
-      query = this.findOne({ Mobile: json.Mobile })
+      let mobile = new RegExp(json.Mobile);
+      query = this.find({ Mobile: { $regex: mobile } });
+      total = this.find({ Mobile: { $regex: mobile } }).count();
     } else {
       query = this.find();
+      total = this.count();
       query.sort({ UpdateDate: -1 }); //根据添加日期倒序
-      query.skip(json.Index * json.Size); //跳过多少个数据
-      query.limit(json.Size); //限制Size条数据
+      query.skip(index * size); //跳过多少个数据
+      query.limit(size); //限制size条数据
     }
     query.exec((error, result) => {
-      if (!error) {
-        resolve(result);
+      if (result) {
+        total.exec((err, res) => {
+          if (res) {
+            resolve({
+              Data: result,
+              TotalCount: res
+            });
+          } else {
+            reject(err);
+          }
+        })
       } else {
-        // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
         reject(error);
       }
     })
@@ -113,15 +121,16 @@ Admin.statics.addAdmin = function(json) {
   return new Promise((resolve, reject) => {
     json.Id = uniqid("admin");
     encryptJSON(json.Password).then(result => {
-      json.Password = result;
-      json.save((error, res) => {
-        if (!error) {
-          resolve(res); //新增的数据
-        } else {
-          // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
-          reject(error);
-        }
-      })
+      if (result) {
+        json.Password = result;
+        json.save((err, res) => {
+          if (res) {
+            resolve(res); //新增的数据
+          } else {
+            reject(err);
+          }
+        })
+      }
     })
   })
 }
@@ -134,7 +143,6 @@ Admin.statics.getAdminById = function(Id) {
       if (result) {
         resolve(result);
       } else {
-        // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
         reject(error);
       }
     })
@@ -146,21 +154,20 @@ Admin.statics.setAdmin = function(json) {
   return new Promise((resolve, reject) => {
     let query = this.findOne({ Id: json.Id });
     query.exec((error, result) => {
-      if (!error) {
-        if (result) {
-          result.RoleId = json.RoleId;
-          result.Nick = json.Nick;
-          result.Mobile = json.Mobile;
-          result.UpdateDate = json.UpdateDate;
-          result.save((error, res) => {
-            resolve(res); //更新后的数据
-          })
-        } else {
-          // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
-          reject(error);
-        }
+      if (result) {
+        result.RoleId = json.RoleId;
+        result.Nick = json.Nick;
+        result.Mobile = json.Mobile;
+        result.Status = json.Status;
+        result.UpdateDate = json.UpdateDate;
+        result.save((err, res) => {
+          if (!err) {
+            resolve(res);
+          } else {
+            reject(err);
+          }
+        })
       } else {
-        // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
         reject(error);
       }
     })
@@ -170,54 +177,28 @@ Admin.statics.setAdmin = function(json) {
 //修改管理员密码
 Admin.statics.setAdminPassword = function(json, oldpwd) {
   return new Promise((resolve, reject) => {
-    console.log(oldpwd)
-    console.log(json)
     let query = this.findOne({ Id: json.Id });
     query.exec((error, result) => {
-      if (!error) {
-        if (result) {
-          decryptJSON(oldpwd, result.Password).then(pass => {
-            if (pass) {
-              encryptJSON(json.Password).then(newpwd => {
-                result.Password = newpwd;
-                result.UpdateDate = json.UpdateDate;
-                result.save((error, res) => {
+      if (result) {
+        decryptJSON(oldpwd, result.Password).then(pass => {
+          if (pass) {
+            encryptJSON(json.Password).then(newpwd => {
+              result.Password = newpwd;
+              result.UpdateDate = json.UpdateDate;
+              result.save((err, res) => {
+                if (!err) {
                   resolve(res);
-                })
+                } else {
+                  reject({ Message: err });
+                }
               })
-            } else {
-              reject({ Message: "旧密码不正确", Code: 401 });
-            }
-          })
-        } else {
-          reject({ Message: "服务器错误，请稍后再试", Code: 400 });
-        }
+            })
+          } else {
+            reject({ Message: "旧密码不正确", Code: 400 });
+          }
+        })
       } else {
-        reject({ Message: "服务器错误，请稍后再试", Code: 400 });
-      }
-    })
-  })
-}
-
-//加入或解除黑名单
-Admin.statics.setAdminValid = function(json) {
-  return new Promise((resolve, reject) => {
-    let query = this.findOne({ Id: json.Id });
-    query.exec((error, result) => {
-      if (!error) {
-        if (result) {
-          result.Valid = json.Valid;
-          result.UpdateDate = json.UpdateDate;
-          result.save((error, res) => {
-            resolve(res); //更新后的数据
-          })
-        } else {
-          // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
-          reject(error);
-        }
-      } else {
-        // reject({ Message: "服务器错误，请稍后再试", Code: 400 });
-        reject(error);
+        reject({ Message: error });
       }
     })
   })

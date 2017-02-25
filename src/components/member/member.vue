@@ -27,7 +27,6 @@
         </el-table-column>
         <el-table-column align="center" label="操作">
           <template scope="scope">
-            <!-- <el-button type="text" @click="editMember(scope.row)" size="small">编辑</el-button> -->
             <i class="fa fa-edit fa-lg" @click="editMember(scope.row)"></i>
           </template>
         </el-table-column>

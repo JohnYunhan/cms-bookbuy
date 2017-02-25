@@ -44,11 +44,6 @@ app.use('/api', Api);
 //验证账号是否过期
 app.get('/', (req, res, next) => {
   let adminId = req.AdminInfo.Id;
-  // let url = window.location.href;
-  // let route = url.substring(21);
-  // if (route === "") {
-  //   route = '/welcome'
-  // }
   if (adminId === "") {
     res.redirect('/login');
   } else {
