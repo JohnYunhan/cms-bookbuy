@@ -100,7 +100,7 @@ router.post('/addAdmin', function(req, res, next) {
 //修改管理员
 router.post('/setAdmin', function(req, res, next) {
   let json = new Admins({
-    Id: req.body.Id,
+    Id: req.AdminInfo.Id,
     RoleId: req.body.RoleId,
     Nick: req.body.Nick,
     Mobile: req.body.Mobile,
@@ -147,7 +147,6 @@ router.post('/getUserList', function(req, res, next) {
 //根据Id获取会员
 router.get('/getUserById', function(req, res, next) {
   let Id = req.query.Id;
-  console.log(Id)
   Users.getUserById(Id).then(result => {
     res.send({ Data: result, Message: "执行成功", Code: 200 });
   }).catch(error => {
@@ -157,10 +156,12 @@ router.get('/getUserById', function(req, res, next) {
 
 //新增会员
 router.post('/addUser', function(req, res, next) {
-  let json = new User({
+  let json = new Users({
     Nick: req.body.Nick,
+    Name: req.body.Name,
     Password: req.body.Password,
-    Mobile: req.body.Mobile
+    Mobile: req.body.Mobile,
+    Email: req.body.Email
   });
   Users.addUser(json).then(result => {
     res.send({ Data: result, Message: "执行成功", Code: 200 });
@@ -170,8 +171,9 @@ router.post('/addUser', function(req, res, next) {
 });
 
 //修改会员
-router.post('/setUser', function(req, res, next) {
-  let json = new User({
+router.post('/editUser', function(req, res, next) {
+  let json = new Users({
+    Id: req.body.Id,
     Nick: req.body.Nick,
     Name: req.body.Name,
     Mobile: req.body.Mobile,
@@ -180,7 +182,7 @@ router.post('/setUser', function(req, res, next) {
     UpdateDate: Date.now(),
     Valid: req.body.Valid
   });
-  Users.setUser(json).then(result => {
+  Users.editUser(json).then(result => {
     res.send({ Data: result, Message: "执行成功", Code: 200 });
   }).catch(error => {
     res.send({ Message: error, Code: 400 });
@@ -296,8 +298,11 @@ router.post('/getOrderList', function(req, res, next) {
   let json = new Orders({
     Id: req.body.Id,
     Nick: req.body.Nick,
-    Status: parseInt(req.body.Status)
+    Status: req.body.Status
   });
+  if (req.body.Status) {
+    json.Status = parseInt(req.body.Status);
+  }
   Orders.getOrderList(req.body.Index, req.body.Size, json).then(result => {
     res.send({ Data: result.Data, TotalCount: result.TotalCount, Message: "执行成功", Code: 200 });
   }).catch(error => {
@@ -317,12 +322,9 @@ router.post('/setOrder', function(req, res, next) {
     Name: req.body.Name,
     Mobile: req.body.Mobile,
     Address: req.body.Address,
-    Status: req.body.Status,
+    Status: parseInt(req.body.Status),
     UpdateDate: Date.now()
   });
-  if (!req.body.Status) {
-    json.Status = parseInt(req.body.Status);
-  }
   Orders.setOrder(json).then(result => {
     res.send({ Data: result, Message: "执行成功", Code: 200 });
   }).catch(error => {
@@ -457,7 +459,7 @@ router.post('/getCategoryList', function(req, res, next) {
     Name: req.body.Name
   });
   Categorys.getCategoryList(req.body.Index, req.body.Size, json).then(result => {
-    res.send({ Data: result, Message: "执行成功", Code: 200 });
+    res.send({ Data: result.Data, TotalCount: result.TotalCount, Message: "执行成功", Code: 200 });
   }).catch(error => {
     res.send({ Message: error, Code: 400 });
   })

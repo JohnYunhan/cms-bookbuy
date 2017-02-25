@@ -95,9 +95,9 @@
             <span v-else>否</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column align="center" label="操作">
           <template scope="scope">
-            <i class="fa fa-edit fa-lg" @click="editBook(scope.row)"></i>
+            <i class="fa fa-edit fa-lg" @click="editBook(scope.row)" style="cursor:pointer"></i>
           </template>
         </el-table-column>
       </el-table>
@@ -157,7 +157,7 @@
               <el-switch on-text="是" v-bind:true-value="true" v-bind:false-value="false" off-text="否" v-model="ruleForm.IsRecommend"></el-switch>
             </el-form-item>
             <el-form-item v-if="isEdit" label="下架" prop="IsSoldOut">
-              <el-switch on-text="是" off-text="否" v-model="ruleForm.IsSoldOut"></el-switch>
+              <el-switch v-bind:true-value="true" v-bind:false-value="false" on-text="是" off-text="否" v-model="ruleForm.IsSoldOut"></el-switch>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="Submit">保存</el-button>
@@ -340,7 +340,7 @@ export default {
         this.openForm = true;
         this.title = "编辑图书";
         this.isEdit = true;
-        row = JSON.parse(JSON.stringify(row));
+        // row = JSON.parse(JSON.stringify(row));
         this.ruleForm = row;
       },
       addBook() {

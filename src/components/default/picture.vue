@@ -5,21 +5,21 @@
     </header>
     <section style="padding:0 20px 20px">
       <el-table :data="tableData" border align="center" style="width:100%">
-        <el-table-column prop="Name" label="名称">
+        <el-table-column align="center" prop="Name" label="名称">
         </el-table-column>
-        <el-table-column prop="Url" label="链接">
+        <el-table-column align="center" prop="Url" label="链接">
         </el-table-column>
-        <el-table-column prop="CreateDate" label="创建日期">
+        <el-table-column align="center" prop="CreateDate" label="创建日期">
         </el-table-column>
-        <el-table-column label="状态">
+        <el-table-column align="center" label="状态">
           <template scope="scope">
             <span v-if="scope.row.Status">已启用</span>
             <span v-else>已禁用</span>
           </template>
         </el-table-column>
-        <el-table-column prop="" label="操作">
+        <el-table-column align="center" label="操作">
           <template scope="scope">
-            <i class="fa fa-edit fa-lg" @click="editPicture(scope.row)"></i>
+            <i class="fa fa-edit fa-lg" @click="editPicture(scope.row)" style="cursor:pointer"></i>
           </template>
         </el-table-column>
       </el-table>

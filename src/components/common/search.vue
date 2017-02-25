@@ -39,7 +39,7 @@ export default {
       switch (this.source) {
         case "member":
           {
-            this.$emit("addmember", this.addItem);
+            this.$emit("addMember");
           }
           break;
         case "book":
@@ -50,6 +50,11 @@ export default {
         case "picture":
           {
             this.$emit("addPicture");
+          }
+          break;
+        case "category":
+          {
+            this.$emit("addCategory");
           }
           break;
       }
@@ -76,6 +81,11 @@ export default {
             this.$emit("searchPicture", this.searchType, this.searchKey);
           }
           break;
+        case "category":
+          {
+            this.$emit("searchCategory", this.searchType, this.searchKey);
+          }
+          break;
       }
     },
     refresh() {
@@ -98,6 +108,11 @@ export default {
         case "picture":
           {
             this.$emit("getPicture", 0, 10, "");
+          }
+          break;
+        case "category":
+          {
+            this.$emit("getCategory", 0, 10, "");
           }
           break;
       }

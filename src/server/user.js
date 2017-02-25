@@ -157,7 +157,7 @@ User.statics.addUser = function(json) {
 }
 
 //修改会员
-User.statics.setUser = function(json) {
+User.statics.editUser = function(json) {
   return new Promise((resolve, reject) => {
     let query = this.findOne({ Id: json.Id });
     query.exec((error, result) => {
@@ -170,7 +170,7 @@ User.statics.setUser = function(json) {
         result.Valid = json.Valid;
         result.UpdateDate = json.UpdateDate;
         result.save((err, res) => {
-          if (!err) {
+          if (res) {
             resolve(res);
           } else {
             reject(err);
@@ -195,7 +195,7 @@ User.statics.setUserPassword = function(json, oldpwd) {
               result.Password = newpwd;
               result.UpdateDate = json.UpdateDate;
               result.save((err, res) => {
-                if (!err) {
+                if (res) {
                   resolve(res);
                 } else {
                   reject({ Message: err });

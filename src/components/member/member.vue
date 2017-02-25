@@ -1,9 +1,9 @@
 <template>
   <section>
-    <header>
+    <header v-show="!openForm">
       <search :haveAdd="have" :searchList="list" :source="source" :defaultValue="searchType" @addMember="addMember" @searchMember="searchMember" @getMember="getMember"></search>
     </header>
-    <section style="padding:0 20px 20px">
+    <section v-if="!openForm" style="padding:0 20px 20px">
       <el-table :data="tableData" border style="width:100%">
         <el-table-column align="center" prop="Nick" label="昵称">
         </el-table-column>
@@ -14,6 +14,13 @@
         <el-table-column align="center" prop="Email" label="邮箱">
         </el-table-column>
         <el-table-column align="center" prop="Level" label="等级">
+          <template scope="scope">
+            <span v-if="scope.row.Level==1">注册会员</span>
+            <span v-else-if="scope.row.Level==2">铜牌会员</span>
+            <span v-else-if="scope.row.Level==3">银牌会员</span>
+            <span v-else-if="scope.row.Level==4">金牌会员</span>
+            <span v-else>钻石会员</span>
+          </template>
         </el-table-column>
         <el-table-column align="center" prop="CreateDate" label="注册日期">
         </el-table-column>
@@ -27,15 +34,53 @@
         </el-table-column>
         <el-table-column align="center" label="操作">
           <template scope="scope">
-            <i class="fa fa-edit fa-lg" @click="editMember(scope.row)"></i>
+            <i class="fa fa-edit fa-lg" @click="editMember(scope.row)" style="cursor:pointer"></i>
           </template>
         </el-table-column>
       </el-table>
-    </section>
-    <footer>
       <el-pagination @size-change="sizeChange" @current-change="currentChange" :current-page="currentPage" :page-sizes="[1, 2, 3, 4]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
       </el-pagination>
-    </footer>
+    </section>
+    <section v-else>
+      <h5 style="text-align: center;margin: 10px 0"><b>{{title}}</b></h5>
+      <el-row type="flex" justify="center">
+        <el-col :span="8">
+          <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="60px" style="">
+            <el-form-item label="昵称" prop="Nick">
+              <el-input v-model="ruleForm.Nick" style="width: 250px;"></el-input>
+            </el-form-item>
+            <el-form-item v-if="isAdd" label="密码" prop="Password">
+              <el-input style="width: 250px;" v-model="ruleForm.Password"></el-input>
+            </el-form-item>
+            <el-form-item label="手机" prop="Mobile">
+              <el-input style="width: 250px;" v-model="ruleForm.Mobile"></el-input>
+            </el-form-item>
+            <el-form-item label="姓名" prop="Name">
+              <el-input style="width: 250px;" v-model="ruleForm.Name"></el-input>
+            </el-form-item>
+            <el-form-item label="邮箱" prop="Email">
+              <el-input style="width: 250px;" v-model="ruleForm.Email"></el-input>
+            </el-form-item>
+            <el-form-item label="地址" prop="Address">
+              <el-input style="width: 250px;" type="textarea" autosize v-model="ruleForm.Address"></el-input>
+            </el-form-item>
+            <el-form-item label="等级" prop="Level">
+              <el-select v-model="ruleForm.Level">
+                <el-option v-for="item in options" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="启用" prop="Valid">
+              <el-switch on-text="是" v-bind:true-value="true" v-bind:false-value="false" off-text="否" v-model="ruleForm.Valid"></el-switch>
+            </el-form-item>
+            <el-form-item style="text-align: center;margin-right: 80px">
+              <el-button type="primary" @click="Submit">保存</el-button>
+              <el-button @click="Close">取消</el-button>
+            </el-form-item>
+          </el-form>
+        </el-col>
+      </el-row>
+    </section>
   </section>
 </template>
 <script>
@@ -59,10 +104,58 @@ export default {
       totalCount: 0, //数据总量
       currentPage: 1, //当前页码
       pageSize: 1, //每页的数据量
+      openForm: false, //打开添加或编辑图书的表单
+      addItem: {},
+      ruleForm: {
+        Nick: "",
+        Password: "",
+        Name: "",
+        Mobile: "",
+        Email: "",
+        Address: "",
+        Level: 1,
+        Valid: true
+      },
+      rules: {
+        Nick: [{
+          required: true,
+          message: '请输入昵称',
+          trigger: 'blur'
+        }],
+        Password: [{
+          required: true,
+          message: '请输入密码',
+          trigger: 'blur'
+        }],
+        Mobile: [{
+          required: true,
+          message: '请输入手机',
+          trigger: 'blur'
+        }]
+      },
+      options: [{
+        label: "注册会员",
+        value: 1,
+      }, {
+        label: "铜牌会员",
+        value: 2,
+      }, {
+        label: "银牌会员",
+        value: 3,
+      }, {
+        label: "金牌会员",
+        value: 4,
+      }, {
+        label: "钻石会员",
+        value: 5,
+      }],
+      title: "新增会员",
+      isAdd: true, //判断是否为新增
     }
   },
   created() {
     this.getMember(0, 10, "", "");
+    this.addItem = this.ruleForm; //保存ruleForm的初始值
   },
   methods: {
     getMember(index, size, nick, mobile) {
@@ -109,8 +202,10 @@ export default {
         console.log(error)
       })
     },
-    addMember(addItem) {
-      console.log(addItem);
+    addMember() {
+      this.openForm = true;
+      this.isAdd = true;
+      this.title = "新增会员";
     },
     searchMember(type, key) {
       // this.loading = true;
@@ -122,8 +217,74 @@ export default {
         this.getMember(0, 10, "", "");
       }
     },
-    editMember(index, row) {
-      console.log(index, row)
+    editMember(row) {
+      this.openForm = true;
+      this.isAdd = false;
+      this.title = "编辑会员";
+      this.ruleForm = row;
+    },
+    Submit() {
+      if (this.isAdd) {
+        this.submitAdd();
+      } else {
+        this.submitEdit();
+      }
+    },
+    //提交新增的会员
+    submitAdd() {
+      var _this = this;
+      var data = JSON.stringify(this.ruleForm);
+      fetch("/api/addUser", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          'Content-Type': "application/json"
+        },
+        body: data
+      }).then(res => res.json()).then(result => {
+        if (result.Code === 200) {
+          _this.Close();
+          _this.$message({
+            message: '新增成功',
+            type: 'success'
+          });
+        } else {
+          console.log(result)
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    //提交编辑的会员
+    submitEdit() {
+      var _this = this;
+      var data = JSON.stringify(this.ruleForm);
+      fetch("/api/editUser", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          'Content-Type': "application/json"
+        },
+        body: data
+      }).then(res => res.json()).then(result => {
+        if (result.Code === 200) {
+          _this.Close();
+          _this.$message({
+            message: '编辑成功',
+            type: 'success'
+          });
+        } else {
+          console.log(result)
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    Close() {
+      this.openForm = false;
+      this.$refs["ruleForm"].resetFields();
+      this.ruleForm = this.addItem; //将ruleForm初始化
+      this.getMember(0, 10, "", "");
     },
     sizeChange(val) {
       this.pageSize = val;

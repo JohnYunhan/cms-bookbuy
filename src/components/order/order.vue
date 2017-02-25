@@ -72,11 +72,11 @@
         </el-table-column>
         <el-table-column align="center" label="操作">
           <template scope="scope">
-            <i class="fa fa-edit fa-lg" @click="editOrder(scope.row)"></i>
+            <i class="fa fa-edit fa-lg" @click="editOrder(scope.row)" style="cursor:pointer"></i>
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination @size-change="sizeChange" @current-change="currentChange" :current-page="currentPage" :page-sizes="[1, 2, 3, 4]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
+      <el-pagination @size-change="add" @current-change="currentChange" :current-page="currentPage" :page-sizes="[1, 2, 3, 4]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
       </el-pagination>
     </section>
     <section v-else>
