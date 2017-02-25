@@ -17,6 +17,8 @@
         </el-table-column>
         <el-table-column align="center" prop="CreateDate" label="注册日期">
         </el-table-column>
+        <el-table-column align="center" prop="UpdateDate" label="更新日期">
+        </el-table-column>
         <el-table-column align="center" label="状态">
           <template scope="scope">
             <span v-if="scope.row.Valid">已启用</span>
@@ -99,6 +101,7 @@ export default {
               _this.tableData.push(item);
             }
           }
+          _this.shiftDate(_this.tableData);
           // _this.loading = false;
         } else {
           console.log(result)
@@ -130,7 +133,16 @@ export default {
     currentChange(val) {
       this.currentPage = val;
       this.getMember(val - 1, this.pageSize, "", "");
-    }
+    },
+    //日期转换
+    shiftDate(data) {
+      for (var i = 0; i < data.length; i++) {
+        var update_date = new Date(data[i].UpdateDate);
+        this.tableData[i].UpdateDate = update_date.toLocaleDateString();
+        var create_date = new Date(data[i].CreateDate);
+        this.tableData[i].CreateDate = create_date.toLocaleDateString();
+      }
+    },
   },
   watch: {
     totalCount: function(val) {

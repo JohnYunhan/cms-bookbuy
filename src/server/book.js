@@ -80,7 +80,7 @@ let Book = mongoose.Schema({
   IsSoldOut: {
     type: Number,
     default: 0
-  }, //是否售罄,1:是,0:否 
+  }, //是否下架,1:是,0:否 
   CreateDate: {
     type: Number,
     default: Date.now()
