@@ -94,7 +94,7 @@ Category.statics.addCategory = function(json) {
 }
 
 //修改类别
-Category.statics.setCategory = function(json) {
+Category.statics.editCategory = function(json) {
   return new Promise((resolve, reject) => {
     let query = this.findOne({ Id: json.Id });
     query.exec((error, result) => {

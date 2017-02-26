@@ -13,13 +13,13 @@
         </el-table-column>
         <el-table-column align="center" label="状态">
           <template scope="scope">
-            <span v-if="scope.row.Status">已启用</span>
-            <span v-else>已禁用</span>
+            <span style="color:#13ce66" v-if="scope.row.Status">已启用</span>
+            <span style="color:red" v-else>已禁用</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="操作">
           <template scope="scope">
-            <i class="fa fa-edit fa-lg" @click="editPicture(scope.row)" style="cursor:pointer"></i>
+            <i class="fa fa-edit fa-lg" @click="editCategory(scope.row)" style="cursor:pointer"></i>
           </template>
         </el-table-column>
       </el-table>
@@ -28,6 +28,20 @@
       <el-pagination @size-change="sizeChange" @current-change="currentChange" :current-page="currentPage" :page-sizes="[1, 2, 3, 4]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
       </el-pagination>
     </footer>
+    <el-dialog :title="title" size="tiny" top="25%" v-model="handleForm">
+      <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
+        <el-form-item prop="Name" label="名称" :label-width="labelwidth">
+          <el-input v-model="ruleForm.Name"></el-input>
+        </el-form-item>
+        <el-form-item label="启用" :label-width="labelwidth">
+          <el-switch on-text="是" v-bind:true-value="true" v-bind:false-value="false" off-text="否" v-model="ruleForm.Status"></el-switch>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="Close">取 消</el-button>
+        <el-button type="primary" @click="submitEdit">提 交</el-button>
+      </div>
+    </el-dialog>
   </section>
 </template>
 <script>
@@ -49,6 +63,20 @@ export default {
       totalCount: 0, //数据总量
       currentPage: 1, //当前页码
       pageSize: 1, //每页的数据量
+      title: "编辑类别",
+      labelwidth: "60px",
+      handleForm: false,
+      ruleForm: {
+        Name: "",
+        Status: true
+      },
+      rules: {
+        Name: [{
+          required: true,
+          message: '请输入名称',
+          trigger: 'blur'
+        }]
+      },
     }
   },
   created() {
@@ -97,10 +125,27 @@ export default {
         console.log(error)
       })
     },
+    searchCategory(type, key) {
+      if (type === "Name") {
+        this.getCategory(0, 10, key);
+      }
+    },
     addCategory() {
+      this.$prompt('请输入类别', '新增类别', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputPattern: /[\u4E00-\u9FA5\uF900-\uFA2D]/,
+        inputErrorMessage: "请输入类别"
+      }).then((value) => {
+        this.submitAdd(value.value);
+      }).catch(() => {
+
+      });
+    },
+    submitAdd(name) {
       var _this = this;
       var data = {
-        Name: "经济"
+        Name: name
       }
       data = JSON.stringify(data);
       fetch("/api/addCategory", {
@@ -116,6 +161,7 @@ export default {
             message: '新增成功',
             type: 'success'
           });
+          _this.getCategory(0, 10, "");
         } else {
           console.log(result)
         }
@@ -123,14 +169,39 @@ export default {
         console.log(error)
       })
     },
-    searchCategory(type, key) {
-      // this.loading = true;
-      if (type === "Name") {
-        this.getCategory(0, 10, key);
-      }
-    },
     editCategory(row) {
-      console.log(row)
+      this.handleForm = true;
+      this.ruleForm = row;
+    },
+    submitEdit() {
+      var _this = this;
+      var data = JSON.stringify(this.ruleForm);
+      fetch("/api/editCategory", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          'Content-Type': "application/json"
+        },
+        body: data
+      }).then(res => res.json()).then(result => {
+        if (result.Code === 200) {
+          _this.$message({
+            message: '编辑成功',
+            type: 'success'
+          });
+          _this.getCategory(0, 10, "");
+          _this.Close();
+        } else {
+          console.log(result)
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    Close() {
+      this.handleForm = false;
+      this.$refs["ruleForm"].resetFields();
+      this.ruleForm = this.addItem; //将ruleForm初始化
     },
     sizeChange(val) {
       this.pageSize = val;

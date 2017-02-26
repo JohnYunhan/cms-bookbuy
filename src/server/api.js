@@ -438,7 +438,7 @@ router.post('/delPicture', function(req, res, next) {
 });
 
 //修改轮播图
-router.post('/setPicture', function(req, res, next) {
+router.post('/editPicture', function(req, res, next) {
   let json = new Pictures({
     Id: req.body.Id,
     Name: req.body.Name,
@@ -446,7 +446,7 @@ router.post('/setPicture', function(req, res, next) {
     Status: req.body.Status,
     UpdateDate: Date.now()
   });
-  Pictures.setPicture(json).then(result => {
+  Pictures.editPicture(json).then(result => {
     res.send({ Data: result, Message: "执行成功", Code: 200 });
   }).catch(error => {
     res.send({ Message: error, Code: 400 });
@@ -488,14 +488,14 @@ router.post('/delCategory', function(req, res, next) {
 });
 
 //修改类别
-router.post('/setCategory', function(req, res, next) {
+router.post('/editCategory', function(req, res, next) {
   let json = new Categorys({
     Id: req.body.Id,
     Name: req.body.Name,
     Status: req.body.Status,
     UpdateDate: Date.now()
   });
-  Categorys.setCategory(json).then(result => {
+  Categorys.editCategory(json).then(result => {
     res.send({ Data: result, Message: "执行成功", Code: 200 });
   }).catch(error => {
     res.send({ Message: error, Code: 400 });

@@ -28,8 +28,8 @@
         </el-table-column>
         <el-table-column align="center" label="状态">
           <template scope="scope">
-            <span v-if="scope.row.Valid">已启用</span>
-            <span v-else>已禁用</span>
+            <span style="color:#13ce66" v-if="scope.row.Valid">已启用</span>
+            <span style="color:red" v-else>已禁用</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="操作">
@@ -74,8 +74,8 @@
               <el-switch on-text="是" v-bind:true-value="true" v-bind:false-value="false" off-text="否" v-model="ruleForm.Valid"></el-switch>
             </el-form-item>
             <el-form-item style="text-align: center;margin-right: 80px">
-              <el-button type="primary" @click="Submit">保存</el-button>
-              <el-button @click="Close">取消</el-button>
+              <el-button type="primary" @click="Submit">提 交</el-button>
+              <el-button @click="Close">取 消</el-button>
             </el-form-item>
           </el-form>
         </el-col>
@@ -243,11 +243,11 @@ export default {
         body: data
       }).then(res => res.json()).then(result => {
         if (result.Code === 200) {
-          _this.Close();
           _this.$message({
             message: '新增成功',
             type: 'success'
           });
+          _this.Close();
         } else {
           console.log(result)
         }
@@ -268,11 +268,11 @@ export default {
         body: data
       }).then(res => res.json()).then(result => {
         if (result.Code === 200) {
-          _this.Close();
           _this.$message({
             message: '编辑成功',
             type: 'success'
           });
+          _this.Close();
         } else {
           console.log(result)
         }

@@ -98,7 +98,7 @@ Picture.statics.addPicture = function(json) {
 }
 
 //修改轮播图
-Picture.statics.setPicture = function(json) {
+Picture.statics.editPicture = function(json) {
   return new Promise((resolve, reject) => {
     let query = this.findOne({ Id: json.Id });
     query.exec((error, result) => {

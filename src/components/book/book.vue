@@ -52,8 +52,8 @@
               </el-form-item>
               <el-form-item label="推荐">
                 <template scope="scope">
-                  <span v-if="props.row.IsRecommend">是</span>
-                  <span v-else>否</span>
+                  <span style="color:#13ce66" v-if="props.row.IsRecommend">是</span>
+                  <span style="color:red" v-else>否</span>
                 </template>
               </el-form-item>
               <el-form-item label="下架">
@@ -368,11 +368,11 @@ export default {
           body: data
         }).then(res => res.json()).then(result => {
           if (result.Code === 200) {
-            _this.Close();
             _this.$message({
               message: '新增成功',
               type: 'success'
             });
+            _this.Close();
           } else {
             console.log(result)
           }
@@ -393,11 +393,11 @@ export default {
           body: data
         }).then(res => res.json()).then(result => {
           if (result.Code === 200) {
-            _this.Close();
             _this.$message({
               message: '编辑成功',
               type: 'success'
             });
+            _this.Close();
           } else {
             console.log(result)
           }
