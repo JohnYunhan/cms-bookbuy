@@ -137,7 +137,7 @@ Order.statics.addOrder = function(json) {
 }
 
 //修改订单
-Order.statics.setOrder = function(json) {
+Order.statics.editOrder = function(json) {
   return new Promise((resolve, reject) => {
     let query = this.findOne({ Id: json.Id });
     query.exec((error, result) => {

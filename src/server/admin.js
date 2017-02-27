@@ -150,7 +150,7 @@ Admin.statics.getAdminById = function(Id) {
 }
 
 //修改管理员
-Admin.statics.setAdmin = function(json) {
+Admin.statics.editAdmin = function(json) {
   return new Promise((resolve, reject) => {
     let query = this.findOne({ Id: json.Id });
     query.exec((error, result) => {

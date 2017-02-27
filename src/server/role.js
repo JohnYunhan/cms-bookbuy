@@ -106,7 +106,7 @@ Role.statics.addRole = function(json) {
 }
 
 //修改管理角色
-Role.statics.setRole = function(json) {
+Role.statics.editRole = function(json) {
   return new Promise((resolve, reject) => {
     let query = this.findOne({ Id: json.Id });
     query.exec((error, result) => {

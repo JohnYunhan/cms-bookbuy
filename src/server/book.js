@@ -224,7 +224,7 @@ Book.statics.delBook = function(Id) {
 }
 
 //修改图书
-Book.statics.setBook = function(json) {
+Book.statics.editBook = function(json) {
   return new Promise((resolve, reject) => {
     let query = this.findOne({ Id: json.Id });
     query.exec((error, result) => {

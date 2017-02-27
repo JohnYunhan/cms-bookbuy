@@ -98,7 +98,7 @@ router.post('/addAdmin', function(req, res, next) {
 });
 
 //修改管理员
-router.post('/setAdmin', function(req, res, next) {
+router.post('/editAdmin', function(req, res, next) {
   let json = new Admins({
     Id: req.AdminInfo.Id,
     RoleId: req.body.RoleId,
@@ -107,7 +107,7 @@ router.post('/setAdmin', function(req, res, next) {
     Status: req.body.Status,
     UpdateDate: Date.now()
   });
-  Admins.setAdmin(json).then(result => {
+  Admins.editAdmin(json).then(result => {
     res.send({ Data: result, Message: "执行成功", Code: 200 });
   }).catch(error => {
     res.send({ Message: error, Code: 400 });
@@ -256,7 +256,7 @@ router.post('/addBook', function(req, res, next) {
 });
 
 //修改图书
-router.post('/setBook', function(req, res, next) {
+router.post('/editBook', function(req, res, next) {
   let json = new Books({
     Id: req.body.Id,
     Name: req.body.Name,
@@ -276,7 +276,7 @@ router.post('/setBook', function(req, res, next) {
     IsSoldOut: req.body.IsSoldOut,
     UpdateDate: Date.now()
   });
-  Books.setBook(json).then(result => {
+  Books.editBook(json).then(result => {
     res.send({ Data: result, Message: "执行成功", Code: 200 });
   }).catch(error => {
     res.send({ Message: error, Code: 400 });
@@ -311,7 +311,7 @@ router.post('/getOrderList', function(req, res, next) {
 });
 
 //修改订单
-router.post('/setOrder', function(req, res, next) {
+router.post('/editOrder', function(req, res, next) {
   let json = new Orders({
     Id: req.body.Id,
     BookId: req.body.BookId,
@@ -325,7 +325,7 @@ router.post('/setOrder', function(req, res, next) {
     Status: parseInt(req.body.Status),
     UpdateDate: Date.now()
   });
-  Orders.setOrder(json).then(result => {
+  Orders.editOrder(json).then(result => {
     res.send({ Data: result, Message: "执行成功", Code: 200 });
   }).catch(error => {
     res.send({ Message: error, Code: 400 });
@@ -387,14 +387,14 @@ router.post('/delPress', function(req, res, next) {
 });
 
 //修改出版社
-router.post('/setPress', function(req, res, next) {
+router.post('/editPress', function(req, res, next) {
   let json = new Presses({
     Id: req.body.Id,
     Name: req.body.Name,
     Status: req.body.Status,
     UpdateDate: Date.now()
   });
-  Presses.setPress(json).then(result => {
+  Presses.editPress(json).then(result => {
     res.send({ Data: result, Message: "执行成功", Code: 200 });
   }).catch(error => {
     res.send({ Message: error, Code: 400 });
@@ -541,7 +541,7 @@ router.post('/delRole', function(req, res, next) {
 });
 
 //修改管理角色
-router.post('/setRole', function(req, res, next) {
+router.post('/editRole', function(req, res, next) {
   let json = new Roles({
     Id: req.body.Id,
     Name: req.body.Name,
@@ -551,7 +551,7 @@ router.post('/setRole', function(req, res, next) {
     UpdateDate: Date.now(),
     Status: req.body.Status
   });
-  Roles.setRole(json).then(result => {
+  Roles.editRole(json).then(result => {
     res.send({ Data: result, Message: "执行成功", Code: 200 });
   }).catch(error => {
     res.send({ Message: error, Code: 400 });
@@ -593,14 +593,14 @@ router.post('/delModule', function(req, res, next) {
 });
 
 //修改模块
-router.post('/setModule', function(req, res, next) {
+router.post('/editModule', function(req, res, next) {
   let json = new Modules({
     Id: req.body.Id,
     Name: req.body.Name,
     UpdateDate: Date.now(),
     Status: req.body.Status
   });
-  Modules.setModule(json).then(result => {
+  Modules.editModule(json).then(result => {
     res.send({ Data: result, Message: "执行成功", Code: 200 });
   }).catch(error => {
     res.send({ Message: error, Code: 400 });

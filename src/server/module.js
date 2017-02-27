@@ -94,7 +94,7 @@ Module.statics.addModule = function(json) {
 }
 
 //修改管理模块
-Module.statics.setModule = function(json) {
+Module.statics.editModule = function(json) {
   return new Promise((resolve, reject) => {
     let query = this.findOne({ Id: json.Id });
     query.exec((error, result) => {

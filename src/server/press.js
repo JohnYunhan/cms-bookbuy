@@ -94,7 +94,7 @@ Press.statics.addPress = function(json) {
 }
 
 //修改出版社
-Press.statics.setPress = function(json) {
+Press.statics.editPress = function(json) {
   return new Promise((resolve, reject) => {
     let query = this.findOne({ Id: json.Id });
     query.exec((error, result) => {

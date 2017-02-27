@@ -57,7 +57,7 @@
       </el-col>
     </el-row>
     <!-- 修改密码对话框 -->
-    <el-dialog class="updatePwdForm" title="修改密码" v-model="updatePwdFormVisible" :close-on-click-modal="false">
+    <el-dialog class="updatePwdForm" size="tiny" top="25%" title="修改密码" v-model="updatePwdFormVisible" :close-on-click-modal="false">
       <el-form :model="updatePwdForm" :rules="rulePwdForm" ref="updatePwdForm">
         <el-form-item label="原密码" label-width="82px" prop="originalPwd">
           <el-input type="password" v-model="updatePwdForm.originalPwd"></el-input>
@@ -302,11 +302,13 @@ export default {
   text-decoration: underline;
 }
 
-.updatePwdForm {
-  width: 900px;
-}
 
-.btnCenter {
+/*.updatePwdForm {
+  width: 900px;
+}*/
+
+
+/*.btnCenter {
   text-align: right;
-}
+}*/
 </style>
