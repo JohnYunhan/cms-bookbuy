@@ -78,9 +78,10 @@ Role.statics.getRoleList = function(index, size, json) {
 }
 
 //根据Id获取管理模块集合
-Role.statics.getModulesById = function(Id) {
+Role.statics.getModulesByRoleId = function(Id) {
   return new Promise((resolve, reject) => {
     let query = this.findOne({ Id: Id });
+    query.select("ModuleIds Modules");
     query.exec((error, result) => {
       if (result) {
         resolve(result);

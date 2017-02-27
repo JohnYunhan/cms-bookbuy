@@ -138,9 +138,6 @@ export default {
 
     },
     methods: {
-      onSubmit() {
-        console.log('submit!');
-      },
       handleopen(key, keyPath) {
         // console.log(key, keyPath);
       },
@@ -207,7 +204,7 @@ export default {
         this.$confirm('确认退出吗?', '提示', {
           //type: 'warning'
         }).then(() => {
-          _this.$router.replace('/login')
+          _this.$router.replace('/login');
         }).catch(() => {
 
         });

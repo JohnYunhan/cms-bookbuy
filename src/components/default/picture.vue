@@ -21,7 +21,8 @@
         </el-table-column>
         <el-table-column align="center" label="操作">
           <template scope="scope">
-            <i class="fa fa-edit fa-lg" @click="editPicture(scope.row)" style="cursor:pointer"></i>
+            <i class="el-icon-edit" @click="editPicture(scope.row)" style="cursor:pointer;font-size:18px"></i>
+            <i class="el-icon-delete2" @click="delPicture(scope.row)" style="cursor:pointer;font-size:18px"></i>
           </template>
         </el-table-column>
       </el-table>
@@ -161,7 +162,7 @@ export default {
         body: data
       }).then(res => res.json()).then(result => {
         if (result.Code === 200) {
-          _this.$message({
+          _this.$notify({
             message: '新增成功',
             type: 'success'
           });
@@ -180,6 +181,39 @@ export default {
       this.isEdit = true;
       this.ruleForm = row;
     },
+    delPicture(row) {
+      var _this = this;
+      this.$confirm('确认要删除吗?', '提示', {
+        //type: 'warning'
+      }).then(() => {
+        var data = {
+          Id: row.Id
+        };
+        data = JSON.stringify(data);
+        fetch("/api/delPicture", {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            'Content-Type': "application/json"
+          },
+          body: data
+        }).then(res => res.json()).then(result => {
+          if (result.Code === 200) {
+            _this.$notify({
+              message: '删除成功',
+              type: 'success'
+            });
+            _this.getPicture(0, 10, "");
+          } else {
+            console.log(result)
+          }
+        }).catch(error => {
+          console.log(error)
+        })
+      }).catch(() => {
+
+      });
+    },
     submitEdit() {
       var _this = this;
       var data = JSON.stringify(this.ruleForm);
@@ -192,7 +226,7 @@ export default {
         body: data
       }).then(res => res.json()).then(result => {
         if (result.Code === 200) {
-          _this.$message({
+          _this.$notify({
             message: '编辑成功',
             type: 'success'
           });
@@ -252,5 +286,9 @@ export default {
 footer {
   margin-left: 5px;
   margin-bottom: 18px;
+}
+
+.el-message-box {
+  width: 350px;
 }
 </style>

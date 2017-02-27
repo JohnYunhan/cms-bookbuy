@@ -10,8 +10,8 @@ import Book from './../components/book/book.vue'
 import Category from './../components/book/category.vue'
 import Press from './../components/book/press.vue'
 import Admin from './../components/system/admin.vue'
-import Module from './../components/system/module.vue'
-import Role from './../components/system/role.vue'
+// import Module from './../components/system/module.vue'
+// import Role from './../components/system/role.vue'
 
 Vue.use(VueRouter)
 
@@ -63,8 +63,8 @@ export default new VueRouter({
     iconCls: 'fa fa-gear',
     children: [
       { path: '/admin', component: Admin, name: '管理员管理' },
-      { path: '/moudle', component: Module, name: '模块管理' },
-      { path: '/role', component: Role, name: '角色管理' }
+      // { path: '/moudle', component: Module, name: '模块管理' },
+      // { path: '/role', component: Role, name: '角色管理' }
     ]
   }]
 })

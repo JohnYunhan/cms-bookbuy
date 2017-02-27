@@ -40,13 +40,13 @@ router.post('/login', function(req, res, next) {
     if (req.body.Checked) {
       res.cookie("token", setCookie({
         Id: result.Id,
-        RoleId: result.RoleId,
+        // RoleId: result.RoleId,
         Nick: result.Nick
       }));
     } else {
       res.cookie("token", setCookie({
         Id: result.Id,
-        RoleId: result.RoleId,
+        // RoleId: result.RoleId,
         Nick: result.Nick,
         LoginDate: Date.now()
       }));
@@ -74,7 +74,7 @@ router.post('/getAdminList', function(req, res, next) {
 
 //根据Id获取管理员信息
 router.post('/getAdminById', function(req, res, next) {
-  let Id = req.body.Id;
+  let Id = req.AdminInfo.Id;
   Admins.getAdminById(Id).then(result => {
     res.send({ Data: result, Message: "执行成功", Code: 200 });
   }).catch(error => {
@@ -85,7 +85,8 @@ router.post('/getAdminById', function(req, res, next) {
 //新增管理员
 router.post('/addAdmin', function(req, res, next) {
   let json = new Admins({
-    RoleId: parseInt(req.body.RoleId),
+    // RoleId: req.body.RoleId,
+    // RoleName: req.body.RoleName,
     Nick: req.body.Nick,
     Password: req.body.Password,
     Mobile: req.body.Mobile
@@ -100,8 +101,9 @@ router.post('/addAdmin', function(req, res, next) {
 //修改管理员
 router.post('/editAdmin', function(req, res, next) {
   let json = new Admins({
-    Id: req.AdminInfo.Id,
-    RoleId: req.body.RoleId,
+    Id: req.body.Id,
+    // RoleId: req.body.RoleId,
+    // RoleName: req.body.RoleName,
     Nick: req.body.Nick,
     Mobile: req.body.Mobile,
     Status: req.body.Status,
@@ -204,6 +206,16 @@ router.post('/setUserPassword', function(req, res, next) {
   })
 });
 
+//删除会员
+router.post('/delMember', function(req, res, next) {
+  let Id = req.body.Id;
+  Users.delMember(Id).then(result => {
+    res.send({ Data: result, Message: "执行成功", Code: 200 });
+  }).catch(error => {
+    res.send({ Message: error, Code: 400 });
+  })
+});
+
 //获取图书列表
 router.post('/getBookList', function(req, res, next) {
   let json = new Books({
@@ -222,7 +234,6 @@ router.post('/getBookList', function(req, res, next) {
 //根据Id获取图书
 router.get('/getBookById', function(req, res, next) {
   let Id = req.query.Id;
-  console.log(Id)
   Books.getBookById(Id).then(result => {
     res.send({ Data: result, Message: "执行成功", Code: 200 });
   }).catch(error => {
@@ -513,6 +524,16 @@ router.post('/getRoleList', function(req, res, next) {
     res.send({ Message: error, Code: 400 });
   })
 });
+
+//根据角色Id获取对应的管理模块
+router.get('/getModulesByRoleId', function(req, res, next) {
+  let Id = req.AdminInfo.RoleId;
+  Roles.getModulesByRoleId(Id).then(result => {
+    res.send({ Data: result, Message: "执行成功", Code: 200 });
+  }).catch(error => {
+    res.send({ Message: error, Code: 400 });
+  })
+})
 
 //新增管理角色
 router.post('/addRole', function(req, res, next) {

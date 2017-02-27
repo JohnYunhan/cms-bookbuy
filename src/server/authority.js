@@ -12,6 +12,7 @@ function AuthCookie(req, res, next) {
         // 解密成功
         let Id = decoded.Id;
         let Nick = decoded.Nick;
+        // let RoleId = decoded.RoleId;
         // let loginDate = decoded.LoginDate;
         // let nowDate = Date.now();
         // let days = nowDate - loginDate;
@@ -20,7 +21,8 @@ function AuthCookie(req, res, next) {
           //管理员
           req.AdminInfo = {
             Id: Id,
-            Nick: Nick
+            Nick: Nick,
+            // RoleId: RoleId,
           }
           next();
         }
@@ -29,14 +31,16 @@ function AuthCookie(req, res, next) {
         res.clearCookie('token');
         req.AdminInfo = {
           Id: "",
-          Nick: ""
+          Nick: "",
+          // RoleId: ""
         };
       }
     })
   } else {
     req.AdminInfo = {
       Id: "",
-      Nick: ""
+      Nick: "",
+      // RoleId: ""
     };
     next();
   }

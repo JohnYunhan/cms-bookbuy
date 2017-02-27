@@ -16,8 +16,14 @@ let Admin = mongoose.Schema({
   }, //管理员id
   RoleId: {
     type: String,
-    required: true,
+    // required: true,
+    default: "",
   }, //角色Id
+  RoleName: {
+    type: String,
+    // required: true,
+    default: "",
+  }, //角色名称 
   Nick: {
     type: String,
     required: true,
@@ -155,7 +161,7 @@ Admin.statics.editAdmin = function(json) {
     let query = this.findOne({ Id: json.Id });
     query.exec((error, result) => {
       if (result) {
-        result.RoleId = json.RoleId;
+        // result.RoleId = json.RoleId;
         result.Nick = json.Nick;
         result.Mobile = json.Mobile;
         result.Status = json.Status;

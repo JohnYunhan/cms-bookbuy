@@ -61,6 +61,11 @@ export default {
             this.$emit("addModule");
           }
           break;
+        case "admin":
+          {
+            this.$emit("addAdmin");
+          }
+          break;
       }
     },
     search() {
@@ -93,6 +98,11 @@ export default {
         case "press":
           {
             this.$emit("searchPress", this.searchType, this.searchKey);
+          }
+          break;
+        case "admin":
+          {
+            this.$emit("searchAdmin", this.searchType, this.searchKey);
           }
           break;
       }
@@ -132,6 +142,11 @@ export default {
         case "module":
           {
             this.$emit("getModule", 0, 10, "");
+          }
+          break;
+        case "admin":
+          {
+            this.$emit("getAdmin", 0, 10, "");
           }
           break;
       }

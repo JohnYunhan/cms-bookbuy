@@ -19,7 +19,8 @@
         </el-table-column>
         <el-table-column align="center" label="操作">
           <template scope="scope">
-            <i class="fa fa-edit fa-lg" @click="editCategory(scope.row)" style="cursor:pointer"></i>
+            <i class="el-icon-edit" @click="editCategory(scope.row)" style="cursor:pointer;font-size:18px"></i>
+            <i class="el-icon-delete2" @click="delCategory(scope.row)" style="cursor:pointer;font-size:18px"></i>
           </template>
         </el-table-column>
       </el-table>
@@ -158,7 +159,7 @@ export default {
         body: data
       }).then(res => res.json()).then(result => {
         if (result.Code === 200) {
-          _this.$message({
+          _this.$notify({
             message: '新增成功',
             type: 'success'
           });
@@ -186,7 +187,7 @@ export default {
         body: data
       }).then(res => res.json()).then(result => {
         if (result.Code === 200) {
-          _this.$message({
+          _this.$notify({
             message: '编辑成功',
             type: 'success'
           });
@@ -198,6 +199,39 @@ export default {
       }).catch(error => {
         console.log(error)
       })
+    },
+    delCategory(row) {
+      var _this = this;
+      this.$confirm('确认要删除吗?', '提示', {
+        //type: 'warning'
+      }).then(() => {
+        var data = {
+          Id: row.Id
+        };
+        data = JSON.stringify(data);
+        fetch("/api/delCategory", {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            'Content-Type': "application/json"
+          },
+          body: data
+        }).then(res => res.json()).then(result => {
+          if (result.Code === 200) {
+            _this.$notify({
+              message: '删除成功',
+              type: 'success'
+            });
+            _this.getCategory(0, 10, "");
+          } else {
+            console.log(result)
+          }
+        }).catch(error => {
+          console.log(error)
+        })
+      }).catch(() => {
+
+      });
     },
     Close() {
       this.handleForm = false;

@@ -213,6 +213,26 @@ User.statics.setUserPassword = function(json, oldpwd) {
   })
 }
 
+//删除会员
+User.statics.delMember = function(Id) {
+  return new Promise((resolve, reject) => {
+    let query = this.findOne({ Id: Id });
+    query.exec((error, result) => {
+      if (result) {
+        result.remove((err, res) => {
+          if (!err) {
+            resolve(res);
+          } else {
+            reject(err);
+          }
+        })
+      } else {
+        reject(error);
+      }
+    })
+  })
+}
+
 //会员升级
 User.statics.userUpgrade = function(json) {
   return new Promise((resolve, reject) => {

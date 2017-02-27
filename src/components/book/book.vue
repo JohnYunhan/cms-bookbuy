@@ -97,7 +97,8 @@
         </el-table-column>
         <el-table-column align="center" label="操作">
           <template scope="scope">
-            <i class="fa fa-edit fa-lg" @click="editBook(scope.row)" style="cursor:pointer"></i>
+            <i class="el-icon-edit" @click="editBook(scope.row)" style="cursor:pointer;font-size:18px"></i>
+            <i class="el-icon-delete2" @click="delBook(scope.row)" style="cursor:pointer;font-size:18px"></i>
           </template>
         </el-table-column>
       </el-table>
@@ -405,35 +406,44 @@ export default {
           console.log(error)
         })
       },
+      delBook(row) {
+        var _this = this;
+        this.$confirm('确认要删除吗?', '提示', {
+          //type: 'warning'
+        }).then(() => {
+          var data = {
+            Id: row.Id
+          };
+          data = JSON.stringify(data);
+          fetch("/api/delBook", {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              'Content-Type': "application/json"
+            },
+            body: data
+          }).then(res => res.json()).then(result => {
+            if (result.Code === 200) {
+              _this.$notify({
+                message: '删除成功',
+                type: 'success'
+              });
+              _this.getBook(0, 10, "");
+            } else {
+              console.log(result)
+            }
+          }).catch(error => {
+            console.log(error)
+          })
+        }).catch(() => {
+
+        });
+      },
       Close() {
         this.openForm = false;
         this.$refs["ruleForm"].resetFields();
         this.ruleForm = this.addItem; //将ruleForm初始化
         this.getBook(0, 10, "", "", "", "");
-        // var _this = this;
-        // var data = {
-        //   Name: "教材"
-        // }
-        // data = JSON.stringify(data);
-        // fetch("/api/addCategory", {
-        //   method: "POST",
-        //   credentials: "include",
-        //   headers: {
-        //     'Content-Type': "application/json"
-        //   },
-        //   body: data
-        // }).then(res => res.json()).then(result => {
-        //   if (result.Code === 200) {
-        //     _this.$message({
-        //       message: '新增成功',
-        //       type: 'success'
-        //     });
-        //   } else {
-        //     console.log(result)
-        //   }
-        // }).catch(error => {
-        //   console.log(error)
-        // })
       },
     },
     filters: {
