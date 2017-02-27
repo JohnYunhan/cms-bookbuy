@@ -3,7 +3,7 @@
     <header>
       <search :haveAdd="have" :searchList="list" :source="source" :defaultValue="searchType" @addPress="addPress" @searchPress="searchPress" @getPress="getPress"></search>
     </header>
-    <section style="padding:0 20px 20px">
+    <section style="padding:0 20px 18px">
       <el-table :data="tableData" border align="center" style="width:100%">
         <el-table-column align="center" prop="Name" label="名称">
         </el-table-column>
@@ -28,7 +28,7 @@
       <el-pagination @size-change="sizeChange" @current-change="currentChange" :current-page="currentPage" :page-sizes="[1, 2, 3, 4]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
       </el-pagination>
     </footer>
-    <el-dialog :title="title" size="tiny" top="25%" v-model="handleForm">
+    <el-dialog :title="title" size="tiny" top="20%" v-model="handleForm">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
         <el-form-item prop="Name" label="名称" :label-width="labelwidth">
           <el-input v-model="ruleForm.Name"></el-input>
@@ -201,7 +201,6 @@ export default {
     Close() {
       this.handleForm = false;
       this.$refs["ruleForm"].resetFields();
-      this.ruleForm = this.addItem; //将ruleForm初始化
     },
     sizeChange(val) {
       this.pageSize = val;
@@ -230,6 +229,6 @@ export default {
 <style scoped>
 footer {
   margin-left: 5px;
-  margin-bottom: 10px;
+  margin-bottom: 18px;
 }
 </style>

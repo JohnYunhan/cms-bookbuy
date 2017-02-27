@@ -3,7 +3,7 @@
     <header v-show="!openForm">
       <search :haveAdd="have" :searchList="list" :source="source" :defaultValue="searchType" @addBook="addBook" @searchBook="searchBook" @getBook="getBook"></search>
     </header>
-    <section v-if="!openForm" style="padding:0 20px 10px">
+    <section v-if="!openForm" style="padding:0 20px 18px">
       <el-table :data="tableData" style="width: 100%">
         <el-table-column type="expand">
           <template scope="props">
@@ -85,8 +85,8 @@
         </el-table-column>
         <el-table-column align="center" label="推荐">
           <template scope="scope">
-            <span v-if="scope.row.IsRecommend">是</span>
-            <span v-else>否</span>
+            <span style="color:#13ce66" v-if="scope.row.IsRecommend">是</span>
+            <span style="color:red" v-else>否</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="下架">
@@ -101,8 +101,8 @@
           </template>
         </el-table-column>
       </el-table>
-      <section>
-        <el-pagination style="padding:0;margin-top:10px;margin-left:-10px" @size-change="sizeChange" @current-change="currentChange" :current-page="currentPage" :page-sizes="[1, 2, 3, 4]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
+      <section style="padding:0;margin-top:18px;margin-left:-16px">
+        <el-pagination @size-change="sizeChange" @current-change="currentChange" :current-page="currentPage" :page-sizes="[1, 2, 3, 4]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
         </el-pagination>
       </section>
     </section>

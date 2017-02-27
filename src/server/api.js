@@ -418,7 +418,7 @@ router.post('/addPicture', function(req, res, next) {
   let json = new Pictures({
     Name: req.body.Name,
     Url: req.body.Url,
-    Status: parseInt(req.body.Status)
+    Status: req.body.Status
   });
   Pictures.addPicture(json).then(result => {
     res.send({ Data: result, Message: "执行成功", Code: 200 });
@@ -508,7 +508,7 @@ router.post('/getRoleList', function(req, res, next) {
     Name: req.body.Name
   });
   Roles.getRoleList(req.body.Index, req.body.Size, json).then(result => {
-    res.send({ Data: result, Message: "执行成功", Code: 200 });
+    res.send({ Data: result.Data, TotalCount: result.TotalCount, Message: "执行成功", Code: 200 });
   }).catch(error => {
     res.send({ Message: error, Code: 400 });
   })
@@ -564,7 +564,7 @@ router.post('/getModuleList', function(req, res, next) {
     Name: req.body.Name
   });
   Modules.getModuleList(req.body.Index, req.body.Size, json).then(result => {
-    res.send({ Data: result, Message: "执行成功", Code: 200 });
+    res.send({ Data: result.Data, TotalCount: result.TotalCount, Message: "执行成功", Code: 200 });
   }).catch(error => {
     res.send({ Message: error, Code: 400 });
   })

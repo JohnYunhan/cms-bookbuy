@@ -3,7 +3,7 @@
     <header v-show="!openForm">
       <search :haveAdd="have" :searchList="list" :source="source" :defaultValue="searchType" @addMember="addMember" @searchMember="searchMember" @getMember="getMember"></search>
     </header>
-    <section v-if="!openForm" style="padding:0 20px 20px">
+    <section v-if="!openForm" style="padding:0 20px 18px">
       <el-table :data="tableData" border style="width:100%">
         <el-table-column align="center" prop="Nick" label="昵称">
         </el-table-column>
@@ -38,8 +38,10 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination @size-change="sizeChange" @current-change="currentChange" :current-page="currentPage" :page-sizes="[1, 2, 3, 4]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
-      </el-pagination>
+      <section style="padding:0;margin-top:18px;margin-left:-16px">
+        <el-pagination @size-change="sizeChange" @current-change="currentChange" :current-page="currentPage" :page-sizes="[1, 2, 3, 4]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
+        </el-pagination>
+      </section>
     </section>
     <section v-else>
       <h5 style="text-align: center;margin: 10px 0"><b>{{title}}</b></h5>

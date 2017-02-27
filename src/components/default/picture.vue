@@ -166,6 +166,7 @@ export default {
             type: 'success'
           });
           _this.Close();
+          _this.getPicture(0, 10, "");
         } else {
           console.log(result)
         }
@@ -196,6 +197,7 @@ export default {
             type: 'success'
           });
           _this.Close();
+          _this.getPicture(0, 10, "");
         } else {
           console.log(result)
         }
@@ -249,6 +251,6 @@ export default {
 <style scoped>
 footer {
   margin-left: 5px;
-  margin-bottom: 10px;
+  margin-bottom: 18px;
 }
 </style>

@@ -31,7 +31,7 @@ const opts = {
     socketOptions: { keepAlive: 1 }
   }
 };
-mongoose.connect("mongodb://admin:123456@localhost:27017/BookBuyDB", opts); //连接测试库
+mongoose.connect("mongodb://admin:123456@127.0.0.1:27017/BookBuyDB", opts); //连接测试库
 
 app.use(favicon(path.join(__dirname, './favicon.ico')));
 app.use(bodyParser.json());

@@ -3,7 +3,7 @@
     <header v-show="!openForm">
       <search :haveAdd="have" :searchList="list" :source="source" :defaultValue="searchType" @searchOrder="searchOrder" @getOrder="getOrder"></search>
     </header>
-    <section v-if="!openForm" style="padding:0 20px 20px">
+    <section v-if="!openForm" style="padding:0 20px 18px">
       <el-table :data="tableData" style="width: 100%">
         <el-table-column type="expand">
           <template scope="props">
@@ -68,7 +68,15 @@
         </el-table-column>
         <el-table-column align="center" label="修改日期" prop="UpdateDate">
         </el-table-column>
-        <el-table-column align="center" label="订单状态" prop="Status">
+        <el-table-column align="center" label="订单状态">
+          <template scope="scope">
+            <span v-if="scope.row.Status==0">已失效</span>
+            <span v-else-if="scope.row.Status==1">待确认</span>
+            <span v-else-if="scope.row.Status==2">配送中</span>
+            <span v-else-if="scope.row.Status==3">已签收</span>
+            <span v-else-if="scope.row.Status==4">审核退款</span>
+            <span v-else>已退款</span>
+          </template>
         </el-table-column>
         <el-table-column align="center" label="操作">
           <template scope="scope">
@@ -76,8 +84,10 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination @size-change="add" @current-change="currentChange" :current-page="currentPage" :page-sizes="[1, 2, 3, 4]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
-      </el-pagination>
+      <section style="padding:0;margin-top:18px;margin-left:-16px">
+        <el-pagination @size-change="add" @current-change="currentChange" :current-page="currentPage" :page-sizes="[1, 2, 3, 4]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
+        </el-pagination>
+      </section>
     </section>
     <section v-else>
       <el-row type="flex" justify="center">
@@ -130,7 +140,7 @@ export default {
           label: "订单号",
           value: "OrderId"
         }, {
-          label: "账号",
+          label: "昵称",
           value: "Nick"
         }],
         have: false, //是否有添加功能
@@ -244,6 +254,7 @@ export default {
                 _this.tableData.push(item);
               }
             }
+            _this.shiftDate(_this.tableData);
           } else {
             console.log(result)
           }
@@ -401,6 +412,15 @@ export default {
       currentChange(val) {
         this.currentPage = val;
         this.getOrder(val - 1, this.pageSize, "", "", "");
+      },
+      //日期转换
+      shiftDate(data) {
+        for (var i = 0; i < data.length; i++) {
+          var update_date = new Date(data[i].UpdateDate);
+          this.tableData[i].UpdateDate = update_date.toLocaleDateString();
+          var create_date = new Date(data[i].CreateDate);
+          this.tableData[i].CreateDate = create_date.toLocaleDateString();
+        }
       },
     },
     filters: {

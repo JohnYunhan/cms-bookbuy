@@ -80,10 +80,10 @@ export default {
     }
   },
   created() {
-    this.getPress(0, 10, "");
+    this.getModule(0, 10, "");
   },
   methods: {
-    getPress(index, size, name) {
+    getModule(index, size, name) {
       var _this = this;
       var data = {
         Index: index,
@@ -201,7 +201,6 @@ export default {
     Close() {
       this.handleForm = false;
       this.$refs["ruleForm"].resetFields();
-      this.ruleForm = this.addItem; //将ruleForm初始化
     },
     sizeChange(val) {
       this.pageSize = val;

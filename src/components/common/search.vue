@@ -11,12 +11,6 @@
       </el-select>
       <el-input class="searchkey" v-model="searchKey" @keyup.enter="search"></el-input>
       <el-button type="primary" icon="search" @click="search">查询</el-button>
-      <!-- <el-input class="searchkey" placeholder="" v-model="searchKey">
-        <el-select v-model="searchType" slot="prepend">
-          <el-option v-for="item in searchList" :label="item.label" :value="item.value">
-        </el-select>
-        <el-button slot="append" icon="search" @click="search"></el-button>
-      </el-input> -->
     </el-col>
     <el-col :span="3" class="right">
       <el-button type="success" class="fa fa-refresh" @click="refresh"></el-button>
@@ -57,6 +51,16 @@ export default {
             this.$emit("addCategory");
           }
           break;
+        case "press":
+          {
+            this.$emit("addPress");
+          }
+          break;
+        case "module":
+          {
+            this.$emit("addModule");
+          }
+          break;
       }
     },
     search() {
@@ -86,6 +90,11 @@ export default {
             this.$emit("searchCategory", this.searchType, this.searchKey);
           }
           break;
+        case "press":
+          {
+            this.$emit("searchPress", this.searchType, this.searchKey);
+          }
+          break;
       }
     },
     refresh() {
@@ -113,6 +122,16 @@ export default {
         case "category":
           {
             this.$emit("getCategory", 0, 10, "");
+          }
+          break;
+        case "press":
+          {
+            this.$emit("getPress", 0, 10, "");
+          }
+          break;
+        case "module":
+          {
+            this.$emit("getModule", 0, 10, "");
           }
           break;
       }
