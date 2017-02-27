@@ -55,7 +55,7 @@ let Book = mongoose.Schema({
   }, //目录  
   Image: {
     type: Array,
-    default: "",
+    default: [],
   },
   ListPrice: {
     type: Number,
