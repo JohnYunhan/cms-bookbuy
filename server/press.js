@@ -65,6 +65,21 @@ Press.statics.getPressList = function(index, size, json) {
   })
 }
 
+//获取出版社枚举
+Press.statics.getPress = function() {
+  return new Promise((resolve, reject) => {
+    let query = this.find();
+    query.select("Id Name");
+    query.exec((error, result) => {
+      if (result) {
+        resolve(result);
+      } else {
+        reject(error);
+      }
+    })
+  })
+}
+
 //根据Id获取出版社
 Press.statics.getPressById = function(pressId) {
   return new Promise((resolve, reject) => {

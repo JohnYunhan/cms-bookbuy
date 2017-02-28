@@ -65,6 +65,21 @@ Category.statics.getCategoryList = function(index, size, json) {
   })
 }
 
+//获取类别枚举
+Category.statics.getCategory = function() {
+  return new Promise((resolve, reject) => {
+    let query = this.find();
+    query.select("Id Name");
+    query.exec((error, result) => {
+      if (result) {
+        resolve(result);
+      } else {
+        reject(error);
+      }
+    })
+  })
+}
+
 //根据Id获取类别
 Category.statics.getCategoryById = function(categoryId) {
   return new Promise((resolve, reject) => {

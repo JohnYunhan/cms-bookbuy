@@ -120,14 +120,12 @@
             </el-form-item>
             <el-form-item label="类别" prop="Category">
               <el-select v-model="ruleForm.Category" style="width: 218px;" placeholder="请选择类别">
-                <el-option label="计算机" value="计算机"></el-option>
-                <el-option label="教材" value="教材"></el-option>
+                <el-option v-for="item in Categorys" :label="item.Name" :value="item.Name">
               </el-select>
             </el-form-item>
             <el-form-item label="出版社" prop="Press">
               <el-select v-model="ruleForm.Press" style="width: 218px;" placeholder="请选择出版社">
-                <el-option label="机械工业出版社" value="机械工业出版社"></el-option>
-                <el-option label="人民邮电出版社" value="人民邮电出版社"></el-option>
+                <el-option v-for="item in Presses" :label="item.Name" :value="item.Name">
               </el-select>
             </el-form-item>
             <el-form-item label="出版日期" prop="PublishDate">
@@ -261,6 +259,8 @@ export default {
             trigger: 'blur'
           }],
         },
+        Categorys: [],
+        Presses: [],
         formValid: true,
         title: "新增图书",
         isEdit: true, //判断是否为编辑
@@ -268,7 +268,6 @@ export default {
     },
     created() {
       this.getBook(0, 10, "", "", "", "");
-      this.addItem = this.ruleForm;
     },
     methods: {
       getBook(index, size, name, author, category, press) {
@@ -307,6 +306,42 @@ export default {
           console.log(error)
         })
       },
+      //获取类别列表
+      getCategory() {
+        var _this = this;
+        fetch("/api/getCategory", {
+          method: "GET",
+          credentials: "include"
+        }).then(res => res.json()).then(result => {
+          if (result.Code === 200) {
+            _this.Categorys = result.Data;
+          } else {
+            console.log(result)
+            _this.Categorys = [];
+          }
+        }).catch(error => {
+          _this.Categorys = [];
+          console.log(error)
+        })
+      },
+      //获取出版社列表
+      getPress() {
+        var _this = this;
+        fetch("/api/getPress", {
+          method: "GET",
+          credentials: "include"
+        }).then(res => res.json()).then(result => {
+          if (result.Code === 200) {
+            _this.Presses = result.Data;
+          } else {
+            console.log(result)
+            _this.Presses = [];
+          }
+        }).catch(error => {
+          _this.Presses = [];
+          console.log(error)
+        })
+      },
       searchBook(type, key) {
         if (type === "Name") {
           this.getBook(0, 10, key, "", "", "");
@@ -336,11 +371,15 @@ export default {
         row.SellPrice = row.SellPrice.toString();
         row.ListPrice = row.ListPrice.toString();
         this.ruleForm = row;
+        this.getCategory();
+        this.getPress();
       },
       addBook() {
         this.openForm = true;
         this.isEdit = false;
         this.title = "新增图书";
+        this.getCategory();
+        this.getPress();
       },
       checkForm() {
         for (var key in this.ruleForm) {

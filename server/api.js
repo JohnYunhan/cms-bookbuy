@@ -375,6 +375,15 @@ router.post('/getPressList', function(req, res, next) {
   })
 });
 
+//获取出版社枚举
+router.get('/getPress', function(req, res, next) {
+  Presses.getPress().then(result => {
+    res.send({ Data: result, Message: "执行成功", Code: 200 });
+  }).catch(error => {
+    res.send({ Message: error, Code: 400 });
+  })
+});
+
 //新增出版社
 router.post('/addPress', function(req, res, next) {
   let json = new Presses({
@@ -458,6 +467,15 @@ router.post('/editPicture', function(req, res, next) {
     UpdateDate: Date.now()
   });
   Pictures.editPicture(json).then(result => {
+    res.send({ Data: result, Message: "执行成功", Code: 200 });
+  }).catch(error => {
+    res.send({ Message: error, Code: 400 });
+  })
+});
+
+//获取类别枚举
+router.get('/getCategory', function(req, res, next) {
+  Categorys.getCategory().then(result => {
     res.send({ Data: result, Message: "执行成功", Code: 200 });
   }).catch(error => {
     res.send({ Message: error, Code: 400 });
