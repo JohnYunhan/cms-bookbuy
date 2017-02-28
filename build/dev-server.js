@@ -12,8 +12,8 @@ var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
 var mongoose = require("mongoose")
 
-var Api = require('../src/server/api');
-var { AuthCookie } = require("../src/server/authority");
+var Api = require('../server/api');
+var { AuthCookie } = require("../server/authority");
 
 // default port where dev server listens for incoming traffic
 var port = process.env.PORT || config.dev.port

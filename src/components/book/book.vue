@@ -295,9 +295,11 @@ export default {
             _this.pageSize = _this.tableData.length;
             _this.totalCount = result.TotalCount;
           } else {
-            _this.$message.error('服务器错误，请稍后再试');
-            _this.tableData = [];
             console.log(result)
+            _this.tableData = [];
+            if (result.Message !== null) {
+              _this.$message.error('服务器错误，请稍后再试');
+            }
           }
         }).catch(error => {
           _this.tableData = [];

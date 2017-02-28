@@ -106,9 +106,11 @@ export default {
           _this.totalCount = result.TotalCount;
           _this.shiftDate(_this.tableData);
         } else {
-          _this.$message.error('服务器错误，请稍后再试');
           console.log(result)
           _this.tableData = [];
+          if (result.Message !== null) {
+            _this.$message.error('服务器错误，请稍后再试');
+          }
         }
       }).catch(error => {
         _this.tableData = [];
@@ -161,7 +163,7 @@ export default {
         }
       }).catch(error => {
         _this.$message.error('服务器错误，请稍后再试');
-        console.log(error)
+        console.log(error.Message)
       })
     },
     editCategory(row) {
