@@ -53,11 +53,11 @@ let Order = mongoose.Schema({
   }, //收货地址
   CreateDate: {
     type: Number,
-    default: Date.now()
+    required: true,
   },
   UpdateDate: {
     type: Number,
-    default: Date.now()
+    required: true,
   },
   Status: {
     type: Number,
@@ -126,6 +126,8 @@ Order.statics.getOrderById = function(Id) {
 // 新增订单(确认下单)
 Order.statics.addOrder = function(json) {
   return new Promise((resolve, reject) => {
+    json.CreateDate = Date.now();
+    json.UpdateDate = Date.now();
     json.save((error, result) => {
       if (result) {
         resolve(result);

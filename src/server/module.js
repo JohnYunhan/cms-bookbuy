@@ -17,11 +17,11 @@ let Module = mongoose.Schema({
   }, //模块名称
   CreateDate: {
     type: Number,
-    default: Date.now()
+    required: true
   },
   UpdateDate: {
     type: Number,
-    default: Date.now()
+    required: true
   },
   Status: {
     type: Boolean,
@@ -83,6 +83,8 @@ Module.statics.getModuleById = function(Id) {
 Module.statics.addModule = function(json) {
   return new Promise((resolve, reject) => {
     json.Id = uniqid("module");
+    json.CreateDate = Date.now();
+    json.UpdateDate = Date.now();
     json.save((error, result) => {
       if (result) {
         resolve(result);

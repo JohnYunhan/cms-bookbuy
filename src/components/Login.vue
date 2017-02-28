@@ -2,7 +2,7 @@
   <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-position="left" label-width="0px" class="demo-ruleForm card-box loginform">
     <h3 class="title">系统登录</h3>
     <el-form-item prop="account">
-      <el-input type="text" v-model="ruleForm.account" auto-complete="off" @keyup.enter.native.prevent="login" placeholder="账号"></el-input>
+      <el-input type="text" v-model="ruleForm.account" auto-complete="off" @keyup.enter.native.prevent="login" placeholder="账号" autofocus></el-input>
     </el-form-item>
     <el-form-item prop="password">
       <el-input type="password" v-model="ruleForm.password" auto-complete="off" @keyup.enter.native.prevent="login" placeholder="密码"></el-input>
@@ -48,14 +48,17 @@ export default {
       },
       login() {
         var _this = this;
+        var mobile = /(^0{0,1}1[3|4|5|6|7|8|9][0-9]{9}$)/;
         var data = {
           Password: this.ruleForm.password,
           Checked: this.checked
         };
-        if (this.ruleForm.account.length === 11) {
+        if (mobile.test(this.ruleForm.account)) {
+          //手机号登陆
           data.Nick = "";
           data.Mobile = this.ruleForm.account;
         } else {
+          //昵称登陆
           data.Nick = this.ruleForm.account;
           data.Mobile = "";
         }
@@ -63,75 +66,26 @@ export default {
           if (valid) {
             data = JSON.stringify(data);
             fetch("/api/login", {
-                method: "POST",
-                credentials: "include",
-                headers: {
-                  'Content-Type': "application/json"
-                },
-                body: data
-              }).then(res => res.json()).then(result => {
-                if (result.Code === 200) {
-                  this.UsrName = result.Nick;
-                  _this.$router.replace('/welcome');
-                } else {
-                  console.log(result)
-                }
-              }).catch(error => {
-                console.log(error)
-              })
-              //_this.$router.push('/table');
-
-            // fetch("/api/addAdmin", {
-            //   method: "POST",
-            //   credentials: "include",
-            //   headers: {
-            //     'Content-Type': "application/json"
-            //   },
-            //   body: data
-            // }).then(res => res.json()).then(result => {
-            //   if (result.Code === 200) {
-            //     console.log(result)
-            //   } else {
-            //     console.log(result)
-            //   }
-            // }).catch(error => {
-            //   console.log(error)
-            // })
-
-          } else {
-            console.log('error submit!!');
-            return false;
+              method: "POST",
+              credentials: "include",
+              headers: {
+                'Content-Type': "application/json"
+              },
+              body: data
+            }).then(res => res.json()).then(result => {
+              if (result.Code === 200) {
+                this.UsrName = result.Nick;
+                _this.$router.replace('/welcome');
+              } else {
+                console.log(result)
+                _this.$message.error(result.Message);
+              }
+            }).catch(error => {
+              console.log(error)
+              console.log(33)
+            })
           }
         });
-      },
-      add() {
-        var _this = this;
-        var data = {
-          RoleId: 1,
-          Nick: "admin",
-          Password: "qqqqqq",
-          Mobile: "13361642438"
-        }
-        data = JSON.stringify(data);
-        fetch("/api/addAdmin", {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            'Content-Type': "application/json"
-          },
-          body: data
-        }).then(res => res.json()).then(result => {
-          if (result.Code === 200) {
-            _this.$message({
-              message: '新增成功',
-              type: 'success'
-            });
-          } else {
-            console.log(result)
-          }
-        }).catch(error => {
-          console.log(error)
-        })
       },
     }
 }

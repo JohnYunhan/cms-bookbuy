@@ -103,7 +103,7 @@
         </el-table-column>
       </el-table>
       <section style="padding:0;margin-top:18px;margin-left:-16px">
-        <el-pagination @size-change="sizeChange" @current-change="currentChange" :current-page="currentPage" :page-sizes="[1, 2, 3, 4]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
+        <el-pagination @size-change="sizeChange" @current-change="currentChange" :current-page="currentPage" :page-sizes="[5, 10, 15, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
         </el-pagination>
       </section>
     </section>
@@ -111,48 +111,48 @@
       <el-row type="flex" justify="center">
         <el-col :span="9">
           <h5 style="text-align: center;margin: 10px 0"><b>{{title}}</b></h5>
-          <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" style="">
-            <el-form-item label="名称" prop="Name" style="width: 318px;">
-              <el-input v-model="ruleForm.Name"></el-input>
+          <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px">
+            <el-form-item label="名称" prop="Name">
+              <el-input v-model="ruleForm.Name" style="width: 218px;"></el-input>
             </el-form-item>
-            <el-form-item label="作者" prop="Author" style="width: 318px;">
-              <el-input v-model="ruleForm.Author"></el-input>
+            <el-form-item label="作者" prop="Author">
+              <el-input v-model="ruleForm.Author" style="width: 218px;"></el-input>
             </el-form-item>
             <el-form-item label="类别" prop="Category">
-              <el-select v-model="ruleForm.Category" placeholder="请选择类别">
+              <el-select v-model="ruleForm.Category" style="width: 218px;" placeholder="请选择类别">
                 <el-option label="计算机" value="计算机"></el-option>
                 <el-option label="教材" value="教材"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="出版社" prop="Press">
-              <el-select v-model="ruleForm.Press" placeholder="请选择出版社">
+              <el-select v-model="ruleForm.Press" style="width: 218px;" placeholder="请选择出版社">
                 <el-option label="机械工业出版社" value="机械工业出版社"></el-option>
                 <el-option label="人民邮电出版社" value="人民邮电出版社"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="出版日期" prop="PublishDate">
-              <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.PublishDate"></el-date-picker>
+              <el-date-picker type="date" style="width: 218px;" placeholder="选择日期" v-model="ruleForm.PublishDate"></el-date-picker>
             </el-form-item>
             <el-form-item label="版次" prop="Edition">
-              <el-input-number v-model="ruleForm.Edition" :min="1" :max="20"></el-input-number>
+              <el-input-number v-model="ruleForm.Edition" style="width: 218px;" :min="1" :max="20"></el-input-number>
             </el-form-item>
-            <el-form-item label="ISBN" prop="ISBN" style="width: 318px;">
-              <el-input v-model="ruleForm.ISBN"></el-input>
+            <el-form-item label="ISBN" prop="ISBN">
+              <el-input style="width: 218px;" v-model="ruleForm.ISBN"></el-input>
             </el-form-item>
             <el-form-item label="字数" prop="WordsCount">
-              <el-input-number v-model="ruleForm.WordsCount" :min="1" :max="9999999999"></el-input-number>
+              <el-input-number v-model="ruleForm.WordsCount" style="width: 218px;" :min="1" :max="9999999999"></el-input-number>
             </el-form-item>
-            <el-form-item label="简介" prop="Abstract" style="width: 318px;">
-              <el-input type="textarea" autosize v-model="ruleForm.Abstract"></el-input>
+            <el-form-item label="简介" prop="Abstract">
+              <el-input type="textarea" style="width: 218px;" autosize v-model="ruleForm.Abstract"></el-input>
             </el-form-item>
-            <el-form-item label="定价" prop="ListPrice" style="width: 280px;">
-              <el-input v-model="ruleForm.ListPrice"></el-input>
+            <el-form-item label="定价" prop="ListPrice">
+              <el-input style="width: 218px;" v-model="ruleForm.ListPrice"></el-input>
             </el-form-item>
-            <el-form-item label="售价" prop="SellPrice" style="width: 280px;">
-              <el-input v-model="ruleForm.SellPrice"></el-input>
+            <el-form-item label="售价" prop="SellPrice">
+              <el-input style="width: 218px;" v-model="ruleForm.SellPrice"></el-input>
             </el-form-item>
             <el-form-item label="数量" prop="Count">
-              <el-input-number v-model="ruleForm.Count" :min="1" :max="999"></el-input-number>
+              <el-input-number v-model="ruleForm.Count" style="width: 218px;" :min="1" :max="999"></el-input-number>
             </el-form-item>
             <el-form-item label="推荐" prop="IsRecommend">
               <el-switch on-text="是" v-bind:true-value="true" v-bind:false-value="false" off-text="否" v-model="ruleForm.IsRecommend"></el-switch>
@@ -161,7 +161,7 @@
               <el-switch v-bind:true-value="true" v-bind:false-value="false" on-text="是" off-text="否" v-model="ruleForm.IsSoldOut"></el-switch>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="Submit">保存</el-button>
+              <el-button type="primary" @click="Submit">提交</el-button>
               <el-button @click="Close">取消</el-button>
             </el-form-item>
           </el-form>
@@ -192,12 +192,10 @@ export default {
         source: "book", //搜索种类
         searchType: "Name", //默认的搜索类型
         tableData: [],
-        // loading: true,
         totalCount: 0, //数据总量
         currentPage: 1, //当前页码
         pageSize: 1, //每页的数据量
         openForm: false, //打开添加或编辑图书的表单
-        addItem: {},
         ruleForm: {
           Name: "",
           Author: "",
@@ -206,7 +204,7 @@ export default {
           PublishDate: "",
           Edition: 1,
           ISBN: "",
-          WordsCount: 1,
+          WordsCount: 1000,
           Abstract: "",
           ListPrice: "",
           SellPrice: "",
@@ -263,13 +261,14 @@ export default {
             trigger: 'blur'
           }],
         },
+        formValid: true,
         title: "新增图书",
         isEdit: true, //判断是否为编辑
       }
     },
     created() {
       this.getBook(0, 10, "", "", "", "");
-      this.addItem = this.ruleForm; //保存ruleForm的初始值
+      this.addItem = this.ruleForm;
     },
     methods: {
       getBook(index, size, name, author, category, press) {
@@ -292,27 +291,17 @@ export default {
           body: data
         }).then(res => res.json()).then(result => {
           if (result.Code === 200) {
-            var item = result.Data;
-            _this.pageSize = item.length;
+            _this.tableData = result.Data;
+            _this.pageSize = _this.tableData.length;
             _this.totalCount = result.TotalCount;
-            //判断是否为null
-            if (!item) {
-              _this.tableData = [];
-            } else {
-              //清空原来的数据，避免叠加
-              _this.tableData = [];
-              if (item instanceof Array) {
-                //返回的结果是数组
-                _this.tableData = item;
-              } else {
-                //返回的结果是对象
-                _this.tableData.push(item);
-              }
-            }
           } else {
+            _this.$message.error('服务器错误，请稍后再试');
+            _this.tableData = [];
             console.log(result)
           }
         }).catch(error => {
+          _this.tableData = [];
+          _this.$message.error('服务器错误，请稍后再试');
           console.log(error)
         })
       },
@@ -341,13 +330,22 @@ export default {
         this.openForm = true;
         this.title = "编辑图书";
         this.isEdit = true;
-        // row = JSON.parse(JSON.stringify(row));
+        row.PublishDate = new Date(row.PublishDate);
+        row.SellPrice = row.SellPrice.toString();
+        row.ListPrice = row.ListPrice.toString();
         this.ruleForm = row;
       },
       addBook() {
         this.openForm = true;
         this.isEdit = false;
         this.title = "新增图书";
+      },
+      checkForm() {
+        for (var key in this.ruleForm) {
+          if (this.ruleForm[key] == "" && typeof this.ruleForm[key] != "boolean") {
+            this.formValid = false;
+          }
+        }
       },
       Submit() {
         if (this.isEdit) {
@@ -359,51 +357,65 @@ export default {
       //提交新增的图书
       submitAdd() {
         var _this = this;
-        var data = JSON.stringify(this.ruleForm);
-        fetch("/api/addBook", {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            'Content-Type': "application/json"
-          },
-          body: data
-        }).then(res => res.json()).then(result => {
-          if (result.Code === 200) {
-            _this.$message({
-              message: '新增成功',
-              type: 'success'
-            });
-            _this.Close();
-          } else {
-            console.log(result)
+        this.$refs.ruleForm.validate((valid) => {
+          if (valid) {
+            var data = JSON.stringify(this.ruleForm);
+            fetch("/api/addBook", {
+              method: "POST",
+              credentials: "include",
+              headers: {
+                'Content-Type': "application/json"
+              },
+              body: data
+            }).then(res => res.json()).then(result => {
+              if (result.Code === 200) {
+                _this.$notify({
+                  message: '新增成功',
+                  type: 'success',
+                  duration: 3000
+                });
+                _this.Close();
+              } else {
+                _this.$message.error('服务器错误，请稍后再试');
+                console.log(result)
+              }
+            }).catch(error => {
+              _this.$message.error('服务器错误，请稍后再试');
+              console.log(error)
+            })
           }
-        }).catch(error => {
-          console.log(error)
         })
       },
       //提交编辑的图书
       submitEdit() {
         var _this = this;
-        var data = JSON.stringify(this.ruleForm);
-        fetch("/api/setBook", {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            'Content-Type': "application/json"
-          },
-          body: data
-        }).then(res => res.json()).then(result => {
-          if (result.Code === 200) {
-            _this.$message({
-              message: '编辑成功',
-              type: 'success'
-            });
-            _this.Close();
-          } else {
-            console.log(result)
+        this.$refs.ruleForm.validate((valid) => {
+          if (valid) {
+            var data = JSON.stringify(this.ruleForm);
+            fetch("/api/editBook", {
+              method: "POST",
+              credentials: "include",
+              headers: {
+                'Content-Type': "application/json"
+              },
+              body: data
+            }).then(res => res.json()).then(result => {
+              if (result.Code === 200) {
+                _this.$notify({
+                  message: '编辑成功',
+                  type: 'success',
+                  duration: 3000
+                });
+                _this.Close();
+              } else {
+                _this.$message.error('服务器错误，请稍后再试');
+                console.log(result)
+              }
+            }).catch(error => {
+              _this.$message.error('服务器错误，请稍后再试');
+              console.log(error)
+            })
           }
-        }).catch(error => {
-          console.log(error)
         })
       },
       delBook(row) {
@@ -426,13 +438,16 @@ export default {
             if (result.Code === 200) {
               _this.$notify({
                 message: '删除成功',
-                type: 'success'
+                type: 'success',
+                duration: 3000
               });
               _this.getBook(0, 10, "");
             } else {
+              _this.$message.error('服务器错误，请稍后再试');
               console.log(result)
             }
           }).catch(error => {
+            _this.$message.error('服务器错误，请稍后再试');
             console.log(error)
           })
         }).catch(() => {
@@ -441,9 +456,9 @@ export default {
       },
       Close() {
         this.openForm = false;
-        this.$refs["ruleForm"].resetFields();
-        this.ruleForm = this.addItem; //将ruleForm初始化
+        this.ruleForm = this.addItem;
         this.getBook(0, 10, "", "", "", "");
+        this.$refs["ruleForm"].resetFields();
       },
     },
     filters: {

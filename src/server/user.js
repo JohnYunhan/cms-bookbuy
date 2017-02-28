@@ -43,11 +43,11 @@ let User = mongoose.Schema({
   }, //会员等级,1:注册会员、2:铜牌会员、3:银牌会员、4:金牌会员、5:钻石会员,//确认订单次数达至(5、15、35、65、105)可升级    
   CreateDate: {
     type: Number,
-    default: Date.now()
+    required: true,
   },
   UpdateDate: {
     type: Number,
-    default: Date.now()
+    required: true,
   },
   Valid: {
     type: Boolean,
@@ -143,6 +143,8 @@ User.statics.getUserById = function(Id) {
 User.statics.addUser = function(json) {
   return new Promise((resolve, reject) => {
     json.Id = uniqid("user");
+    json.CreateDate = Date.now();
+    json.UpdateDate = Date.now();
     encryptJSON(json.Password).then(result => {
       json.Password = result;
       json.save((err, res) => {

@@ -40,7 +40,7 @@
         </el-table-column>
       </el-table>
       <section style="padding:0;margin-top:18px;margin-left:-16px">
-        <el-pagination @size-change="sizeChange" @current-change="currentChange" :current-page="currentPage" :page-sizes="[1, 2, 3, 4]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
+        <el-pagination @size-change="sizeChange" @current-change="currentChange" :current-page="currentPage" :page-sizes="[5, 10, 15, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
         </el-pagination>
       </section>
     </section>
@@ -103,12 +103,10 @@ export default {
       source: "member", //搜索种类
       searchType: "Nick", //默认的搜索类型
       tableData: [],
-      // loading: true,
       totalCount: 0, //数据总量
       currentPage: 1, //当前页码
       pageSize: 1, //每页的数据量
       openForm: false, //打开添加或编辑图书的表单
-      addItem: {},
       ruleForm: {
         Nick: "",
         Password: "",
@@ -158,7 +156,6 @@ export default {
   },
   created() {
     this.getMember(0, 10, "", "");
-    this.addItem = this.ruleForm; //保存ruleForm的初始值
   },
   methods: {
     getMember(index, size, nick, mobile) {
@@ -179,29 +176,18 @@ export default {
         body: data
       }).then(res => res.json()).then(result => {
         if (result.Code === 200) {
-          var item = result.Data;
-          _this.pageSize = item.length;
+          _this.tableData = result.Data;
+          _this.pageSize = _this.tableData.length;
           _this.totalCount = result.TotalCount;
-          //判断是否为null
-          if (!item) {
-            _this.tableData = [];
-          } else {
-            //清空原来的数据，避免叠加
-            _this.tableData = [];
-            if (item instanceof Array) {
-              //返回的结果是数组
-              _this.tableData = item;
-            } else {
-              //返回的结果是对象
-              _this.tableData.push(item);
-            }
-          }
           _this.shiftDate(_this.tableData);
-          // _this.loading = false;
         } else {
+          _this.$message.error('服务器错误，请稍后再试');
+          _this.tableData = [];
           console.log(result)
         }
       }).catch(error => {
+        _this.tableData = [];
+        _this.$message.error('服务器错误，请稍后再试');
         console.log(error)
       })
     },
@@ -252,9 +238,11 @@ export default {
           });
           _this.Close();
         } else {
+          _this.$message.error('服务器错误，请稍后再试');
           console.log(result)
         }
       }).catch(error => {
+        _this.$message.error('服务器错误，请稍后再试');
         console.log(error)
       })
     },
@@ -277,9 +265,11 @@ export default {
           });
           _this.Close();
         } else {
+          _this.$message.error('服务器错误，请稍后再试');
           console.log(result)
         }
       }).catch(error => {
+        _this.$message.error('服务器错误，请稍后再试');
         console.log(error)
       })
     },
@@ -307,9 +297,11 @@ export default {
             });
             _this.getMember(0, 10, "");
           } else {
+            _this.$message.error('服务器错误，请稍后再试');
             console.log(result)
           }
         }).catch(error => {
+          _this.$message.error('服务器错误，请稍后再试');
           console.log(error)
         })
       }).catch(() => {

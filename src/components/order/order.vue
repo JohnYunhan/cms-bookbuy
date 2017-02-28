@@ -237,28 +237,17 @@ export default {
           body: data
         }).then(res => res.json()).then(result => {
           if (result.Code === 200) {
-            var item = result.Data;
-            _this.pageSize = item.length;
+            _this.tableData = result.Data;
+            _this.pageSize = _this.tableData.length;
             _this.totalCount = result.TotalCount;
-            //判断是否为null
-            if (!item) {
-              _this.tableData = [];
-            } else {
-              //清空原来的数据，避免叠加
-              _this.tableData = [];
-              if (item instanceof Array) {
-                //返回的结果是数组
-                _this.tableData = item;
-              } else {
-                //返回的结果是对象
-                _this.tableData.push(item);
-              }
-            }
-            _this.shiftDate(_this.tableData);
           } else {
+            _this.$message.error('服务器错误，请稍后再试');
+            _this.tableData = [];
             console.log(result)
           }
         }).catch(error => {
+          _this.tableData = [];
+          _this.$message.error('服务器错误，请稍后再试');
           console.log(error)
         })
       },
@@ -300,25 +289,13 @@ export default {
           credentials: "include"
         }).then(result => {
           if (result.Code === 200) {
-            var item = result;
-            //判断是否为null
-            if (!item) {
-              _this.bookInfor = [];
-            } else {
-              //清空原来的数据，避免叠加
-              _this.bookInfor = [];
-              if (item instanceof Array) {
-                //返回的结果是数组
-                _this.bookInfor = item;
-              } else {
-                //返回的结果是对象
-                _this.bookInfor.push(item);
-              }
-            }
+            _this.bookInfor = result.Data;
           } else {
+            _this.$message.error('服务器错误，请稍后再试');
             console.log(result)
           }
         }).catch(error => {
+          _this.$message.error('服务器错误，请稍后再试');
           console.log(error)
         })
       },
@@ -356,12 +333,15 @@ export default {
             _this.Close();
             _this.$message({
               message: '修改成功',
-              type: 'success'
+              type: 'success',
+              duration: 3000
             });
           } else {
+            _this.$message.error('服务器错误，请稍后再试');
             console.log(result)
           }
         }).catch(error => {
+          _this.$message.error('服务器错误，请稍后再试');
           console.log(error)
         })
       },
@@ -396,7 +376,8 @@ export default {
           if (result.Code === 200) {
             _this.$message({
               message: '新增成功',
-              type: 'success'
+              type: 'success',
+              duration: 3000
             });
           } else {
             console.log(result)

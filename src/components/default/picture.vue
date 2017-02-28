@@ -28,13 +28,13 @@
       </el-table>
     </section>
     <footer>
-      <el-pagination @size-change="sizeChange" @current-change="currentChange" :current-page="currentPage" :page-sizes="[1, 2, 3, 4,5,6]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
+      <el-pagination @size-change="sizeChange" @current-change="currentChange" :current-page="currentPage" :page-sizes="[5, 10, 15, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
       </el-pagination>
     </footer>
-    <el-dialog :title="title" size="tiny" top="25%" v-model="handleForm">
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
+    <el-dialog :title="title" size="tiny" top="20%" @close="Close" v-model="handleForm">
+      <el-form :model="ruleForm" ref="ruleForm">
         <el-form-item prop="Name" label="名称" :label-width="labelwidth">
-          <el-input v-model="ruleForm.Name"></el-input>
+          <el-input v-model="ruleForm.Name" autofocus></el-input>
         </el-form-item>
         <el-form-item prop="Url" label="链接" :label-width="labelwidth">
           <el-input v-model="ruleForm.Url"></el-input>
@@ -78,23 +78,23 @@ export default {
         Url: "",
         Status: true
       },
-      rules: {
-        Name: [{
-          required: true,
-          message: '请输入名称',
-          trigger: 'blur'
-        }],
-        Url: [{
-          required: true,
-          message: '请输入链接',
-          trigger: 'blur'
-        }]
-      },
+      // rules: {
+      //   Name: [{
+      //     required: true,
+      //     message: '请输入名称',
+      //     trigger: 'blur'
+      //   }],
+      //   Url: [{
+      //     required: true,
+      //     message: '请输入链接',
+      //     trigger: 'blur'
+      //   }]
+      // },
+      formValid: true,
     }
   },
   created() {
     this.getPicture(0, 10, "");
-    this.addItem = this.ruleForm; //保存ruleForm的初始值
   },
   methods: {
     getPicture(index, size, name) {
@@ -114,28 +114,17 @@ export default {
         body: data
       }).then(res => res.json()).then(result => {
         if (result.Code === 200) {
-          var item = result.Data;
-          _this.pageSize = item.length;
+          _this.tableData = result.Data;
+          _this.pageSize = _this.tableData.length;
           _this.totalCount = result.TotalCount;
-          //判断是否为null
-          if (!item) {
-            _this.tableData = [];
-          } else {
-            //清空原来的数据，避免叠加
-            _this.tableData = [];
-            if (item instanceof Array) {
-              //返回的结果是数组
-              _this.tableData = item;
-            } else {
-              //返回的结果是对象
-              _this.tableData.push(item);
-            }
-          }
-          _this.shiftDate(_this.tableData);
         } else {
+          _this.$message.error('服务器错误，请稍后再试');
+          _this.tableData = [];
           console.log(result)
         }
       }).catch(error => {
+        _this.tableData = [];
+        _this.$message.error('服务器错误，请稍后再试');
         console.log(error)
       })
     },
@@ -150,30 +139,52 @@ export default {
       this.title = "新增轮播图";
       this.isEdit = false;
     },
+    checkForm() {
+      if (this.ruleForm.Name == "") {
+        this.$message({
+          message: '请输入名称',
+          type: 'warning'
+        });
+        this.formValid = false;
+      } else if (this.ruleForm.Url == "") {
+        this.$message({
+          message: '请输入链接',
+          type: 'warning'
+        });
+        this.formValid = false;
+      } else {
+        this.formValid = true;
+      }
+    },
     submitAdd() {
       var _this = this;
-      var data = JSON.stringify(this.ruleForm);
-      fetch("/api/addPicture", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          'Content-Type': "application/json"
-        },
-        body: data
-      }).then(res => res.json()).then(result => {
-        if (result.Code === 200) {
-          _this.$notify({
-            message: '新增成功',
-            type: 'success'
-          });
-          _this.Close();
-          _this.getPicture(0, 10, "");
-        } else {
-          console.log(result)
-        }
-      }).catch(error => {
-        console.log(error)
-      })
+      this.checkForm();
+      if (this.formValid) {
+        var data = JSON.stringify(this.ruleForm);
+        fetch("/api/addPicture", {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            'Content-Type': "application/json"
+          },
+          body: data
+        }).then(res => res.json()).then(result => {
+          if (result.Code === 200) {
+            _this.$notify({
+              message: '新增成功',
+              type: 'success',
+              duration: 3000
+            });
+            _this.Close();
+          } else {
+            _this.$message.error('服务器错误，请稍后再试');
+            console.log(result)
+          }
+        }).catch(error => {
+          _this.$message.error('服务器错误，请稍后再试');
+          console.log(error)
+        })
+      }
     },
     editPicture(row) {
       this.handleForm = true;
@@ -201,13 +212,16 @@ export default {
           if (result.Code === 200) {
             _this.$notify({
               message: '删除成功',
-              type: 'success'
+              type: 'success',
+              duration: 3000
             });
             _this.getPicture(0, 10, "");
           } else {
+            _this.$message.error('服务器错误，请稍后再试');
             console.log(result)
           }
         }).catch(error => {
+          _this.$message.error('服务器错误，请稍后再试');
           console.log(error)
         })
       }).catch(() => {
@@ -216,28 +230,33 @@ export default {
     },
     submitEdit() {
       var _this = this;
-      var data = JSON.stringify(this.ruleForm);
-      fetch("/api/editPicture", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          'Content-Type': "application/json"
-        },
-        body: data
-      }).then(res => res.json()).then(result => {
-        if (result.Code === 200) {
-          _this.$notify({
-            message: '编辑成功',
-            type: 'success'
-          });
-          _this.Close();
-          _this.getPicture(0, 10, "");
-        } else {
-          console.log(result)
-        }
-      }).catch(error => {
-        console.log(error)
-      })
+      this.checkForm();
+      if (this.formValid) {
+        var data = JSON.stringify(this.ruleForm);
+        fetch("/api/editPicture", {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            'Content-Type': "application/json"
+          },
+          body: data
+        }).then(res => res.json()).then(result => {
+          if (result.Code === 200) {
+            _this.$notify({
+              message: '编辑成功',
+              type: 'success',
+              duration: 3000
+            });
+            _this.Close();
+          } else {
+            _this.$message.error('服务器错误，请稍后再试');
+            console.log(result)
+          }
+        }).catch(error => {
+          _this.$message.error('服务器错误，请稍后再试');
+          console.log(error)
+        })
+      }
     },
     Submit() {
       if (this.isEdit) {
@@ -247,9 +266,9 @@ export default {
       }
     },
     Close() {
+      this.getPicture(0, 10, "");
       this.handleForm = false;
       this.$refs["ruleForm"].resetFields();
-      this.ruleForm = this.addItem; //将ruleForm初始化
     },
     sizeChange(val) {
       this.pageSize = val;

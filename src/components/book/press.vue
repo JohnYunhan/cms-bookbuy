@@ -26,11 +26,11 @@
       </el-table>
     </section>
     <footer>
-      <el-pagination @size-change="sizeChange" @current-change="currentChange" :current-page="currentPage" :page-sizes="[1, 2, 3, 4]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
+      <el-pagination @size-change="sizeChange" @current-change="currentChange" :current-page="currentPage" :page-sizes="[5, 10, 15, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
       </el-pagination>
     </footer>
-    <el-dialog :title="title" size="tiny" top="20%" v-model="handleForm">
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
+    <el-dialog :title="title" size="tiny" @close="Close" top="20%" v-model="handleForm">
+      <el-form :model="ruleForm" ref="ruleForm">
         <el-form-item prop="Name" label="名称" :label-width="labelwidth">
           <el-input v-model="ruleForm.Name"></el-input>
         </el-form-item>
@@ -71,13 +71,13 @@ export default {
         Name: "",
         Status: true
       },
-      rules: {
-        Name: [{
-          required: true,
-          message: '请输入名称',
-          trigger: 'blur'
-        }]
-      },
+      // rules: {
+      //   Name: [{
+      //     required: true,
+      //     message: '请输入名称',
+      //     trigger: 'blur'
+      //   }]
+      // },
     }
   },
   created() {
@@ -101,28 +101,18 @@ export default {
         body: data
       }).then(res => res.json()).then(result => {
         if (result.Code === 200) {
-          var item = result.Data;
-          _this.pageSize = item.length;
+          _this.tableData = result.Data;
+          _this.pageSize = _this.tableData.length;
           _this.totalCount = result.TotalCount;
-          //判断是否为null
-          if (!item) {
-            _this.tableData = [];
-          } else {
-            //清空原来的数据，避免叠加
-            _this.tableData = [];
-            if (item instanceof Array) {
-              //返回的结果是数组
-              _this.tableData = item;
-            } else {
-              //返回的结果是对象
-              _this.tableData.push(item);
-            }
-          }
           _this.shiftDate(_this.tableData);
         } else {
+          _this.$message.error('服务器错误，请稍后再试');
           console.log(result)
+          _this.tableData = [];
         }
       }).catch(error => {
+        _this.tableData = [];
+        _this.$message.error('服务器错误，请稍后再试');
         console.log(error)
       })
     },
@@ -160,13 +150,16 @@ export default {
         if (result.Code === 200) {
           _this.$notify({
             message: '新增成功',
-            type: 'success'
+            type: 'success',
+            duration: 3000
           });
           _this.getPress(0, 10, "");
         } else {
+          _this.$message.error('服务器错误，请稍后再试');
           console.log(result)
         }
       }).catch(error => {
+        _this.$message.error('服务器错误，请稍后再试');
         console.log(error)
       })
     },
@@ -188,14 +181,17 @@ export default {
         if (result.Code === 200) {
           _this.$notify({
             message: '编辑成功',
-            type: 'success'
+            type: 'success',
+            duration: 3000
           });
           _this.getPress(0, 10, "");
           _this.Close();
         } else {
+          _this.$message.error('服务器错误，请稍后再试');
           console.log(result)
         }
       }).catch(error => {
+        _this.$message.error('服务器错误，请稍后再试');
         console.log(error)
       })
     },
@@ -219,13 +215,16 @@ export default {
           if (result.Code === 200) {
             _this.$notify({
               message: '删除成功',
-              type: 'success'
+              type: 'success',
+              duration: 3000
             });
             _this.getPress(0, 10, "");
           } else {
+            _this.$message.error('服务器错误，请稍后再试');
             console.log(result)
           }
         }).catch(error => {
+          _this.$message.error('服务器错误，请稍后再试');
           console.log(error)
         })
       }).catch(() => {
@@ -235,6 +234,7 @@ export default {
     Close() {
       this.handleForm = false;
       this.$refs["ruleForm"].resetFields();
+      this.getPress(0, 10, "");
     },
     sizeChange(val) {
       this.pageSize = val;

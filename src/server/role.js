@@ -29,11 +29,11 @@ let Role = mongoose.Schema({
   }, //备注
   CreateDate: {
     type: Number,
-    default: Date.now()
+    required: true,
   },
   UpdateDate: {
     type: Number,
-    default: Date.now()
+    required: true,
   },
   Status: {
     type: Number,
@@ -96,6 +96,8 @@ Role.statics.getModulesByRoleId = function(Id) {
 Role.statics.addRole = function(json) {
   return new Promise((resolve, reject) => {
     json.Id = uniqid("role");
+    json.CreateDate = Date.now();
+    json.UpdateDate = Date.now();
     json.save((error, result) => {
       if (result) {
         resolve(result);

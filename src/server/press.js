@@ -17,11 +17,11 @@ let Press = mongoose.Schema({
   }, //出版社名称
   CreateDate: {
     type: Number,
-    default: Date.now()
+    required: true
   },
   UpdateDate: {
     type: Number,
-    default: Date.now()
+    required: true
   },
   Status: {
     type: Boolean,
@@ -83,6 +83,8 @@ Press.statics.getPressById = function(pressId) {
 Press.statics.addPress = function(json) {
   return new Promise((resolve, reject) => {
     json.Id = uniqid("press");
+    json.CreateDate = Date.now();
+    json.UpdateDate = Date.now();
     json.save((error, result) => {
       if (result) {
         resolve(result);

@@ -17,11 +17,11 @@ let Category = mongoose.Schema({
   }, //类别名称
   CreateDate: {
     type: Number,
-    default: Date.now()
+    required: true
   },
   UpdateDate: {
     type: Number,
-    default: Date.now()
+    required: true
   },
   Status: {
     type: Boolean,
@@ -83,6 +83,8 @@ Category.statics.getCategoryById = function(categoryId) {
 Category.statics.addCategory = function(json) {
   return new Promise((resolve, reject) => {
     json.Id = uniqid("category");
+    json.CreateDate = Date.now();
+    json.UpdateDate = Date.now();
     json.save((error, result) => {
       if (result) {
         resolve(result);

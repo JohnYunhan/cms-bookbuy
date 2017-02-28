@@ -21,11 +21,11 @@ let Picture = mongoose.Schema({
   }, //轮播图链接
   CreateDate: {
     type: Number,
-    default: Date.now()
+    required: true
   },
   UpdateDate: {
     type: Number,
-    default: Date.now()
+    required: true
   },
   Status: {
     type: Boolean,
@@ -87,6 +87,8 @@ Picture.statics.getPictureById = function(Id) {
 Picture.statics.addPicture = function(json) {
   return new Promise((resolve, reject) => {
     json.Id = uniqid("picture");
+    json.CreateDate = Date.now();
+    json.UpdateDate = Date.now();
     json.save((error, result) => {
       if (result) {
         resolve(result);

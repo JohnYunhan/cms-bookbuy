@@ -40,11 +40,11 @@ let Admin = mongoose.Schema({
   },
   CreateDate: {
     type: Number,
-    default: Date.now()
+    required: true,
   },
   UpdateDate: {
     type: Number,
-    default: Date.now()
+    required: true,
   },
   Valid: {
     type: Boolean,
@@ -126,6 +126,8 @@ Admin.statics.getAdminList = function(json, index, size) {
 Admin.statics.addAdmin = function(json) {
   return new Promise((resolve, reject) => {
     json.Id = uniqid("admin");
+    json.CreateDate = Date.now();
+    json.UpdateDate = Date.now();
     encryptJSON(json.Password).then(result => {
       if (result) {
         json.Password = result;

@@ -83,11 +83,11 @@ let Book = mongoose.Schema({
   }, //是否下架
   CreateDate: {
     type: Number,
-    default: Date.now()
+    required: true,
   },
   UpdateDate: {
     type: Number,
-    default: Date.now()
+    required: true,
   },
 });
 
@@ -193,6 +193,8 @@ Book.statics.getBookById = function(Id) {
 Book.statics.addBook = function(json) {
   return new Promise((resolve, reject) => {
     json.Id = uniqid("book");
+    json.CreateDate = Date.now();
+    json.UpdateDate = Date.now();
     json.save((error, result) => {
       if (result) {
         resolve(result);

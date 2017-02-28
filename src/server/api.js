@@ -53,7 +53,7 @@ router.post('/login', function(req, res, next) {
     }
     res.send({ Data: result, Message: "登录成功", Code: 200 });
   }).catch(error => {
-    res.send({ Message: error, Code: 400 });
+    res.send({ Message: error.Message, Code: error.Code });
   })
 });
 
