@@ -7,11 +7,11 @@
       <el-table :data="tableData" border align="center" style="width:100%">
         <el-table-column align="center" prop="Name" label="名称">
         </el-table-column>
-        <el-table-column align="center" prop="Url" label="链接">
+        <el-table-column align="center" min-width="400" prop="Url" label="链接">
         </el-table-column>
-        <el-table-column align="center" prop="UpdateDate" label="更新日期">
+        <el-table-column align="center" min-width="90" prop="UpdateDate" label="更新日期">
         </el-table-column>
-        <el-table-column align="center" prop="CreateDate" label="创建日期">
+        <el-table-column align="center" min-width="90" prop="CreateDate" label="创建日期">
         </el-table-column>
         <el-table-column align="center" label="状态">
           <template scope="scope">
@@ -28,7 +28,7 @@
       </el-table>
     </section>
     <footer>
-      <el-pagination @size-change="sizeChange" @current-change="currentChange" :current-page="currentPage" :page-sizes="[5, 10, 15, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
+      <el-pagination @size-change="sizeChange" @current-change="currentChange" :current-page="currentPage" :page-sizes="[10, 15, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
       </el-pagination>
     </footer>
     <el-dialog :title="title" size="tiny" top="20%" @close="Close" v-model="handleForm">
@@ -117,6 +117,7 @@ export default {
           _this.tableData = result.Data;
           _this.pageSize = _this.tableData.length;
           _this.totalCount = result.TotalCount;
+          _this.shiftDate(_this.tableData);
         } else {
           console.log(result)
           _this.tableData = [];

@@ -9,9 +9,9 @@
         </el-table-column>
         <el-table-column align="center" prop="Name" label="姓名">
         </el-table-column>
-        <el-table-column align="center" prop="Mobile" label="手机">
+        <el-table-column align="center" min-width="120" prop="Mobile" label="手机">
         </el-table-column>
-        <el-table-column align="center" prop="Email" label="邮箱">
+        <el-table-column align="center" min-width="180" prop="Email" label="邮箱">
         </el-table-column>
         <el-table-column align="center" prop="Level" label="等级">
           <template scope="scope">
@@ -22,9 +22,9 @@
             <span v-else>钻石会员</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="CreateDate" label="注册日期">
+        <el-table-column align="center" min-width="100" prop="CreateDate" label="注册日期">
         </el-table-column>
-        <el-table-column align="center" prop="UpdateDate" label="更新日期">
+        <el-table-column align="center" min-width="100" prop="UpdateDate" label="更新日期">
         </el-table-column>
         <el-table-column align="center" label="状态">
           <template scope="scope">
@@ -40,7 +40,7 @@
         </el-table-column>
       </el-table>
       <section style="padding:0;margin-top:18px;margin-left:-16px">
-        <el-pagination @size-change="sizeChange" @current-change="currentChange" :current-page="currentPage" :page-sizes="[5, 10, 15, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
+        <el-pagination @size-change="sizeChange" @current-change="currentChange" :current-page="currentPage" :page-sizes="[10, 15, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
         </el-pagination>
       </section>
     </section>

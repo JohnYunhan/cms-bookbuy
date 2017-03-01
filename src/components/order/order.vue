@@ -4,7 +4,7 @@
       <search :haveAdd="have" :searchList="list" :source="source" :defaultValue="searchType" @searchOrder="searchOrder" @getOrder="getOrder"></search>
     </header>
     <section v-if="!openForm" style="padding:0 20px 18px">
-      <el-table :data="tableData" style="width: 100%">
+      <el-table :data="tableData" border style="width: 100%">
         <el-table-column type="expand">
           <template scope="props">
             <el-form inline class="table-expand">
@@ -36,10 +36,10 @@
                 <span>{{ props.row.Address }}</span>
               </el-form-item>
               <el-form-item label="下单日期">
-                <span>{{ props.row.CreateDate | shiftDate }}</span>
+                <span>{{ props.row.CreateDate}}</span>
               </el-form-item>
               <el-form-item label="修改日期">
-                <span>{{ props.row.UpdateDate | shiftDate }}</span>
+                <span>{{ props.row.UpdateDate }}</span>
               </el-form-item>
               <el-form-item label="订单状态">
                 <template scope="scope">
@@ -54,9 +54,9 @@
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="订单号" prop="Id">
+        <el-table-column align="center" min-width="150" label="订单号" prop="Id">
         </el-table-column>
-        <el-table-column align="center" label="图书名称" prop="BookName">
+        <el-table-column align="center" min-width="250" label="图书名称" prop="BookName">
         </el-table-column>
         <el-table-column align="center" label="昵称" prop="Nick">
         </el-table-column>
@@ -64,11 +64,11 @@
         </el-table-column>
         <el-table-column align="center" label="总额" prop="Total">
         </el-table-column>
-        <el-table-column align="center" label="下单日期" prop="CreateDate">
+        <el-table-column align="center" min-width="100" label="下单日期" prop="CreateDate">
         </el-table-column>
-        <el-table-column align="center" label="修改日期" prop="UpdateDate">
+        <el-table-column align="center" min-width="100" label="修改日期" prop="UpdateDate">
         </el-table-column>
-        <el-table-column align="center" label="订单状态">
+        <el-table-column align="center" min-width="100" label="订单状态">
           <template scope="scope">
             <span v-if="scope.row.Status==0">已失效</span>
             <span v-else-if="scope.row.Status==1">待确认</span>
@@ -85,7 +85,7 @@
         </el-table-column>
       </el-table>
       <section style="padding:0;margin-top:18px;margin-left:-16px">
-        <el-pagination @size-change="add" @current-change="currentChange" :current-page="currentPage" :page-sizes="[1, 2, 3, 4]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
+        <el-pagination @size-change="add" @current-change="currentChange" :current-page="currentPage" :page-sizes="[10, 15, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
         </el-pagination>
       </section>
     </section>
@@ -240,6 +240,7 @@ export default {
             _this.tableData = result.Data;
             _this.pageSize = _this.tableData.length;
             _this.totalCount = result.TotalCount;
+            _this.shiftDate(_this.tableData);
           } else {
             console.log(result)
             _this.tableData = [];
@@ -407,11 +408,7 @@ export default {
       },
     },
     filters: {
-      //日期转换
-      shiftDate: function(date) {
-        date = new Date(date);
-        return date.toLocaleDateString();
-      },
+
     },
     watch: {
       usrInfor: function(val) {

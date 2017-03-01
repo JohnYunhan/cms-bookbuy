@@ -4,7 +4,7 @@
       <search :haveAdd="have" :searchList="list" :source="source" :defaultValue="searchType" @addBook="addBook" @searchBook="searchBook" @getBook="getBook"></search>
     </header>
     <section v-if="!openForm" style="padding:0 20px 18px">
-      <el-table :data="tableData" style="width: 100%">
+      <el-table :data="tableData" border style="width: 100%">
         <el-table-column type="expand">
           <template scope="props">
             <el-form inline class="table-expand">
@@ -71,17 +71,17 @@
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="名称" prop="Name">
+        <el-table-column align="center" min-width="250" label="名称" prop="Name">
         </el-table-column>
-        <el-table-column align="center" label="作者" prop="Author">
+        <el-table-column align="center" min-width="100" label="作者" prop="Author">
         </el-table-column>
-        <el-table-column align="center" label="类别" prop="Category">
+        <el-table-column align="center" min-width="100" label="类别" prop="Category">
         </el-table-column>
-        <el-table-column align="center" label="出版社" prop="Press">
+        <el-table-column align="center" min-width="150" label="出版社" prop="Press">
         </el-table-column>
-        <el-table-column align="center" label="库存数量" prop="Count">
+        <el-table-column align="center" min-width="100" label="库存数量" prop="Count">
         </el-table-column>
-        <el-table-column align="center" label="点击次数" prop="ClickCount">
+        <el-table-column align="center" min-width="100" label="点击次数" prop="ClickCount">
         </el-table-column>
         <el-table-column align="center" label="推荐">
           <template scope="scope">
@@ -103,7 +103,7 @@
         </el-table-column>
       </el-table>
       <section style="padding:0;margin-top:18px;margin-left:-16px">
-        <el-pagination @size-change="sizeChange" @current-change="currentChange" :current-page="currentPage" :page-sizes="[5, 10, 15, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
+        <el-pagination @size-change="sizeChange" @current-change="currentChange" :current-page="currentPage" :page-sizes="[10, 15, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
         </el-pagination>
       </section>
     </section>
@@ -174,13 +174,13 @@ export default {
   data() {
       return {
         list: [{
-          label: "书名",
+          label: "名 称",
           value: "Name"
         }, {
-          label: "作者",
+          label: "作 者",
           value: "Author"
         }, {
-          label: "类别",
+          label: "类 别",
           value: "Category"
         }, {
           label: "出版社",
@@ -494,6 +494,15 @@ export default {
         }).catch(() => {
 
         });
+      },
+      //日期转换
+      shiftDate(data) {
+        for (var i = 0; i < data.length; i++) {
+          var update_date = new Date(data[i].UpdateDate);
+          this.tableData[i].UpdateDate = update_date.toLocaleDateString();
+          var create_date = new Date(data[i].CreateDate);
+          this.tableData[i].CreateDate = create_date.toLocaleDateString();
+        }
       },
       Close() {
         this.openForm = false;
