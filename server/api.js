@@ -73,7 +73,7 @@ router.post('/getAdminList', function(req, res, next) {
 });
 
 //根据Id获取管理员信息
-router.post('/getAdminById', function(req, res, next) {
+router.get('/getAdminById', function(req, res, next) {
   let Id = req.AdminInfo.Id;
   Admins.getAdminById(Id).then(result => {
     res.send({ Data: result, Message: "执行成功", Code: 200 });

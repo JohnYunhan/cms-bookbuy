@@ -108,7 +108,7 @@ export default {
         }
       }
       return {
-        adminName: "admin", //管理员名称
+        adminName: "", //管理员名称
         currentPathName: "欢迎页",
         currentPathNameParent: "首页",
         updatePwdFormVisible: false, //修改密码界面是否显示
@@ -135,9 +135,26 @@ export default {
       };
     },
     created() {
-
+      this.getAdminInfor();
     },
     methods: {
+      getAdminInfor() {
+        var _this = this;
+        fetch("/api/getAdminById", {
+          method: "GET",
+          credentials: "include"
+        }).then(res => res.json()).then(result => {
+          if (result.Code === 200) {
+            _this.adminName = result.Data.Nick;
+          } else {
+            console.log(result)
+            _this.adminName = "";
+          }
+        }).catch(error => {
+          _this.adminName = "";
+          console.log(error)
+        })
+      },
       handleopen(key, keyPath) {
         // console.log(key, keyPath);
       },
@@ -176,7 +193,7 @@ export default {
             }).then(res => res.json()).then(result => {
               if (result.Code === 200) {
                 _this.updatePwdClose();
-                _this.$message({
+                _this.$notify({
                   message: '修改成功',
                   type: 'success'
                 });
@@ -304,8 +321,7 @@ export default {
   width: 900px;
 }*/
 
-
-/*.btnCenter {
+.btnCenter {
   text-align: right;
-}*/
+}
 </style>

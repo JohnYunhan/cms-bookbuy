@@ -147,6 +147,7 @@ Admin.statics.addAdmin = function(json) {
 Admin.statics.getAdminById = function(Id) {
   return new Promise((resolve, reject) => {
     let query = this.findOne({ Id: Id });
+    query.select("Nick");
     query.exec((error, result) => {
       if (result) {
         resolve(result);
