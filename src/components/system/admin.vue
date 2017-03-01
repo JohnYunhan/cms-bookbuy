@@ -23,7 +23,7 @@
         </el-table-column>
         <el-table-column align="center" label="操作">
           <template scope="scope">
-            <i class="fa fa-edit fa-lg" @click="editAdmin(scope.row)" style="cursor:pointer"></i>
+            <i class="fa fa-edit fa-lg icon" @click="editAdmin(scope.row)" style="cursor:pointer"></i>
           </template>
         </el-table-column>
       </el-table>
@@ -289,5 +289,9 @@ export default {
 footer {
   margin-left: 5px;
   margin-bottom: 10px;
+}
+
+.icon:hover {
+  color: #20a0ff;
 }
 </style>

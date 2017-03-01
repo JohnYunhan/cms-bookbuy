@@ -7,7 +7,10 @@
       <el-table :data="tableData" border align="center" style="width:100%">
         <el-table-column align="center" prop="Name" label="名称">
         </el-table-column>
-        <el-table-column align="center" min-width="400" prop="Url" label="链接">
+        <el-table-column align="center" min-width="400" label="链接">
+          <template scope="scope">
+            <a :href="scope.row.Url" target="_blank" title="预览" class="url">{{scope.row.Url}}</a>
+          </template>
         </el-table-column>
         <el-table-column align="center" min-width="90" prop="UpdateDate" label="更新日期">
         </el-table-column>
@@ -21,8 +24,8 @@
         </el-table-column>
         <el-table-column align="center" label="操作">
           <template scope="scope">
-            <i class="el-icon-edit" @click="editPicture(scope.row)" style="cursor:pointer;font-size:18px"></i>
-            <i class="el-icon-delete2" @click="delPicture(scope.row)" style="cursor:pointer;font-size:18px"></i>
+            <i class="el-icon-edit icon" @click="editPicture(scope.row)" style="cursor:pointer;font-size:18px"></i>
+            <i class="el-icon-delete2 icon" @click="delPicture(scope.row)" style="cursor:pointer;font-size:18px"></i>
           </template>
         </el-table-column>
       </el-table>
@@ -312,5 +315,19 @@ footer {
 
 .el-message-box {
   width: 350px;
+}
+
+.url {
+  color: #1f2d3d;
+  text-decoration: none;
+}
+
+.url:hover {
+  color: #20a0ff;
+  text-decoration: underline;
+}
+
+.icon:hover {
+  color: #20a0ff;
 }
 </style>

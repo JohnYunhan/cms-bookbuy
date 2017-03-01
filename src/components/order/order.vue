@@ -80,7 +80,7 @@
         </el-table-column>
         <el-table-column align="center" label="操作">
           <template scope="scope">
-            <i class="fa fa-edit fa-lg" @click="editOrder(scope.row)" style="cursor:pointer"></i>
+            <i class="fa fa-edit fa-lg icon" @click="editOrder(scope.row)" style="cursor:pointer"></i>
           </template>
         </el-table-column>
       </el-table>
@@ -441,5 +441,9 @@ export default {
 
 .el-pagination {
   margin-top: 10px;
+}
+
+.icon:hover {
+  color: #20a0ff;
 }
 </style>

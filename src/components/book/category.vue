@@ -19,8 +19,8 @@
         </el-table-column>
         <el-table-column align="center" label="操作">
           <template scope="scope">
-            <i class="el-icon-edit" @click="editCategory(scope.row)" style="cursor:pointer;font-size:18px"></i>
-            <i class="el-icon-delete2" @click="delCategory(scope.row)" style="cursor:pointer;font-size:18px"></i>
+            <i class="el-icon-edit icon" @click="editCategory(scope.row)" style="cursor:pointer;font-size:18px"></i>
+            <i class="el-icon-delete2 icon" @click="delCategory(scope.row)" style="cursor:pointer;font-size:18px"></i>
           </template>
         </el-table-column>
       </el-table>
@@ -290,5 +290,9 @@ footer {
 .prompts {
   top: 20%;
   width: 300px;
+}
+
+.icon:hover {
+  color: #20a0ff;
 }
 </style>

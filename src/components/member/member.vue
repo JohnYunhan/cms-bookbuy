@@ -34,8 +34,8 @@
         </el-table-column>
         <el-table-column align="center" label="操作">
           <template scope="scope">
-            <i class="el-icon-edit" @click="editMember(scope.row)" style="cursor:pointer;font-size:18px"></i>
-            <i class="el-icon-delete2" @click="delMember(scope.row)" style="cursor:pointer;font-size:18px"></i>
+            <i class="el-icon-edit icon" @click="editMember(scope.row)" style="cursor:pointer;font-size:18px"></i>
+            <i class="el-icon-delete2 icon" @click="delMember(scope.row)" style="cursor:pointer;font-size:18px"></i>
           </template>
         </el-table-column>
       </el-table>
@@ -348,5 +348,9 @@ export default {
 footer {
   margin-left: 5px;
   margin-bottom: 10px;
+}
+
+.icon:hover {
+  color: #20a0ff;
 }
 </style>

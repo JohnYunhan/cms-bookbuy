@@ -97,8 +97,8 @@
         </el-table-column>
         <el-table-column align="center" label="操作">
           <template scope="scope">
-            <i class="el-icon-edit" @click="editBook(scope.row)" style="cursor:pointer;font-size:18px"></i>
-            <i class="el-icon-delete2" @click="delBook(scope.row)" style="cursor:pointer;font-size:18px"></i>
+            <i class="el-icon-edit icon" @click="editBook(scope.row)" style="cursor:pointer;font-size:18px"></i>
+            <i class="el-icon-delete2 icon" @click="delBook(scope.row)" style="cursor:pointer;font-size:18px"></i>
           </template>
         </el-table-column>
       </el-table>
@@ -541,5 +541,9 @@ export default {
   margin-right: 0;
   margin-bottom: 0;
   width: 50%;
+}
+
+.icon:hover {
+  color: #20a0ff;
 }
 </style>
