@@ -7,9 +7,11 @@
       <el-table :data="tableData" border align="center" style="width:100%">
         <el-table-column align="center" prop="Name" label="名称">
         </el-table-column>
-        <el-table-column align="center" min-width="400" label="链接">
+        <el-table-column align="center" min-width="450" label="链接">
           <template scope="scope">
-            <a :href="scope.row.Url" target="_blank" title="预览" class="url">{{scope.row.Url}}</a>
+            <el-tooltip effect="dark" content="点击预览" placement="top">
+              <a :href="scope.row.Url" target="_blank" class="url">{{scope.row.Url}}</a>
+            </el-tooltip>
           </template>
         </el-table-column>
         <el-table-column align="center" min-width="90" prop="UpdateDate" label="更新日期">
@@ -81,18 +83,6 @@ export default {
         Url: "",
         Status: true
       },
-      // rules: {
-      //   Name: [{
-      //     required: true,
-      //     message: '请输入名称',
-      //     trigger: 'blur'
-      //   }],
-      //   Url: [{
-      //     required: true,
-      //     message: '请输入链接',
-      //     trigger: 'blur'
-      //   }]
-      // },
       formValid: true,
     }
   },
