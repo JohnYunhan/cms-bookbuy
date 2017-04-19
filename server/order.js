@@ -11,14 +11,10 @@ let Order = mongoose.Schema({
     required: true,
     index: true
   }, //订单id
-  BookId: {
+  BuyInfor: {
     type: String,
     required: true,
-  }, //图书Id
-  BookName: {
-    type: String,
-    required: true,
-  },
+  }, //购买的图书信息
   UserId: {
     type: String,
     required: true,
@@ -27,10 +23,6 @@ let Order = mongoose.Schema({
     type: String,
     required: true,
   }, //昵称
-  Count: {
-    type: Number,
-    required: true,
-  }, //订单数量
   Freight: {
     type: Number,
     required: true,
@@ -51,6 +43,18 @@ let Order = mongoose.Schema({
     type: String,
     default: "",
   }, //收货地址
+  Note: {
+    type: String,
+    default: "",
+  },
+  DeliveryTime: {
+    type: String,
+    default: ""
+  }, //配送时间
+  InvoiceInfor: {
+    type: String,
+    default: ""
+  }, //发票信息
   CreateDate: {
     type: Number,
     required: true,
@@ -59,10 +63,14 @@ let Order = mongoose.Schema({
     type: Number,
     required: true,
   },
+  IsApplyRefund: {
+    type: Number,
+    default: 0
+  }, //是否申请售后  0:否、1:是
   Status: {
     type: Number,
     default: 1
-  }, //订单状态,0:已失效、1:待确认、2:配送中、3:已签收、4:审核退款、5:已退款
+  }, //订单状态,-1:已删除、0:已失效、1:待确认、2:配送中、3:已签收、4:审核中、5:已退款、6:已评价、7:退换中、8:已换货、9:待评价
 });
 
 //获取订单列表
