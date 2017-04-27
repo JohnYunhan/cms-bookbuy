@@ -268,6 +268,7 @@ export default {
     },
     created() {
       this.getBook(0, 10, "", "", "", "");
+      this.addItem = this.ruleForm;
     },
     methods: {
       getBook(index, size, name, author, category, press) {
@@ -417,7 +418,7 @@ export default {
                 });
                 _this.Close();
               } else {
-                _this.$message.error('服务器错误，请稍后再试');
+                _this.$message.error(result.Message);
                 console.log(result)
               }
             }).catch(error => {
