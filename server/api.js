@@ -365,6 +365,19 @@ router.post('/addOrder', function(req, res, next) {
   })
 });
 
+//设置订单状态
+router.post('/setOrderStatus', function(req, res, next) {
+  let json = new Orders({
+    Id: req.body.Id,
+    Status: req.body.Status
+  });
+  Orders.setOrderStatus(json).then(result => {
+    res.send({ Data: result, Message: "执行成功", Code: 200 });
+  }).catch(error => {
+    res.send({ Message: error, Code: 400 });
+  })
+});
+
 //获取出版社列表
 router.post('/getPressList', function(req, res, next) {
   let json = new Presses({

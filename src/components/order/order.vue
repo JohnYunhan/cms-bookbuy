@@ -15,10 +15,7 @@
                 <span>{{ props.row.Nick }}</span>
               </el-form-item>
               <el-form-item label="图书名称">
-                <span>{{ props.row.BookName }}</span>
-              </el-form-item>
-              <el-form-item label="数量">
-                <span>{{ props.row.Count }}</span>
+                <span v-for="(name,index) in props.row.BuyInfor">{{ name.BookName }}({{ name.count }}本)<span v-if="index!==props.row.BuyInfor.length-1">、</span></span>
               </el-form-item>
               <el-form-item label="运费">
                 <span>{{ props.row.Freight }}</span>
@@ -35,6 +32,12 @@
               <el-form-item label="收货地址">
                 <span>{{ props.row.Address }}</span>
               </el-form-item>
+              <el-form-item label="配送时间">
+                <span>{{ props.row.DeliveryTime }}</span>
+              </el-form-item>
+              <el-form-item label="备注">
+                <span>{{ props.row.Note }}</span>
+              </el-form-item>
               <el-form-item label="下单日期">
                 <span>{{ props.row.CreateDate}}</span>
               </el-form-item>
@@ -42,47 +45,52 @@
                 <span>{{ props.row.UpdateDate }}</span>
               </el-form-item>
               <el-form-item label="订单状态">
-                <template scope="scope">
+                <template>
                   <span v-if="props.row.Status==0">已失效</span>
+                  <span v-else-if="props.row.Status==-1">已删除</span>
                   <span v-else-if="props.row.Status==1">待确认</span>
                   <span v-else-if="props.row.Status==2">配送中</span>
                   <span v-else-if="props.row.Status==3">已签收</span>
-                  <span v-else-if="props.row.Status==4">审核退款</span>
-                  <span v-else>已退款</span>
+                  <span v-else-if="props.row.Status==4">审核中</span>
+                  <span v-else-if="props.row.Status==5">已退款</span>
+                  <span v-else-if="props.row.Status==6">已评价</span>
+                  <span v-else-if="props.row.Status==7">退换中</span>
+                  <span v-else-if="props.row.Status==6">已换货</span>
+                  <span v-else>待评价</span>
                 </template>
               </el-form-item>
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column align="center" min-width="150" label="订单号" prop="Id">
-        </el-table-column>
-        <el-table-column align="center" min-width="250" label="图书名称" prop="BookName">
+        <el-table-column align="center" width="150" label="订单号" prop="Id">
         </el-table-column>
         <el-table-column align="center" label="昵称" prop="Nick">
         </el-table-column>
-        <el-table-column align="center" label="数量" prop="Count">
-        </el-table-column>
-        <el-table-column align="center" label="总额" prop="Total">
-        </el-table-column>
-        <el-table-column align="center" min-width="100" label="下单日期" prop="CreateDate">
-        </el-table-column>
-        <el-table-column align="center" min-width="100" label="修改日期" prop="UpdateDate">
-        </el-table-column>
-        <el-table-column align="center" min-width="100" label="订单状态">
+        <el-table-column align="center" width="300" label="图书">
           <template scope="scope">
-            <span v-if="scope.row.Status==0">已失效</span>
-            <span v-else-if="scope.row.Status==1">待确认</span>
-            <span v-else-if="scope.row.Status==2">配送中</span>
-            <span v-else-if="scope.row.Status==3">已签收</span>
-            <span v-else-if="scope.row.Status==4">审核退款</span>
-            <span v-else>已退款</span>
+            <span v-for="(name,index) in scope.row.BuyInfor">{{ name.BookName }}({{ name.count }}本)<span v-if="index!==scope.row.BuyInfor.length-1">、</span></span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="操作">
+        <el-table-column align="center" width="80" label="运费" prop="Freight">
+        </el-table-column>
+        <el-table-column align="center" width="80" label="总额" prop="Total">
+        </el-table-column>
+        <el-table-column align="center" width="115" label="下单日期" prop="CreateDate">
+        </el-table-column>
+        <el-table-column align="center" width="115" label="修改日期" prop="UpdateDate">
+        </el-table-column>
+        <el-table-column align="center" width="125" label="订单状态">
+          <template scope="scope">
+            <el-select @change="updStatus(scope.row.Id,$event)" v-model="scope.row.Status">
+              <el-option v-for="item in options" :label="item.label" :value="item.value">
+            </el-select>
+          </template>
+        </el-table-column>
+        <!-- <el-table-column align="center" label="操作">
           <template scope="scope">
             <i class="fa fa-edit fa-lg icon" @click="editOrder(scope.row)" style="cursor:pointer"></i>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
       <section style="padding:0;margin-top:18px;margin-left:-16px">
         <el-pagination @size-change="add" @current-change="currentChange" :current-page="currentPage" :page-sizes="[10, 15, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
@@ -145,7 +153,7 @@ export default {
         }],
         have: false, //是否有添加功能
         source: "order", //搜索种类
-        searchType: "Nick", //默认的搜索类型
+        searchType: "OrderId", //默认的搜索类型
         totalCount: 0, //数据总量
         currentPage: 1, //当前页码
         pageSize: 1, //每页的数据量
@@ -194,6 +202,12 @@ export default {
           }],
         },
         options: [{
+          label: "已删除",
+          value: -1,
+        }, {
+          label: "已失效",
+          value: 0,
+        }, {
           label: "待确认",
           value: 1,
         }, {
@@ -203,14 +217,23 @@ export default {
           label: "已签收",
           value: 3,
         }, {
-          label: "审核退款",
+          label: "审核中",
           value: 4,
         }, {
           label: "已退款",
           value: 5,
         }, {
-          label: "已失效",
-          value: 0,
+          label: "已评价",
+          value: 6,
+        }, {
+          label: "退换中",
+          value: 7,
+        }, {
+          label: "已换货",
+          value: 8,
+        }, {
+          label: "待评价",
+          value: 9,
         }],
       }
     },
@@ -238,6 +261,9 @@ export default {
         }).then(res => res.json()).then(result => {
           if (result.Code === 200) {
             _this.tableData = result.Data;
+            for (var i = 0; i < _this.tableData.length; i++) {
+              _this.tableData[i].BuyInfor = JSON.parse(_this.tableData[i].BuyInfor);
+            }
             _this.pageSize = _this.tableData.length;
             _this.totalCount = result.TotalCount;
             _this.shiftDate(_this.tableData);
@@ -319,6 +345,35 @@ export default {
         this.openForm = true;
         row = JSON.parse(JSON.stringify(row));
         this.ruleForm = row;
+      },
+      updStatus(id, status) {
+        var _this = this;
+        var data = {
+          "Id": id,
+          "Status": status,
+        };
+        data = JSON.stringify(data);
+        fetch("/api/setOrderStatus", {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            'Content-Type': "application/json"
+          },
+          body: data
+        }).then(res => res.json()).then(result => {
+          if (result.Code === 200) {
+            _this.$notify({
+              message: '修改成功',
+              type: 'success'
+            });
+          } else {
+            _this.$message.error('状态修改失败，请稍后再试');
+            console.log(result)
+          }
+        }).catch(error => {
+          _this.$message.error('服务器错误，请稍后再试');
+          console.log(error)
+        })
       },
       Submit() {
         var _this = this;
